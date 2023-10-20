@@ -1,0 +1,82 @@
+---
+title: What I learned from only using Select in PostgreSQL
+summary: A month in queries
+date: '2018-04-09'
+draft: false
+tags: [beginner, debugging, sql, productivity]
+---
+
+![Fritz the Rescue Horse](/static/images/blog/fritz-the-rescue-horse.png)
+
+I was tasked to gather detailed metrics for a project at work and advised to only use select (as a newbie to Postgres and also querying on production) so I would not break the whole system.
+
+I can't go into details about the cool data I found but feel compelled to write a dummy post as a whole new world was opened up to me 😂
+Markup nerds please forgive me—This is written on an iOS keyboard without backticks.
+
+## Relational databases are tables with cells that have relationships with cells in other tables
+
+This was actually the hardest thing for me to wrap my head around coming from MongoDB and I kept having to ‘\d’ every table name to find the information I needed. I have an active mind, so without asking my coworkers, I was prone to thinking certain tables nested other tables.
+
+Ben Sinclair gave perhaps a more comprehensible clarification of what I tried to say above:
+
+<blockquote>
+  "The "relational" in a relational database is just talking about the relations inside a table,
+  i.e. the fields which all belong to a table form a relationship. What you're talking about with
+  regards to other tables are foreign keys."
+</blockquote>
+
+## Joining is great for finding granular (edit: NOT granola) trends and commonalities between tables, but sometimes it’s overkill
+
+Join with caution. The more tables I joined the more aliasing I had to manage. Finally if there isn’t really a reliable common key between two tables I wasn't sure in what sense the results gathered from the join were valid. Was it happenstance overlap, or exact correlation? And all I know is the left inner join, not the right inner join, outer joins, etc. Learn one well before you learn two because your results will vary.
+
+## Labels can be deceiving
+
+I had this quandary about general statistics like population and household numbers for example. Was it worth finding the usage rate of a feature according to household if you can’t determine what constitutes a household, or not everyone uses it? What if the population count is just from Wikipedia or the census in 2011? A lot of things started to become neurotic inaccuracies. Data would have to be normalized due to differences in population density and terrain, weather, whether it’s a city or a town...etc. I had to assess whether it was worth the time to do the work of normalizing or finding usage per city data.
+
+## Don’t try to accomplish too much in one query or you’ll drive yourself crazy.
+
+It is easy to get mired in numbers and tabled presentation. I wanted to use everything new and shiny that I learned in terms of from, where conditions, group by and order by. Sometimes it takes a few queries to drill down to the few pieces of info I really needed to produce useful results and come to concrete conclusions. Because otherwise, I won’t have a presentation.
+
+## Build up your query line by line using ‘\e’ in Vim
+
+Or you lose it by pressing up the console or otherwise waste time using arrow keys to go back to your typo... only to accidentally press enter, submit a wrong query and have to rollback.
+...or even better, save it as a .sql file and run it in bash!
+
+## Export your query as a csv
+
+So you can marvel at your findings and prove you did work lol.
+‘\copy（SELECT...FROM...WHERE...) ‘path/to/file.csv’ CSV HEADER;’
+
+## You can slice and dice data in 50 million ways but you need to come up with some hard and true answers
+
+Trends over time matter as much as all time. Set limited constraints for your first queries or it will get confusing quick. Start at per week or month with large volumes of data.
+
+## Don’t get too obsessed with accuracy unless that really matters.
+
+The point of metrics in my case was less so monitoring but seeing where I could make an improvement in our users experience and reduce pain points of using the internal software. There was a margin of error we’d have to accept but there were significant enough numbers to show we could definitely reduce reply rates here or complaints there. At the end of the day it was about creating an impact in our coworkers’ lives at work.
+
+## Every column you enter in select becomes an aggregate and should appear in “group by”
+
+I found this particularly annoying because sometimes the information is redundant, and group by only organizes your results into columns so you don’t end up with a long list of records
+
+## You don’t necessarily need to create a view
+
+Unless you’re going to use it all the time. This will just take up space and processing power.
+
+Dian Fay corrected me a bit on my assumption(s) above:
+
+<blockquote>
+  {' '}
+  Views are just stored queries that get run when you invoke the view. The space and power consumption
+  is negligible unless you create a materialized view which actually stores its results (and therefore
+  has to be manually refreshed).
+</blockquote>
+
+<blockquote>
+  GROUP BY is only necessary if you're actually doing aggregate calculations. If you're just pulling
+  individual records without counting, summing, or otherwise deriving a value from multiple rows,
+  you don't even need to specify it. If you just have duplicate rows you want to filter out, you can
+  SELECT DISTINCT instead.
+</blockquote>
+
+If you’re a fan of PostgreSQL or sql what do you think it’s best at? What are use cases best suited for it? What types of projects have you done implementing a pg database? Let me know!

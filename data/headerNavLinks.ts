@@ -2,8 +2,9 @@ const headerNavLinks = [
   { href: '/', title: 'Home' },
   { href: '/blog', title: 'Blog' },
   { href: '/tags', title: 'Tags' },
-  { href: '/projects', title: 'Projects' },
+  { href: '/work', title: 'Work' },
   { href: '/about', title: 'About' },
+  { href: '/Chan_Jen_5.2.pdf', title: 'Resume' },
 ]
 
 export default headerNavLinks

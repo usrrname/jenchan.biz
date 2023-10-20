@@ -1,0 +1,94 @@
+---
+title: 'What I Learned From Not Planning A Web App (from start to finish)'
+date: '2017-12-12'
+draft: false
+tags: [node, heroku, productivity, javascript]
+images: ['http://importantmen.com/img/importantMen.gif']
+---
+
+![important men dot com gif](http://importantmen.com/img/importantMen.gif)
+
+I recently launched [Important Men](http://importantmen.com), an art project I'd been shooting for two years.
+
+I deployed in October, but the maintenance and debugging dragged on for over a month. Part of it was due to inexperience and the other part was due being overextended on multiple deadlines.
+
+The website features stylized stock photos profiles of men who play a huge role in my life. The front end is static with Tachyons; the back end was Node/Express, Sendgrid API for taking form input and sending emails with a form embedded in it, all records were collected in MongoDB on MLab, and the backend was hosted on Heroku.
+
+After some crits with a designer, I made mockups in InVision, but I was so pressed for time towards the end I spent more of it wrestling with handling api responses and adapting the project to Heroku than checking for errors.
+
+In hindsight, I was overly fixated on matching my designs and making a sleeker looking website than any of my previous work. But I had completely overlooked planning the api behavior of the Q&A form at [http://www.importantmen.com/matt/](http://www.importantmen.com/matt/)
+I hope this post helps someone avoid my mistakes.
+
+# The front end is uncoupled from the back end.
+
+As long as the data returns in JSON I can manipulate it however I like, at whatever url endpoint that I reference the js file with the fetch request in.
+Over a year ago at a Angular immersion course I learned that routing should serve particular partials or files at endpoints (i.e '/' should respond with index.html, etc). The routing is for sending data back and forth. The routing is for sending data back and forth. I keep having to remember this.
+
+# Get the basic functionality down first. Debug one thing at a time.
+
+Instead of kludging code-blocks with solutions from StackOverflow (what I do when stressed), making small test apps and checking each line of code made sense to build up to a feature helped more than writing 10 lines of spaghetti code that broke in several places. I was tempted to add more and more functionalities like timestamp and Oauth logins for commenting (more of a hindrance for such a small project in my opinion) but I had to be realistic about my capabilities.
+
+# I can't follow my own sprint plan.
+
+...so I might as well opt for the most productive and engaging task list that I would absolutely revisit. For me this was trello. As I had multiple projects that were wrapping up, it was a lot more realistic to dump everything into several columns on trello and move whatever was done into a "Done" column.
+
+![My trello task list](https://thepracticaldev.s3.amazonaws.com/i/jtzoqhabfokvuglipemm.png)
+
+# Design APIs with logical visual outcomes in mind
+
+I don’t think I can explain this without going into detail how my visually oriented thinking only accounted for one set of results, but in reality achieving those results required more conditions and queries to be included in the backend code.
+
+In the case of the displaying answered questions, I didn't think about:
+
+1. notifying users by email when a response was posted to a question
+2. only showing the records that had both questions and answers so it wouldn’t look like questions were unanswered or that the get request didn't work
+3. having so many toggle down labels to reveal essential information on the page was unnecessary (minimalist-obsession over function really)
+4. including a loader or some sort of visual cue while the fetch response was loading, but this may also be excessive
+
+![Screenshot showing test of a fetch request response](https://thepracticaldev.s3.amazonaws.com/i/od2429phaoag50jmbe3v.png)
+Gotta get to the bottom of those "undefined"s
+
+# Decide on your tooling, and read the docs for it before you get to that part of the plan.
+
+I had not thought about deployment and only had working knowledge of AWS buckets. It would be too much of a gamble to learn how to configure a server on the eve of a launch, so Heroku seemed like a good bet since I was already familiar with git.
+
+# Don't waste time trying to learn a new framework
+
+(especially on a deadline), if you're not ready to use it in production.
+
+For &lt;10 page site it could just be extra bloatation and introduce an unnecessary time-consuming learning gradient.
+
+![Disastrous unlinked open graph image Facebook sharing](https://thepracticaldev.s3.amazonaws.com/i/a130fg5c286jeemg1w2g.png)
+Above: one of many horrors several weeks post-deploy.
+
+# Always test locally
+
+Revert to testing on localhost if something fails after deploying to Heroku and put up a dummy page ("We're working on it") instead. Impulsive frustration-testing meant I ended up with so many versions on Heroku that I forgot what changes I made to the backend code. Console.logs for MongoDB will also be more legible that way.(Correct me if I'm wrong on this one)
+
+# Paying to play sucks, but consistency may be worth it.
+
+I didn’t know one of my fetch requests I had up to a 15 sec time-to-view!
+
+If you need to it work lightning speed, it's probably worth paying for the Heroku Hobby tier. I had heard all these great things about having a small project hosted free on Heroku but it’s pointless if the desired behavior idles because the server [goes to sleep](https://devcenter.heroku.com/articles/free-dyno-hours#dyno-sleeping) after half an hour of inactivity and needs to be "woken up" by a request. I have heard people wrote scripts to wake up the server every half hour so it won’t go to sleep. Seems like a lot of extra work for someone under pressure.
+
+![Screenshot of menu item highlighted not in sync with image at scroll position](https://thepracticaldev.s3.amazonaws.com/i/7h0jwecouranu74wxm1j.jpeg)
+
+# Give yourself plenty of time to mess up.
+
+...like 1.5x of that final sprint.
+
+I did not, so I ended up launching a project that was about 80% functional, then spent the next month holding off promotion til I had the whole Q&A feature working. In hindsight I should have made a pre-deploy checklist to put finishing touches like:
+
+- create robots.txt to allow for web crawling and indexing
+- test Open Graph meta tags for Facebook and Twitter to ensure image and caption previews for link sharing work
+- getting multiple users to test website links
+- Use chrome devTools to check on performance times
+- ensure people are able to tab through links and input fields
+- checked how the page looked on different devices
+- made sure I could tab through inputs or buttons for focus (accessibility)
+
+This [list could go on](https://codeburst.io/the-front-end-checklist-8b2292fdda44), but those were a few things I really wish I did.
+
+# Bombproof your project and portfolio before applying for jobs.
+
+When it's live it's public, and whatever doesn't work likely didn’t reflect well on me as a dev and mid-career digital artist. I really had to curb my vocational desperation.

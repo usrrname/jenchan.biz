@@ -1,0 +1,139 @@
+---
+title: Build Time, Runtime, Execution time... What "time" is it in Javascript?
+draft: false
+date: '2022-11-23'
+summary: 'Runtime, Build time, Parsing and Execution'
+tags: [webperf, javascript, intermediate]
+images: ['/static/images/blog/horses-running.jpeg']
+---
+
+![Bojack watching horses run](/static/images/blog/horses-running.jpeg)
+
+Last month, I was struggling to give good answers to questions like "Why can't I just plug a `.scss` file into a link element's `href` and have that work in development?", or "Why can't I reference a `.css` file from a neighbouring project's `node_modules` within a static file?"
+
+A crucial reason for this is due to the way JS frameworks rely on multiple transpiling and bundling processes.
+
+The rapid visual feedback of hot module reloading (HMR) in local development environments can make us forget that the outgoing application code doesn't treat files the same way!
+
+## Runtime vs. Build Time
+
+We can't discuss what a "build" means in a Javascript application without mentioning:
+
+- runtime
+- build time
+- parsing and execution time
+
+_Note: I left out compile time since JS is an [interpreted language](https://www.geeksforgeeks.org/difference-between-compiled-and-interpreted-language/)_
+
+## Runtime
+
+Runtime happens when the software is executing. This can be when an application makes requests and the server responds–maybe after a server-side computed process.
+
+Runtime also refers to the actual tool running the code: like [Node](https://nodejs.org/en/about/), or [Deno](https://deno.land/).\*
+
+The idea is further confused by the fact we use `node` or `npm` in our commands to **run** the runtime in local dev environments. 😂
+
+TLDR: `npm` and `yarn` are package managers.
+
+Node and Deno are runtimes that create an environment for the code you write to be executed, built, even deployed.
+
+As you're developing, runtimes allow you to access backends, enter environment variables--all in the same place without the need for a browser.
+
+<sub>
+  *If you wanted to split hairs, the browser is arguably a runtime environment for Javascript files.
+</sub>
+
+## Build Time
+
+Build time consists of the following processes:
+
+### Compiling/Transpiling
+
+![Compiling and build processes in React](https://miro.medium.com/proxy/1*n08Bym1Kq5Fpj8ZTQ3XJqA.png)
+
+<sup>
+  Jonas Bondi. [Angular vs. React:
+  Compilers](https://medium.jonasbandi.net/angular-vs-react-compilers-45b279a8f571), Medium, 2017.
+</sup>
+
+When you write modern Javascript apps, you usually need to outfit your project with a transpiler like Babel or Typescript to compile the Javascript to ES5 or CommonJS, a form of Javascript that Node was initially introduced in, and all browsers could parse.
+
+In the case of CSS preprocessors like Sass, it is compiling to CSS. With PostCSS, unique classes might be generated and treeshaken.
+
+### Minifying
+
+Merging all code into a single file and removing all excessive spacing such that it is compact, and bundling and runs faster.
+
+### Codesplitting
+
+Chunking and separating code to relevant `.js` files -- such that you're able to import just the files pertinent to a button component, instead of a whole library.
+
+When you run `npm run build`, all processes mentioned in above are started to prepare a production ready bundle of Javascript, CSS and HTML (often with source maps) that will be ready for production deployment.
+
+## Development mode
+
+During development mode, the build tool Webpack's [Hot Module Replacement (HMR)](https://webpack.js.org/guides/hot-module-replacement/) feature allows applications to conveniently rebuild at runtime.
+
+In most cases a local cache folder of application code is built, with subsequent changes constantly rebuilt to give developers fast-feedback of end-users' experience as you're developing... _but_ all those fresh buildz don't appear in your output (`dist/`) folder.
+
+Today there are so many fancy features that optimize the dev experience of being able to preview the code you're writing in JS frameworks (_cough_ [Ahead-Of-Time compiling](https://angular.io/guide/aot-compiler) in Angular, [incremental builds](https://www.gatsbyjs.com/docs/how-to/performance/improving-build-performance/) in Gatsby and for Next, [Incremental Static Regeneration](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration) uses such caches both in dev and on the server to decrease the rebuild times for its statically generated views.)
+
+With the rise of a newer generation of build tools and bundlers written in Rust and Go, build times are drastically lowering.
+
+## Execution Time
+
+Execution happens in the browser. In single page applications, the minified files returned from the server go through what happens [after you type the URL into the browser](https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/How_the_Web_works#so_what_happens_exactly).
+
+![Illustration of how the Javascript v8 engine works by Addy Osmani](https://miro.medium.com/max/1400/1*GuWInZljjvtDpdeT6O0emA.webp)
+
+> "V8 is Google’s open source high-performance JavaScript and WebAssembly engine, written in C++. It is used in Chrome and in Node.js..." [v8.dev](https://v8.dev/)
+
+![Illustration Figure 2.1. The lifecycle of a client-side web application starts with the user specifying a website address (or clicking a link) and ends when the user leaves the web page. It’s composed of two steps: page building and event handling. from "Secrets of the Javascript Ninja Second Edition"](https://drek4537l1klr.cloudfront.net/maras/Figures/02fig01_alt.jpg)
+
+> Fig 2.1 The lifecycle of a client-side web application starts with the user specifying a website address (or clicking a link) and ends when the user leaves the web page. It’s composed of two steps: page building and event handling.
+
+<sub>
+  ["Secrets of the Javascript Ninja, Second
+  Edition"](https://www.manning.com/books/secrets-of-the-javascript-ninja-second-edition) by John
+  Resig, Bear Bibault, Josip Maras, August 2016.
+</sub>
+
+In the web 1.0 times, a DOM tree would be created by parsing of html files. These days, JS functions (like `React.createElement()`) create and append those nodes.
+
+On [initial load](https://developer.chrome.com/blog/inside-browser-part2/#extra-step-initial-load-complete), JS is read (parsed) top to bottom once, and the relevant execution contexts are set for every single function invocation in a first-on-first-off manner. As the session continues, functions are invoked asynchronously in a last-in-first-out manner.
+
+![Illustration of execution context stack](https://miro.medium.com/max/4800/1*ACtBy8CIepVTOSYcVwZ34Q.webp)
+
+<sub>
+  Sukhjinder Arora,["Understanding Execution Context and Execution Stack in
+  Javascript"](https://blog.bitsrc.io/understanding-execution-context-and-execution-stack-in-javascript-1c9ea8642dd0),
+  Medium, 2018.
+</sub>
+
+Aside from the load time, scripting time constitutes the registering of event listeners and dynamic content during the session.
+
+A lot of [foundational](https://kbpsystem777.github.io/You-Dont-Know-JS/) [resources](https://eloquentjavascript.net/) cover Javascript execution, but rarely do we connect all types of "time" to see where they fit together!
+
+---
+
+Which build tools are you excited for in 2023?
+
+What are concepts that you found hard to place in your programming career?
+
+Let me know in the comments.
+
+Thanks to @naismith [Shreya Dahal](https://shreyadahal.com), [Chang](https://twitter.com/CheapSteak), Jimmy Jansen, Matt Mackay for helping me clarify my mental models!
+
+---
+
+## Related Reading
+
+Dan Abramov. ["How does the development mode work?"](https://overreacted.io/how-does-the-development-mode-work/), _overreacted_. August 4, 2019.
+
+Hugh Haworth. ["Comparing the New Generation of Build Tools"](https://css-tricks.com/comparing-the-new-generation-of-build-tools/), _css-tricks_, Apr 8, 2021 (Updated on Jan 5, 2022)
+
+["State of JS 2021: Build Tools"](https://2021.stateofjs.com/en-US/libraries/build-tools/), State of JS. 2022.
+
+Mariko Kosaka. ["Inside look at modern web browser (part 3)"](https://developer.chrome.com/blog/inside-browser-part3/) Chrome Developers, August 18, 2020.
+
+Addy Osmani. ["Javascript Start-up Performance"](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Feb 9, 2017.

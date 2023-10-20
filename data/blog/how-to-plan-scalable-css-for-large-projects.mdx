@@ -1,0 +1,144 @@
+---
+title: How To Plan Scalable CSS for Large Projects?
+draft: false
+summary: The options, oh the options!
+tags: [CSS, productivity]
+date: '2020-02-10'
+---
+
+![pasta in a pantry](https://media1.popsugar-assets.com/files/thumbor/XdAjrib6LbJaVIzrq1hHRd1IED4/fit-in/728xorig/filters:format_auto-!!-:strip_icc-!!-/2019/01/11/984/n/1922441/0ec6567e5c391adb26fa57.64829615_/i/Best-Organizers-2020.jpg)
+
+Having worked on a couple large projects, I feel myself start to form opinions on how CSS is implemented across multi-module single page apps. Here's some brainstorming and questions I have on the subject.
+
+#### Preamble
+
+I'm particularly inspired by the ["You think you know CSS"](https://dev.to/hoangbkit/how-css-works-under-the-hood-mmk) series by hoangbkit and Rachel Andrew's work on [CSS grids](https://gridbyexample.com/)
+
+### 0. Defining best (and not-best) practices
+
+Company-wide, this step is the easiest of the rest.
+Bad practices can be weeded out during code review and put to bed.
+
+I discussed and learned some best/not-great practices in an [old post](https://dev.to/jenc/what-should-production-css-look-like-share-your-layout-to-web-workflow-2d55)
+
+### 1. Preprecessor Choice
+
+Usually this is decided by a tech lead, or maybe the command line version of the JS framework comes with a baked-in pre-processor. I'm in belief of leveraging whatever these preprocessors have to offer when they're used.
+
+[SASS](https://sass-lang.com/)
+
+[PostCSS](https://postcss.org/)
+
+[Styled Components](https://styled-components.com/)
+
+Pertinent to the following choices are whether a company or product already has a design system or style guide. If there is one, the logical approach is to go deeper on enforcing CSS patterns.
+
+The latter two also endorse a "CSS in JS" approach I've never tried before, but seem to go along the lines of a "write once and reuse your component", with any more common styles being easy to import from a global style resource.
+
+### 2. CSS Methodologies/Patterns
+
+A lot of the following philosophies have overlap with each other. And where they differ, I see many merits for different stages of development.
+
+#### BEM
+
+![Example of BEM](https://snipcart.com/media/203926/bem-css-methodology.png)
+
+[BEM](http://getbem.com/introduction/), or Block Element Modifier style is something to get used to and when I first entered development seem to have quite a following. I think I see it in a ton of frameworks too (Ng-Material, ahem!)
+
+While this syntax is more semantic than atomic pattern and makes attempts to build scope into selector naming, it's not needed if we use SASS or JS frameworks which provide nested scopes. The result of its implementation is insanely verbose.
+
+<u>Example: menu bar</u>
+
+1. The default component styles go into a selector called `.navigation`
+2. Writing another selector called `.navigation__li` to style all the list items under a navigation
+3. Then using `.navigation__li--active` to indicate the active state of a list item
+
+...and having to declare all of the styles above inline just to indicate an element is active with `navigation navigation_li navigation_li--active`
+
+Now rinse and repeat for all different states or needs related to an element.
+
+#### Atomic (also known interchangeably as "Functional CSS")
+
+![Atomic CSS example](https://img.haikudeck.com/mg/C9Te6Prfu5_1421618125691.jpg)
+
+[Atomic] (https://acss.io/) is a library and also an ethos around using units of aliased style to implement classes on the fly, like inline-styles.
+
+While great for prototyping a design fast, I'm not crazy about this approach.
+
+<u>Example: a heading with a container</u>
+Having to remember to use `Bd` to create a 1px border anytime I want it on a particular element. Then,
+if that element contains text, I'll be using `Lh(1.5)` to indicate it has a line height of 1.5em and
+`f1` to stand for a font size of 3em
+
+Now for every heading I end up with:
+`<div class ="f1 Bd Lh(1.5)"></div>`
+
+It's illegible, and gets really tiresome if I have many pages with many headings to style. An extended tirade by Adam Silver [right here](https://medium.com/simple-human/the-problem-with-atomic-css-d0c09c7aa38e).
+
+However, [tachyons](http://tachyons.io/) is an atomically-principled library that has few enough classes to make rapid prototyping in code possible, and my go-to when I need a landing page fast.
+
+#### DRY (Don't Repeat Yourself)
+
+![DRY example](https://www.vanseodesign.com/blog/wp-content/uploads/2012/04/dry-steps.jpg)
+
+In [Maintainable CSS](https://maintainablecss.com/), Adam Silver defines the DRY grouping as a strategy for applying semantic classes to reusable groupings of style.
+
+I like to take this further and think about components coded as Sass mixins to be included/reapplied wherever they're reused in an application. (Au contraire, some may hate this idea as it requires the parsing of the imported authoritative style file every time)
+
+#### SMACSS
+
+<caption>
+  {' '}
+  [SMACSS](http://smacss.com/), pronounced "smacks" aka "scalable and modular architecture for css"{' '}
+</caption>
+
+![SMACSS file organization](https://miro.medium.com/max/592/1*HIID2rKeku4DlTl5GQ8Pbg.png)
+
+This involves separating styles in terms of base styles, modules, components and state, in addition to creating classes for frequently coupled styles attributes.
+
+![Parts of the SMACSS methodology](https://imgs.developpaper.com/imgs/2716887123-5cf4704574876_articlex.png)
+It's very similar to maintainable CSS but includes more opinions on nesting and specificity.
+
+#### OOCSS
+
+<caption>
+  {' '}
+  Not quite object-oriented in the traditional sense, and otherwise thought of as the original "modular"{' '}
+</caption>
+
+![Design structure, container and content](https://i0.wp.com/css-tricks.com/wp-content/uploads/2017/07/image1.png?fit=1000%2C366&ssl=1)
+
+According to its ideator Nicole Sullivan, the point of OOCSS is to:
+
+- Separate structure and skin
+- Separate container and content
+
+![Example of object oriented CSS ](https://kate-travers.com/images/posts/css-tree.png)
+
+Before googling it, I didn't even know that OOCSS informs much of what I've learned to be today's efforts at modular CSS: to write style by component.
+
+### 3 CSS style-guide?
+
+Does this serve as more reading for fellow devs who are already short on time, or serve to better reinforce design consistency?
+
+I think this is team dependent. If the company is design-focused and organized, this could be very helpful. When I first started trying to level up my JS for industry however, the Airbnb style guides for writing ES6 were insanely intimidating.
+
+### 4. Popular Libraries
+
+I prefer to direct you to this [brilliant post](https://dev.to/hoangbkit/beloved-css-frameworks-3lho) by Huang b Kit on popular libs.
+
+### 5. Grids and responsive grids
+
+If you've received designs your team is probably going to need to agree on grid columns and breakpoints or things will get dicey when you merge your branches in.
+
+A typical design grid is 12 or 10 column that snaps down to 1-4 on a small device. If a CSS lib leverages flexbox or flexgrid, it's possible to implement responsiveness [without media queries](https://medium.com/@drewmck/a-ui-designers-primer-to-responsive-grids-270b523e6fa2).
+
+### 6. Organizing components for development
+
+I'm not well versed on this part but I've heard a ton of good things about using [Storybook](https://storybook.io) to test and develop components in isolation prior to handing over to other devs.
+
+## Questions
+
+In a dream world I would love to write the styling once and just reuse it anywhere I want. Then I realize there's a couple of layouts, maybe-conflicting assumptions between how I imagined a layout to work, and how it works to a different dev. This involves a lot of communication and agreement.
+
+I'd like to hear about how you settled on a CSS strategy in your team or company. What do you find most effective for smaller or larger teams? What have you discovered to be good things to agree on before and during dev? What is your experience with writing CSS in JS? Have you enjoyed alternates to Sass and less?

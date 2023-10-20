@@ -1,0 +1,107 @@
+---
+title: 'First Impressions: learning Angular after React/Redux'
+draft: false
+summary: 'Another this-vs-that post from a dev who got comfortable with React D:'
+tags: [react, angular, beginner]
+date: '2019-12-17'
+---
+
+![apple versus orange meme](/static/images/blog/apple-orange.webp)
+
+### Back story:
+
+I just started a new job and have to learn Angular, fast. I haven't touched since it was AngularJS (1.x). It's now _Angular 8_, and this post includes a preamble comparing 1.x with current impressions to abandonees like me.
+
+Update: As quite a few readers have rightly noted, this is a rather fuzzy and premature list of differences. If anyone has any insight on which or what to explore more, I'd love to know!
+
+Disclaimer: This post compares Angular-cli with create-react-app and Redux. I haven't engaged with the OG libs.
+
+I've heard many times that React isn't strictly a framework by definition, but it can be tooled it until it performs like one.
+
+## 0. Preamble: Angular 1.x vs. Angular Today
+
+- $scope is gone
+- components are the new controllers, which are always classes
+- binding is now indicated by brackets around directives (i.e. [[NgClass]](https://angular.io/api/common/NgClass))
+- [change detection](https://blog.thoughtram.io/angular/2016/02/22/angular-2-change-detection-explained.html) does DOM updates
+- No more repetitive binding out of class methods; it's replaced by exporting components as classes
+- Business logic is handled by services, which come from providers
+
+## 1. Similarities between React and Angular
+
+- Both support typescript integration, live/hot-reloading, lazy-loading, scoped styles, modular component design, and lifecycle hooks
+- Test driven development encouraged by both frameworks' teams: karma for Angular and jest/mocha for React
+- Developed with support from big tech companies: Google for Angular, Facebook for React
+- Encourage dumb components that are free of business logic
+
+## 2. The Painful Differences
+
+At this stage, I need to forget exactly what features with the same names do in React.
+
+### File Structure
+
+This has got to be my biggest complaint initially. Angular's file structure seems excessive compared to React's. Each component folder contains a `component.ts`, `component.spec` test file, and a `component.scss` file.
+
+### Nested (container) components vs NgModules
+
+Both frameworks emphasize the single responsibility principle of planning an app. While users can choose to flavour their own routing with react router, Angular's router module covers most of our routing needs.
+
+React's core team and most avid developers have moved away from the container component pattern to use hooks but for the purposes of comparing like with like, this is as much as I know.
+
+When multiple components perform the same group of functions for a feature in an Angular app, they can be placed into module folders with a `.component.module.ts` and it's own routing file `component.routing.module.ts` to further specify which components would become available to the rest of the app.
+
+In React, the routing is controlled by `react-router` and `Provider`. The Provider in Angular modules however, don't serve the same purpose. They are simply module properties that import services (think of services as helper functions).
+
+### Dev with TypeScript
+
+The Angular boilerplate app comes with Typescript included. Thou shall use TypeScript. As someone who learned React with Typescript this didn't really change how I feel about it, but I could see that being a deterrent. I did notice that type declarations where not needed as frequently compared to developing with CRA, and it may be due to a new version of Typescript being used on my project.
+
+### Learning Resources
+
+React has a greater wealth of learning resources and pattern design guides by users of different experience levels. (Shout out @WesBos, @DanAbramov) Over a year ago, I wouldn't touch it due to the need for transpiling through babel, jsx interpolation, webpack config, etc. but there's so many rockstar developers and websites that come to mind for learning React/Redux.
+
+I have noticed however that south Asian YouTubers have cornered the market on Angular tutorials 😁-- a welcome change. My only gripe is that the Angular.io documentation doesn't contain enough visual examples.
+
+### Hot Reloading || Change Detection
+
+I've noticed with how quick React and Vue would compile during during local development. Some say it's the [use of Virtual DOM](https://programmingwithmosh.com/react/react-virtual-dom-explained/), which only replacing differences in state with partial updates, instead of re-rendering pages completely.
+
+In contrast, Angular has [change detection](https://indepth.dev/a-gentle-introduction-into-change-detection-in-angular/), which listens for state changes, but doesn't update the DOM. Depending on what the circumstances are, I've heard it can help or hurt during local dev.
+
+### Import statements in JS modules vs Angular modules
+
+Unlike Javascript modules or generic components in react where importing components become necessary the deeper nesting goes, files in each Angular component already "talk" to each other and don't require explicit importing. Modules have a declaration property to specify the components that make them up, whereas the imports simply address in-library modules that need to be made available to a specific module.
+
+### Services and Observables vs [Reducers & Actions]
+
+Services contain reusable functions that execute data exchange or transform data–kind of like helper functions.
+
+Every Angular module has a Providers property to specify how which Services are available to them. (It however, has nothing to do with the semantics of React's providers.) Services are injected in the root of Angular apps so that they can be used by any component, however. (See: [Dependency Injection](https://angular.io/guide/dependency-injection))
+
+Using Redux with React, reducers manage and respond to changes in the state. Actions need to be defined and "action creators" are dispatched to update the state and change the view.
+
+Angular doesn't have actions. API requests and events return an [observable](https://angular.io/guide/observables-in-angular). The observable is a thing that's like an intermediary: it listens for events, then passes it on to subscribers. It can transfer data to a components, and handle HTTP requests.
+
+### Tooling
+
+Since React only operates on the view layer of an application, devs get to choose any library under the sun for things like state management, form validation, data visualization... the list goes on.
+
+The libraries for Angular are baked in during its installation and devs are usually set on the same few libs to do the same things. That saves the mental overhead of trying to create yet another form or button (no need for writing generic components from scratch).
+
+### Two-way Data Binding vs One-way Data Flow
+
+This is the most confounding part for me to get used to. Angular's directives enable two-way binding. Every directive treats its DOM property as a model. Changing the view changes the value of the property in the model. You would think there's a million side effects; I'm not sure how they prevent that.
+
+The only aspect of Angular that I've found so far that mirrors unidirectional data flow is its concept of [dynamic forms](https://angular.io/guide/dynamic-form).
+
+Instead of passing props down nested components, [input-binding](https://angular.io/guide/component-interaction#pass-data-from-parent-to-child-with-input-binding) enables this in React.
+
+The Reactive Forms module emulates the [Flux](https://facebook.github.io/flux/docs/in-depth-overview#structure-and-data-flow) architecture of React. In place of actions and dispatchers, a `valueChanges` observable and `subscribe()` method tracks changes in the class component. The form model is the source of truth for the control of forms.
+
+### Promises vs Thunks
+
+Thunks are one of many library modules used with Redux to enable async actions to dispatch.
+
+Used in addition with observables, Angular takes fetched data and returns them as plain old promises.
+
+These are all preliminary impressions and I have a feeling I'll be updating this over time. Please feel free to correct me or if anyone out there is working with both, I would love to talk!

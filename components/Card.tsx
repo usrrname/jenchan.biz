@@ -1,12 +1,12 @@
 import Image from './Image'
 import Link from './Link'
 
-const Card = ({ title, description, imgSrc, href }) => (
+const Card = ({ title, description, imgSrc, href, press, company }) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
         imgSrc && 'h-full'
-      }  overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
+      } overflow-hidden rounded-md border-2 border-gray-300 border-opacity-60 dark:border-gray-700`}
     >
       {imgSrc &&
         (href ? (
@@ -14,7 +14,7 @@ const Card = ({ title, description, imgSrc, href }) => (
             <Image
               alt={title}
               src={imgSrc}
-              className="object-cover object-center md:h-36 lg:h-48"
+              className="object-cover object-center md:h-36 lg:h-60"
               width={544}
               height={306}
             />
@@ -23,12 +23,13 @@ const Card = ({ title, description, imgSrc, href }) => (
           <Image
             alt={title}
             src={imgSrc}
-            className="object-cover object-center md:h-36 lg:h-48"
+            className="object-cover object-center md:h-36 lg:h-60"
             width={544}
             height={306}
           />
         ))}
       <div className="p-6">
+        {company && <p className="font-small text-gray-500 dark:text-gray-400">{company}</p>}
         <h2 className="mb-3 text-2xl font-bold leading-8 tracking-tight">
           {href ? (
             <Link href={href} aria-label={`Link to ${title}`}>
@@ -42,12 +43,25 @@ const Card = ({ title, description, imgSrc, href }) => (
         {href && (
           <Link
             href={href}
-            className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="mb-3 text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label={`Link to ${title}`}
           >
             Learn more &rarr;
           </Link>
         )}
+
+        {press && press?.length > 0 ? <h3 className="font-medium">Press</h3> : null}
+        {press?.map((p: { title: string; href: string }) => (
+          <p key={p.title}>
+            <Link
+              href={p.href}
+              className="prose text-base font-medium leading-6 text-secondary-500 hover:text-secondary-600 dark:hover:text-secondary-400"
+              aria-label={`Link to ${p.title}`}
+            >
+              {p.title}
+            </Link>
+          </p>
+        ))}
       </div>
     </div>
   </div>

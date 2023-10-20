@@ -1,0 +1,149 @@
+---
+title: 'How I Approach Whiteboard Interviews'
+summary: 'From Imposter to Candidate'
+date: '2019-11-30'
+tags: [beginner, career, showdev]
+---
+
+![Ginny the ginger cat from @b_b_b_bennyandthecats](https://instagram.com/b_b_b_bennyandthecats?igshid=1xbymb8yd56zw)
+
+I do so much of my learning solo that the nerves of writing code live never go away. I find that the only way to curb them is to keep doing these interviews.
+
+Here are some notes I took from a [Rangle.io](https://rangle.io/) workshop I went to last year +some personal thoughts mixed in.
+
+Disclaimer: code in this post was transposed from handwriting, and may not compile.
+
+# 1. Understand the Question
+
+- What does the interviewer want the code to do?
+- What types of data should it take?
+- What kind of conditions should it adjust for?
+
+Clarifying the problem is a minimum expectation and interviewers who won't do that or act surprised you haven't heard of `x` is a red flag. ("What, you don't know what currying is?!")
+
+It costs a company roughly 8 hours to do an irl interview. Hiring folks should provide guidelines to help you succeed. Any employer who wants to sell the company as a pleasant place to work is not going to leave you puzzled on their expectations.
+
+If they ask a question that requires knowledge outside the job scope, ask for an example of how it's used at the company to understand more.
+
+# 2. Pseudo-code the barebones
+
+The interviewer informs me that it will take a string with a repeating name, like "Bob". They want to know how many times this name is repeated.
+
+Begin by listing your inputs and outputs.
+
+```javascript
+input: string
+output: number
+keyword: 'bob'
+```
+
+The question begets a function so just start off with a skeleton: function with a name, some params and empty braces.
+
+Don't jump into the execution details yet.
+
+```javascript
+const findRepeatingWord = (str) => {}
+```
+
+# 3. Break down the problem
+
+This is optional for you god mode coders but making notes of execution steps in the function helps me cover something with many moving parts.
+
+My comments might look like:
+
+```javascript
+const findRepeatingWord = (str) => {
+  // loop through the string
+  // find the matching words
+  // increment count
+  // return # of matches
+}
+```
+
+Leaving gaps between each point allows me to fill in the code line by line.
+
+```javascript
+
+let keyword = 'bob';
+let count = 0;
+
+// loop through the string
+
+str.split(' ');
+
+for (let i = 0; i < str.length; i++){
+
+// find the matching words
+
+   if (i == keyword) {
+
+// increment count
+
+   count++;
+
+}
+
+// return # of matches
+
+return count;
+
+```
+
+Talk as you're writing to get sense whether the interviewer follows.
+
+# 4. Step back and Refine
+
+I tend to openly question my use of a certain method as in writing it, but it actually sounds hesitant and wastes time. Finish the code block first, then ask questions. It lets them know you had refactoring in mind.
+
+You might (like I) suddenly realize the input string needs to be lowercased because a capital letter and lowercase letter might be parsed differently, so I'd insert `str.toLowerCase();` into the first line of the code block.
+
+In place of `count++` I'm tempted to use `.match()`, but I forget what it returns. Is it a number or the position of the match?
+(I know this is overkill as it accepts regex, but I could only think of that way.)
+
+I could ask, "I know I could use .match(), but I don't remember what it returns and whether it would work in an array...Is it possible to loop through a string as is?"
+
+If they're feeling kind, they'll reply "`.match()` traverses the string for you. You don't need a for loop. It returns all the matches in an array."
+
+To which I would reply, "OH YEAHH!"
+
+So I rewrite:
+
+```javascript
+const findRepeat = (str, keyword) => {
+  const lowercased = str.toLowerCase()
+
+  // find the matching words
+  const matches = lowercased.match(keyword / g).length
+
+  // return matches
+  return matches
+}
+```
+
+PS: There’s no harm in completing the question with a for loop and an if/else. Out of prudence and a need for mental clarity, I tend to reassign statements to new variables instead of method chaining, and use for loops instead of `switch`, `forEach` or `while`. I can always argue it's faster ;)
+
+#5 Admit what you don't know, ask for help
+
+Pausing, taking a breath, and saying "I need a moment to think" and using it to jog your memory about something is totally ok.
+
+When you're truly stuck or don't remember something, say so and ask the interviewer for a hint.
+
+Or just say "I know I can use .match() but I don't remember what its second param represents... here's what I would write to illustrate my intention..."
+
+They just want to understand your thinking process. It's not supposed to be a hazing.
+
+If you finish the question sooner than the allotted time, they might raise the difficulty to see where things go. I don't imagine many senior devs want to be doing recruitment tasks so involving them and showing that you're someone communicative and feedback-driven is a plus for a potential coworker.
+
+# Practice
+
+Doing test questions is like an ab workout. Things like this are worth attempting without foreknowledge and I recognize my knowledge gaps more when I look up the answer. Using pen and paper, and then typing my answer into the browser console and immediately lets me know if I did something wrong.
+
+Fyi, here's a [gist](https://gist.github.com/usrrname/70819ab3421e1c3e93ed8accea212b88) with my attempts and a cleaned up solution.
+
+I've been asked the example question above before, and did it again on paper to write this post. I realized my answers don't compile; how did I get any of my jobs?!
+
+You can get it, by remaining calm, using what you know, and getting through it!
+
+Whiteboarding isn't a replication of our usual work environment with our IDE, docs and linters. It's unrealistic to expect the human brain to work like a compiler.
+
+Think of it like an open conversation, and remember to enjoy the time you get to discuss your technique with a pro dev!

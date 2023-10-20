@@ -1,0 +1,61 @@
+---
+title: Differential Loading for Legacy Browser Support in Angular 9
+draft: false
+summary: For those of us who can't let go
+tags: [typescript, javascript, angular, webperf]
+images: ['/static/images/two-headed-monster.webp']
+date: 2020-07-21
+---
+
+![Two-headed monster from Sesame Street](/static/images/two-headed-monster.webp)
+
+This post discusses ways to support “legacy” browsers in terms of IE 11, and tuning Angular to support [differential loading](https://angular.io/guide/deployment#differential-loading).
+
+Before we changing build configs, there are [4 different scenarios](https://auth0.com/blog/angular-8-differential-loading/) you could end up with:
+
+1. 1 ES5 build (differential loading disabled, target is `es5`)
+2. 1 ES5 build with conditional polyfills (differential loading enabled, target is `es5`)
+3. 1 ES2015 build (differential loading disabled, target is es2015), which won't support IE 11
+4. 2 builds with conditional polyfills (differential loading enabled, target as `es2015`)
+   This doc explains how to accomplish #4.
+
+### Configuration
+
+1. Enable differential loading by making the `tsconfig.json` `target: es2015` (Javascript ES6).
+
+Little has changed from Angular 8 other than retiring of the `es5BrowserSupport` tag. Follow the steps below for adding `tsconfig.app.json` with configurations targetting `es5` export in your build and serve (on local dev) your app for legacy browsers.
+
+1. Ensure `.browserslist` includes all versions of browsers the project intends to support.
+   This file refers to the compile configuration tool [browserslist](https://github.com/browserslist/browserslist). Each statement in browserslist is read as a query string, which is runs against [Can I Use](https://caniuse.com/) data on support of various language features. Their [github](https://github.com/browserslist/browserslist#full-list) has great explanations of how to write accurate queries.
+
+On build, Browserslist determines which browsers the app supports, and compiles JS files for ES5 (to support legacy browsers) and ES6+ supporting modern browsers.
+
+### Polyfilling
+
+Check [caniuse.com](http://caniuse.com/) for various es6 expressions and update `polyfills.ts` file with the necessary polyfills. It would be good to take stock of what kind of modern development features you're using. For example, IE 11 doesn't support flex grid, as well as ES6-ES11 features such as `.includes()`, promises, for-of or `Object.keys()` iteration, and optional chaining.
+
+Angular’s [“Browser Support”](https://angular.io/guide/browser-support) docs suggest `classlist`, all the `core-js` elements and `web-animations` if you are using Angular Material, but in the interest of keeping our legacy browsers' bundle size small, we should only polyfill for classlist and the ES6, ES7-11 features that our projects use. Make sure you `npm install` the polyfill package before you import it into `polyfill.ts`.
+
+![Diagram of differential loading](https://developer.okta.com/assets-jekyll/blog/spring-boot-2-angular-8/differential-loading-slide-96a8f9e28945254efff078756aa5eb95cecd138e7e5d702253160bd968d98c77.jpg)
+
+In tandem with the `polyfills.ts`, step tells Angular to export a bundle for modern browsers, and a bundle for legacy browsers.
+
+### How Do We Know It Worked?
+
+After you run `ng build --prod` and check your `dist/` or project folder, you’ll notice your `index.html` contains something like the following:
+
+```
+<script src="fancyModernBundle-es2015.js" type="module"></script>
+<script src="legacyBundle-es5.js" nomodule></script>
+```
+
+![Differential loading exports 2 sets of markup in Angular](https://webdesigntips.blog/wp-content/uploads/2019/06/1560365790_564_A-Guide-to-Angular-8039s-Differential-Loading.png)
+When you run the project locally or visit the deployed development version, open up the network tab of the developer tools and refresh the page. For modern browsers, you should see only the scripts that include `-es2015` in the name. For IE 11, you would only see scripts that include `-es5` in the name, and it will ignore any script tags with the type, `module`.
+
+To compare bundle sizes, run this [bash script gist](https://gist.github.com/jrybinski/3d27cddee875b7d152c5e8eec86d14f3) by Jackub Rybinski
+
+For more info about maintaining bundle size, check out:
+Suguru Inatomi, ["Differential Loading" - A New Feature of Angular CLI v8](https://dev.to/lacolaco/differential-loading-a-new-feature-of-angular-cli-v8-4jl), Apr 17, 2019
+
+[[Pro Tip] How to analyze your Angular bundle](https://dev.to/angular/pro-tip-how-to-analyze-your-angular-bundle-297f),
+Sep 13, 2019

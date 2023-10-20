@@ -1,0 +1,161 @@
+---
+title: Git Rebase for Preventing Merge Commits
+draft: false
+summary: How to prevent merge commits when pulling from remote to local, or merging from feature to remote main.
+tags: [git, showdev, productivity]
+date: '2022-10-30'
+---
+
+![mushrooms in the forest](https://images.unsplash.com/photo-1600995616866-d2dc0215774a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1740&q=80)
+
+Within trunk-based or agile development, minimizing the number of noisy commits to keep any possible regressions easy to back-trace is often considered a good practice.
+
+There was the workplace that kept everything minimal on their main branch, with commits few as possible. Everyone's feature branches would be merged in as singular squashed commits. The danger here was that if there was a bug introduced in a feature branch, it would be tremendously difficult to trace chronologically.
+
+Then there was the workplace that wanted each commit to tell a story so we'd make a commit annotating the changes on each file. In either case, the lesson learned was to take care in allowing the commits to tell a story of what changes were made.
+
+## 1. Preventing Merge Commits When PRs are Merged In on Remote Trunk
+
+(...where "trunk" is the iterative development branch)
+
+See ["Merge Strategies"](https://www.atlassian.com/git/tutorials/using-branches/merge-strategy) detailed by Atlassian For Bitbucket
+
+See ["About Merge Methods"](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github) for Github
+
+## 2. Preventing Merge Commits when Pulling from Remote to Local
+
+I imagine this is what you came to the article for.
+
+### In Principle, This is the Setting to Change
+
+That you set your git config to rebase whenever you pull:
+
+`git config --global branch.autosetuprebase always`
+
+Depending on your work-style, here's 3 ways to prevent merge commits when merging from remote after it has moved forward while you've been developing. They all have to do with how you manage your own changes.
+
+The following 3 workflows will illuminate exactly what that means if a rebase happens every time you pull, if you **don't** use the setting above.
+
+**Method 1:** Make your local commits as usual and `git pull rebase` when you need to merge from remote origin
+
+1. On your checked out feature branch, commit your changes as you go - It will create commits on your local branch.
+2. You're ready to make a PR but realize the dev branch has advanced, so you run:
+    `git pull --rebase <remote-name> <branch-name>` or in our case,
+   `git pull origin development —rebase`
+3. If what's new on `development` conflicts with changes you have in your code, VS code will tell you something like:
+
+```bash
+From bitbucket.org:your-organization/your-repo
+ * branch            development -> FETCH_HEAD
+   1ab345e..d321ff7  development -> origin/development
+Auto-merging types/style.d.ts
+Auto-merging src/abc-folder/assets/fonts.ts
+CONFLICT (content): Merge conflict in src/abc-folder/assets/fonts.ts
+Auto-merging src/folder/theme.ts
+CONFLICT (content): Merge conflict in src/folder/theme.ts
+error: could not apply f4e0681... Rename thing x to thing y
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+```
+
+In fact, Git will list out every file that has a merge conflict in it with the `CONFLICT` flag!
+
+1. Navigate to each file listed, where VS code will make the local and incoming changes apparent. Select whether you want the "current" or "incoming" change or "both" included. You can even make edits within either version and keep that one.
+2. `git add` each conflicted file's name to acknowledge/stage the changes
+3. `git rebase —-continue` to complete the rebase.
+4. finally, files that are changed as a result of your own local commits will also need to be `git add`-ed. so add those and run `git rebase --continue`
+5. You know everything has succeeded when you get the message:
+
+```jsx
+Successfully rebased and updated refs/heads/your-feature-branch-name
+```
+
+⚠️ The rebase will take out the commits that you committed on your current local branch `HEAD` as a patch. Then it will apply all the remote commits on top of `HEAD`, and then applies your newest commits on top of it.
+
+⚠️ Highly recommend you groom your own local branch's commit history (see [interactive rebase](https://thoughtbot.com/blog/git-interactive-rebase-squash-amend-rewriting-history)) before you perform this method. If your branch after step 3 is merged into remote `development`, will contain a revised history.
+
+1. Run `git log` and you'll see a linear retrospective history of the choices you made for each file with no merge commit!
+2. Sometimes when you're ready to push, you'll see that your remote local is now out of sync with whatever you've pulled and rebased from `development`:
+
+```bash
+Your branch and 'origin/bug-123' have diverged,
+and have 28 and 1 different commits each, respectively.
+```
+
+What we have here:
+
+- 28 commits on local that are a reconciliation of my own local commits with most recent changes on `development`
+
+- 1 commit on remote feature branch that I made and pushed to my remote feature branch
+
+Running `git pull —-rebase` off the contents of my now-behind remote local is going to start a rebase process that won't be fruitful in this case, so I run `git push -f` (`—-force`)on my feature/bug branch.
+
+If you have impact tested that your current local builds, and you are super confident your current version is the authoritative version you can use `-f`.
+
+Force push with **ultimate** care, and never on a shared public branch.
+
+You are literally rewriting history!
+
+➕ Pros:
+
+No excessive merge commits.
+
+Trigger less merge conflict markers, or none if the code you're contributing is new.
+
+At the end of the rebase the `HEAD` of your branch will be in sync with the `development` branch
+
+➖ Cons:
+
+The enormous risk here is that any files or code that are supposed to be deleted by someone else's merge commit, might be re-added if they remained in your branch. You can accidentally overwrite someone else's work in the process of rebasing changes on a large feature branch. Fortunately, even if you do, when you make a pull request with this feature branch, your teammates will notice anything you're overwriting or removing on your PR.
+
+If you have squashed any commits together that are also already on the remote, you will experience really difficult merge conflicts.
+
+**Method 2**: [stash](https://www.atlassian.com/git/tutorials/saving-changes/git-stash) any uncommitted changes, git pull rebase pull from remote, then commit your changes
+
+1. Checkout a new branch and start working on changes. making no commits so if you run `git status` there would be lots of red untracked files.
+2. You realize the remote branch is ahead and need to update your local but you need to hang onto your uncommitted changes:
+   `git stash`
+   The above brings the state of your project back to the previous one before you made changes. Your local branch is simply behind remote `development`.
+3. You run `git pull —-rebase` to bring in new changes without causing a merge commit.
+4. Bring back uncommitted changes you made with `git stash apply`
+5. And then commit all of them
+
+➕ Pros: again, way less merge conflicts to resolve. No merge commits.
+
+➖ Cons: Hanging onto all my changes without commits requires working in a very clearsighted way, makes an issue hard to show a teammate if I make a PR just to show them where I'm stuck.
+
+**Method 3:** Make a side-branch to run the rebase on
+
+If you're not comfortable with all this yet, you can use your feature branch as the branch in which you will merge a series of commits in a separate branch with the ones from remote.
+
+Example:
+
+1. `git checkout development` to start on development branch
+2. `git checkout -b feature-branch` to checkout a feature branch that contains the current commits on development
+3. Start making all yer commits for all your changes
+4. When you're ready you can check out a temporary branch with all of your feature branch's changes, while still on `feature-branch`:
+
+   `git checkout -b temporary-branch`
+
+5. The last command creates a "copy" of your feature branch. To bring what's newly on `development` and your temporary branch together (while on your temporary-branch)[^1]:
+
+   `git rebase -i development`
+
+6. Checkout your initial feature branch: `git checkout feature-branch`
+7. `git merge temporary-branch --ff`
+
+Here the `—-ff` flag tells our merging of 2 branches not to create a merge commit, and to fast-forward the pointer to the most recent commit (aka. the `HEAD`) to your most recent one. 8. Push and create a PR of your feature branch as usual.
+
+➕ Pros: this is the most safe approach probably, of all three ways
+
+➖ Cons: This is quite a longer-winded way to do things and probably more theoretical. I have not actually done the whole process verbatim before
+
+[^1] I say "copy" in quotes because it's easier to think about, but Git is actually creating a pointer to the initial branch.
+
+**Recommended Reading**
+
+The [rebase](https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase) command
+
+[Merge vs. Rebase](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)

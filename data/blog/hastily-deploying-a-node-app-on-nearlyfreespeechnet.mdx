@@ -1,0 +1,57 @@
+---
+title: 'Hastily Deploying a Node App on NearlyFreeSpeech.net (Mac OS)'
+summary: 'Hack job on deploying a Node app'
+date: '2018-10-17'
+draft: false
+tags: [deploy, beginner, showdev, nearlyfreespeech]
+---
+
+This was so intimidating that I'm just recording what I did so I can remember. Thanks to Conan Lai @letmelol for onsite assistance and [this Mopsled blog from 2015](http://web.archive.org/web/20161108020800/http://www.mopsled.com/2015/run-nodejs-on-nearlyfreespeechnet/), which you should really read instead of my post which only details the terminal commands I used.
+
+# Getting started
+
+(For more info [See "NFSN Configuration"](http://web.archive.org/web/20161108020800/http://www.mopsled.com/2015/run-nodejs-on-nearlyfreespeechnet/) in Mopsled's post)
+
+1. Make a NearlyFreeSpeech account.
+2. Create a password
+3. Create a RSA key if you don't have one, run `ssh-keygen`, which generates a public and private key. You'll need the public one
+4. Go to Profile > Add SSH
+5. To copy your public key, run `pbcopy < ~/.ssh/id_rsa.pub` in the terminal
+6. Paste your key into the input box, and click Add SSH Key
+
+# Preparing my app
+
+My app is a Vue-cli with express server: At this point I had the front end in a different folder than the backend. Two different projects with two package.jsons!
+
+1. In my front-end project, compile the build into a /dist or /build folder
+   with `npm run build`
+2. Copy and paste the folder into my server side project folder (express app)
+3. In my `app.js`, add `app.use(express.static ('dist/'))` to point the backend at my public directory
+
+Optional: In `package.json`, I could add a script to run the app `run.sh`
+
+# Deploying
+
+(Also refer to [Project Setup](http://web.archive.org/web/20161108020800/http://www.mopsled.com/2015/run-nodejs-on-nearlyfreespeechnet/))
+
+1. ssh to my server to get in
+   `ssh username_websiteNickName>@ssh.phx.nearlyfreespeech.net`
+
+2. To "upload" all your files to the server, copy everything into `home/protected/` by running:
+
+   `rsync -av ./ username_websitenickname@ssh.phx.nearlyfreespeech.net:/home/protected`
+
+   `./` indicates "everything in this folder" as the local path, and `username_websitenickname@ssh.phx.nearlyfreespeech.net:/home/protected` is the remote path.
+
+Alternately, I could use `scp -r ./ username_websiteNickname@ssh.phx. nearlyfreespeech.net:/home/protected`
+
+Remember to keep a space between local and destination paths.
+
+Apparently rsync is really cool because it only updates what's changed/new in your files.
+
+# Make It Live
+
+3. See ["Configure NearlyFreeSpeech.net Daemon" and "Configure Proxy"] on Mopsled's post(http://www.mopsled.com/2015/run-nodejs-on-nearlyfreespeechnet/)
+
+In a total duhh moment I found that scheduled tasks are listed in the GUI.
+I went to Sites, and on the left hand side I found a sidebar listing "Scheduled Tasks" where the `tls.setup` task was listed, with a "Remove" button to the right hand side.

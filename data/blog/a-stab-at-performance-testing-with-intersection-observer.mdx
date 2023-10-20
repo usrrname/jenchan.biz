@@ -1,0 +1,90 @@
+---
+title: 'A Stab at Performance Testing with Intersection Observer and Scroll events'
+summary: 'Basic runtime performance testing for an app that used multiple, possibly-very-long-forms'
+date: '2020-06-29'
+draft: false
+images: ['/static/images/blog/bojack.jpg']
+tags: [testing, beginners, webdev, javascript]
+---
+
+![Bojack Horseman catching his breath](/static/images/blog/bojack.jpg)
+
+About 2 months ago, I tried some very basic runtime performance testing for an app that used multiple, possibly-very-long-forms that changed depending on what the user selected and entered. Due to NDA, I can't reveal specific numbers, but I'd like to share my process to figure out where I can improve.
+
+I had a requirement to turn one of the page components into a "sticky" header after scrolling past it, and also highlight (in a fixed side-menu of titles) the form title was showing the most within the viewport according to the one the user had scrolled to.
+
+Due to existing codebase, it wasn't possible to use the tried-and-true #href navigation to determine where the viewport was. After searching some combination of `minimap + nav + sticky + scroll + angular` I discovered many senior Angular devs were using [Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) API to track where a user had scrolled on a page, lazy-load images or API-requested media on-demand. The arguments for using it included the fact it didn't require as much code or processing as the usual vanilla JS [calculations of scroll offset](https://www.html5rocks.com/en/tutorials/speed/scrolling/) and an element's boundingClientRect position, AND it had [performance advantages](https://itnext.io/1v1-scroll-listener-vs-intersection-observers-469a26ab9eb6) over scroll listeners. It also had a polyfill for IE 11 and Safari.
+
+I thought this hit 3 birds with one stone so I happily went forward trying to make it fit. At this point, it was still naive speculation.
+
+As there were multiple events running on the page in addition to the scroll event, I used Kayce Basques' ["Performance Analysis Reference"](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference) guide from Chrome Dev Tools get started.
+
+## Gotchas
+
+`[Violation] Added non-passive event listener to a scroll-blocking 'touchstart' event. Consider marking event handler as 'passive' to make the page more responsive.`
+
+From the beginning, whenever I tried to introduce an event listener or `window.onscroll` event, a Chrome console log would tell me that the browser was deliberately use the passive event listener feature debuted in 2019 to improve scrolling during onTouch and wheel events. In short, it told me the browser will actively prevent `event.preventDefault` from running in any related vanilla functions that the users write. You could get rid of the note by adding the `{ passive: true }` parameter after my callback.
+
+### Baseline: No baseline
+
+Because the project I'm on is an internal tool that will always be used by its audience while connected to the internet, I didn't need to performance test by throttling the connection. However, I did want to check that having multiple intersection observers wasn't slowing down script execution since there were many API requests were happening on the same page. I was running about 6 observers, each observing a form of variable length.
+
+The creation of the intersection observer was done `onInit`, and the scroll watching started `NgafterViewInit`, and any instance would be `ngDestroy`-ed whenever the user navigated away from the page.
+
+### Detour: Debounce or throttle?
+
+![Diagram depicting debouncing onKeyup events versus throttling onKeyUp events](https://guide.meteor.com/images/throttle-vs-debounce.png)
+
+Debouncing and throttling reduces the frequency of API calls or event listeners so that the browser's memory will not be slowed by an extraneous number of event calls. This [article](https://css-tricks.com/the-difference-between-throttling-and-debouncing/) by Chris Coyier and [this one](https://css-tricks.com/debouncing-throttling-explained-examples/) by David Corbacho explains the situational benefits of debouncing vs throttling.
+
+I went with debouncing as my listening activity would be continuous; I wanted to capture the start and end of any scroll activity.
+
+For animations, other devs have suggested I use [`requestAnimationFrame()`](https://css-tricks.com/using-requestanimationframe/) or even CSS if it can do the same thing.
+
+Inevitably, any type of vertical movement across a view with scroll activity and moving components will lead to [reflows and repaints](https://medium.com/@suhas010/what-the-heck-is-repaint-and-reflow-in-the-browser-b2d0fb980c08), and debouncing limits the amount of times they are invoked.
+
+Reflows affect the general layout (for example, moving a component across the screen), while repaints will affect more micro styles like outline, visibility.
+
+I discover Paul Lewis has been writing about this since early 2000s and recommends debouncing and simplifying CSS styles to [cut down on repaints](https://developers.google.com/web/fundamentals/performance/rendering/simplify-paint-complexity-and-reduce-paint-areas).
+
+## Takeaways:
+
+In my quest to start perf testing, I decided not to focus on squashing numbers and optimizations, but to simply ensure I was not blowing anything up.
+
+### Summary
+
+The summary tells us which activities took the most time during the profiling of web app, between scripting, rendering, and painting. The activity that takes the most time might point to areas needing optimization.
+
+### Frame Rate Chart
+
+- Make sure the framerate does not drop so low there's a "the red line" above our graph.
+
+![Red line on chrome dev tools indicating low frame rate that's harmful to user experience](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/imgs/fps-chart.svg)
+
+<sub>For more, check out Chrome Dev Tools blog</sub>
+
+- Ensure the FPS ([frames per second](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance#analyze_frames_per_second)) don't run as high as video. It should be a third or half of what the standard 60fps should be.
+
+### CPU Chart
+
+![CPU chart in Chrome Dev Tools indicating full activity](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/imgs/cpu-summary.svg)
+
+If the CPU chart is chock full of color graphs, then your CPU is under stress and loading or displaying interactions will become very slow, or your browser may even hang.
+
+- The [CPU profiler](https://developers.google.com/web/tools/chrome-devtools/rendering-tools/js-execution) can also display the different percentages of loadtime or runtime it takes to run the performance, allowing us to determine which functions are most expensive.
+
+- Debouncing 10-20 ms is enough. I started off using lodash's `._debounce` with 100-500 which apparently stopped making much meaningful difference.
+
+### Main
+
+- The Main section contains a flame chart and breakdown of JS calls so we can see at different moments, which functions were called and how long each took.
+
+![Main chart in Chrome Dev tools](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/imgs/main.svg)
+
+This way we can figure out which functions are the ones taking longer or making unnecessary recursive calls, and refactor from there, etc.
+
+## Afterthoughts
+
+So I overcomplicate things. Some combination of inexperience and stubbornness for using this one API to make all requirements happen ended up making it harder to complete each req well. I ended up only using intersection observer to implement a sticky header instead of also using it for highlight-onscroll-menu.
+
+I have since discovered I can approach performance testing through loadtime, stress testing, and volume testing. I'm not sure how this applies to the front end however.

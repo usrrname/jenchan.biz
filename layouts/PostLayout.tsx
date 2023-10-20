@@ -62,13 +62,13 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
                   {authorDetails.map((author) => (
                     <li className="flex items-center space-x-2" key={author.name}>
-                      {author.avatar && (
+                      {author!.avatar && (
                         <Image
                           src={author.avatar}
                           width={38}
                           height={38}
                           alt="avatar"
-                          className="h-10 w-10 rounded-full"
+                          className="h-10 w-10 rounded-full object-cover"
                         />
                       )}
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
@@ -97,8 +97,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 <Link href={discussUrl(path)} rel="nofollow">
                   Discuss on Twitter
                 </Link>
-                {` • `}
-                <Link href={editUrl(filePath)}>View on GitHub</Link>
               </div>
               {siteMetadata.comments && (
                 <div
@@ -128,7 +126,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     {prev && prev.path && (
                       <div>
                         <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          Previous Article
+                          &larr; Previous
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${prev.path}`}>{prev.title}</Link>
@@ -138,7 +136,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     {next && next.path && (
                       <div>
                         <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                          Next Article
+                          Next &rarr;
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${next.path}`}>{next.title}</Link>

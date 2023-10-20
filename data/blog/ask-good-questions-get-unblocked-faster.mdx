@@ -1,0 +1,127 @@
+---
+title: Ask Good Questions; Get Unblocked Faster
+draft: false
+summary: 'How to find support, when to ask, and what to ask to get help faster'
+tags: [beginner, productivity, discuss]
+date: '2022-09-06'
+---
+
+![crow placing stones in water](/static/images/blog/crow-stones.jpeg)
+
+Part of everyday dev practice is asking questions to understand the current setup, or to find help when blocked. Here are some tips to ask questions online so others can help more effectively.
+
+Do you have techniques and tricks for asking questions and helping others troubleshoot? Let me know in the comments!
+
+## 0. Ask in the right channel. Don't Crosspost
+
+Every online community has a `#help` , `#support`, or `#questions` channel. In fact, right after you join a Discord server there are rules about which channels to use and what subject matter is acceptable. Spend time reading them. Do not use `@here` or `@channel` unless you are facing a community emergency (highly unlikely). 11000 users don't want to hear the fact you're panicked about debugging in #intro, nor that you already asked in #support.
+
+## 1. Don't Breadcrumb. Provide a Trail.
+
+The most annoying thing for people in support and online communities to read is the "I'm stuck and it doesn't work." [Don't Ask To Ask](https://dontasktoask.com/) illustrates a similar situation well.
+
+First, it's not a question. A glib complaint inevitably requires multiple back-and-forths to troubleshoot.
+
+Secondly, it provides no context as to how and why the poster is stuck--what they were trying to achieve. Most devs don't magically look at an error and come up with the unblocking idea, they may have to reproduce the error to figure it out.
+
+### Productive Examples
+
+#### The Stuck Report
+
+<blockquote>
+"Hello Storybookers!
+
+I'm stuck on getting Storybook to run on development mode.
+I'm using Angular 9 with Storybook 6.1, on a Windows 10 machine. I followed the instructions on the Getting Started doc. When I run `npm run start-storybook` I get the following error:
+
+_shares error message block_
+
+What could I be missing?"
+
+</blockquote>
+
+Here's a short example one could send a teammate at work.
+
+<blockquote>
+" Hey Jen,
+
+I tried to check out your branch, but when I run it, I'm getting the following error: `cannot find module 'cors'`
+
+Any ideas what I can do to get past this?"
+
+</blockquote>
+Your peer already have substantial context on the setup of the project, so your question could be briefer.
+
+#### The Opinion Survey
+
+<blockquote>
+"Has anyone tried migrating an npm project to yarn? Any gotchas?
+
+I had a great experience using yarn on a different project, and wanted to use it on my current project repo too. I'm using node v.14.7.x. However, any new dependencies I've installed using `yarn add <dependency name>` seem not to be found when I run `npm run start`.
+
+_shares error block_
+
+Has anyone encountered this?
+
+</blockquote>
+
+#### The Bikeshed
+
+<blockquote>
+I'm trying out NextJS in a side project, and all my pages will be server side rendered. Since I can no longer use CSS-in-JS functions I've been familiar with for detecting device width changes like `useBreakpoint()`, how can I handle scaling responsive CSS? Am I resolved to write media queries?
+
+What are some style libraries you've enjoyed using with Next?
+
+</blockquote>
+
+### Summary
+
+The most helpful information to provide when asking for help is:
+
+- what you were trying to accomplish
+- what you did to get where you are (reproduction steps)
+- the operating system and version of tools you're using
+- a screenshot of the malfunction, a code block, the error or unexpected issue you encountered (versus what you expected)
+
+This way, you'll attract answers from others who have worked with the same setup.
+
+## 2. Don't be rude
+
+Ever wondered if chefs at restaurants, out of spite, might spit in your next dish after you sent a bad one back?
+
+If you're talking to tech support, you may think you're being answered by Tier 3 support kids or simpletons who are going through a script. They might be, or they may also be extremely experienced with resolving issues! (Yes there are QA and support people who know how to code! And there are senior support folks too!)
+
+If it's an actual product you're seeking help from, I recommend not saying anything to frustrate the person on the line... it'll just take longer, and they can actually terminate your service.
+
+In the case of open source, no one likes to respond to a demanding, whiney user.
+
+## 3. Expect Delay
+
+Public forums and Discord servers are not usually staffed with full time employees or product staff. An exception would be companies like Mozilla or company backed frameworks where the staff routinely engage with users. Therefore anyone who answers is doing so from the goodness of their own heart and a recreational use of their time. Some of the biggest open tools tools are staffed by very small but efficient teams.
+Give it a day or two.
+
+## 4. Follow up with more information
+
+There's a high likelihood whomever answers is going to ask for more information. Provide a reproduction in a Code Sandbox or use triple backticks (`) to create a markdown codeblock.
+
+## 5. Check Your Assumptions
+
+The [XY problem](https://xyproblem.info/) discusses the tendency to propose a perceived solution instead of a meaningful way to frame the problem.
+
+Client: "Push notifications would be a great feature."
+
+Consultant: "Why? What problem do you think that might solve?"
+
+Client: "We want to send people reminders on when to get a physical."
+
+Consultant: "How does that benefit your business if people are reminded to see the doctor?"
+
+Client: "We think this would improve user engagement [and use us as a source of health advice]." 👈 This is their actual problem, and one that involves research to solve.
+
+The same principle could be applied to debugging or integration situations where I've spent too long trying to make multiple things work... such that I've lost sight of the smallest item to unblock in order to move my progress ahead. This happens most often when I'm learning a new language and unfamiliar with the peculiarities of its development environment.
+
+## Anecdote
+
+Over time, using the `#help` or `#support` channel and offering help in turn can lead to getting to know the different people who hang out there as humans.
+
+One of the most surprising things about online communities is that people who are experienced and avid fans of a certain tools just gather around the space to offer advice in their free time. Help them with having an easier time helping you by offering a clear picture of your problem. And if you are helped, pay it forward by helping the next question-asker!

@@ -1,0 +1,73 @@
+---
+title: 'Challenge: Cross-browser testing for IE11 and IE Edge on Mac for free'
+draft: false
+summary: Looking for cheap options to support a crappy browser in a pay-to-play world
+tags: [showdev, webdev, devops, aws]
+date: 2020-04-28
+---
+
+I have given myself the arcane challenge of trying to test a web app on IE11 for free. In the sense of "test" here, I'm trying to solve the problem of seeing whether the UX/design is implemented correctly across browsers. If anyone knows of a better way to go about this, or how to make this an env that scales such that 2+ users can use it on a shoestring budget, I'd be interested to know!
+
+Here's what I tried:
+
+### Free Trials
+
+[BrowserStack](https://www.browserstack.com/) appears to be the most widely used upon a quick survey of TorontoJS folks.
+
+![Screenshot of BrowserStack banner stating "Each device is available for up to 1 minute during Free Trial. For full access: Buy a Plan"](https://dev-to-uploads.s3.amazonaws.com/i/rw0nfr44jy63o54ijrsu.png)
+
+<caption>Better use that minute carefully!</caption>
+
+[Lambda Test](https://www.lambdatest.com/) offers 100 min free per month. I thought this was a really sweet deal. They even have a GUI app called [Underpass](https://www.lambdatest.com/support/docs/underpass-tunnel-application/) to make it easy to connect your locally hosted app to their browser-based testing site.
+
+![Screenshot of Lambda Test alert informing the user "Oop! You have used up all your free minutes. Sessions remaining: 0/6. Minutes remaining: 0" ](https://dev-to-uploads.s3.amazonaws.com/i/oaxxhi0jbs82qm75mo6l.png)
+
+But in 4 minutes, I had exceeded the 6 sessions that came with the free trial. With 30 sec remaining, I was able to see the app login page load on IE Edge. Micro-win!
+
+### Amazon Workspaces
+
+Amazon Workspaces is free on AWS' Free Tier until June 30 due to Covid-freelancer offers. (Granted, each session is 1 hour on this tier and you can make Workspaces for up to 50 users, but I don't know how much they'll charge for other services.)
+
+I had heard a peer was able to hook up their staging environment to an Amazon Workspace for about $20/month.
+
+I decided to follow a hybrid of this [implementation guide](https://aws.amazon.com/blogs/desktop-and-application-streaming/add-your-workspaces-to-azure-ad-using-azure-active-directory-domain-services/) and [this video](https://www.youtube.com/watch?v=lV_PjZ4gV9s) to see how far I could go. Eventually I created 1 VPC with 2 private subnets, 2 public subnets, 1 Elastic IP and 1 NAT gateway.
+
+Disclaimer: You'll need to enter your credit card info when you register for free AWS and Azure trials.
+
+According to implementation guides, Azure Active Directory (a user management system) is used to provision access to Workspaces. You can register for a [free trial of Azure](https://azure.microsoft.com/en-ca/free/), but doesn't include the Azure Active Directory Domain Services ...and this is where the lockstep of paywalls began.
+
+When creating a Workspace Directory, Amazon Web Services makes user choose between Active Directory Connector Plans.
+
+![When creating a Workspace Directory, Amazon Web Services makes user choose between Active Directory Connector Plans](https://dev-to-uploads.s3.amazonaws.com/i/sn1suy6vuxah8cpdxx26.png)
+
+After some digging, I found there are concessions on Amazon's Directory for a [limited free trial](https://aws.amazon.com/directoryservice/limited-free-trial/) for 1-2 hours, so I proceeded to make empty admin, user accounts and directories.
+
+As it turns out, it's possible to not even use this AD Connector or AWS Managed Microsoft directory. You can create users (and various privilege user groups) with AWS' Identity Access Management (IAM) or they'll ask you to [create usernames and logins](https://docs.aws.amazon.com/workspaces/latest/adminguide/manage-workspaces-users.html) when you try to launch a workspace.
+
+[This book](https://www.manning.com/books/learn-amazon-web-services-in-a-month-of-lunches) also really helped with understanding some of the AWS acronyms.
+
+In sum, the free tier is a bit deceptive. As it turns out, by day 2 I had racked up $6.37 CAD running a NAT gateway (required to expose the private subnet) for 24-30 hours.
+
+![Amazon Web Services Billing & Cost Management Dashboard showing a graph of Month-to-Date costs of $6.37 Canadian Dollars](https://res.cloudinary.com/practicaldev/image/fetch/s--4WlNH6Kf--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/a7lor3xpcf0vgbnqg2ws.png)
+
+According to their doc, Amazon suggests creating a VPC endpoint to EC2 [to get around the NAT charges](https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-internet-access.html). I associated the private and public subnet route tables my internet gateway and deleted the NAT gateway. To make sure the virtual desktop had internet, I set the IP Outbound Access Control to include port 80 and HTTP 443. Done!
+
+Eventually I was able to activate my virtual desktop in Windows and load IE11. Part 2 is: how am I supposed to connect my localhost/dev-env to the virtual destop? A docker image? An ngrok tunnel? TBC.
+
+### Virtual Machines
+
+My coworker dropped me a [link to free VMs](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) for running Windows with IE11 and Edge. These virtual disk images/vms take up about 10GB.
+
+Parallels is $80 USD per license so I didn't bother touching that.
+
+[Virtual Box](https://www.virtualbox.org/wiki/Downloads) is free and the most promising of the trials, however it did make my computer run really hot and slow after an hour. (I'm on a mid-2017 Macbook Pro, using 2048 MB base memory.)
+
+I was finally able to access my work's testing deployment release. However, I still wanted localhost to serve up my particular branch of Angular.
+
+![Screenshot of my Virtual Box settings for starting up a Windows 10 virtual machine](https://dev-to-uploads.s3.amazonaws.com/i/actvqv4svhkz073txrbb.png)
+
+You might experience problems with portmapping localhost. Something along the lines of running `ifconfig` in command line on the VM and `ipconfig` on the MAC, finding the `192.xx.xx/x` address and making sure the Bridge port address matches it. I am currently in the process of figuring that out.
+
+Now for some reason `localhost:4200` doesn't show up on IE11. I can't seem to figure out why.
+
+In all honesty I know very little about infrastructure and this was kind of a fun skimming of the surface. I've always wanted to be able to activate applications or do desktop performances remotely for art installations.

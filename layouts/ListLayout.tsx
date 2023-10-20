@@ -39,7 +39,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
             href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
             rel="prev"
           >
-            Previous
+            &larr; Previous
           </Link>
         )}
         <span>
@@ -52,7 +52,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         )}
         {nextPage && (
           <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
-            Next
+            Next &rarr;
           </Link>
         )}
       </nav>

@@ -1,0 +1,65 @@
+---
+title: Removing Accidentally Committed Files From Remote History
+summary: 'Oops, I did it again -_-'
+draft: false
+date: '2020-02-19'
+tags: [git]
+images: ['/static/images/blog/Lightning_Thundercloud_Clouds_Night_518556_1280x853.webp']
+---
+
+![Lightning and thunderclouds](/static/images/blog/Lightning_Thundercloud_Clouds_Night_518556_1280x853.webp)
+
+Seems like a rite of passage to _accidentally_ push some api keys or `node_modules` or sensitive data into a public repo. Then in a panic I `git rm -r` the file and commit that next (...but that simply unstages it) and in a flight of terror, force push that edited and rebased history. But a look through my github commit history will show in `diff`, and the incriminating files remain firmly implanted in my remote repo.
+
+I've also become somewhat paranoid about my hyperactive git history. Pushing a commit or three to fix every little thing seems like a bad look now since I can't claim to be fresh out of bootcamp :/
+
+What I learned after resetting and reverting back and forth for half an hour:
+
+- Selecting `drop` in a list of previous commits during a rebase (i.e. `git rebase -i HEAD~n`) doesn't remove old commits if they've already been pushed to a remote repo!
+- Recursively removing a file with `git rm -r` doesn't remove it from my local filesystem. It removes the file from the working directory history.
+- `git rm --cached <filename>` doesn't remove a file from the working tree. It simply unstages the file and a subsequent commit ensures it is untracked by git. It removes the paths from file to the index. RELATED: [Stop tracking and start ignoring] (https://dev.to/svijaykoushik/stop-tracking-and-start-ignoring-ook) by svijakoushik.
+- `git reset HEAD <filename>` unstages a file.
+- `git revert HEAD <filename>` has no effect on a file level.
+- `git reset --hard <commitHash>` discards your local commits coming after a specified commit hash, but only if it hasn't been pushed yet.
+- If it's already been pushed, `git revert HEAD~n` or `git revert` will create a new commit, undo existing commits, and compare and apply changes to the project in the new commit.
+  -After all of the above, selecting `squash` in a list of previous commits doesn't remove commits with old files/folders in them.
+
+AHHHHHH!
+
+At this point, if it's still fairly new, I delete the remote repo, make a new one on github, then `git remote add origin <new github ssh>` with my "rewritten" git history. (The how-to is below)
+
+![pruning a tree](http://lifescapecolorado.com/wp-content/uploads/2016/03/landscape-1435351385-pruning-guide-index.jpg)
+
+<blockquote>"Treat every commit like you're telling a story." - Former manager.</blockquote>
+
+Oh former-manager-senior-dev, I miss thee. We had many a great pairing sessions. The cool thing about you was that you'd show me the way you do it without giving disclaimers that might clog my mind and support me when I learned where I screwed up. I'm not being sarcastic by the way.
+
+After poking around StackOverflow, I came across this user's answer on [using git filter-branch](https://stackoverflow.com/a/2158271). This is a condensed explanation of their amazing commands:
+
+1. `git filter-branch --index-filter "git rm --cached -f -r --ignore-unmatch filenameOrFolderName" --tag-name-filter cat -- --all`
+
+`--index-filter` runs against the index at each step in the history. The command `git rm -r --cached -f --ignore-unmatch <filename>` deletes the file when it is present, and recursively.
+
+1. `git update-ref -d refs/original/refs/heads/master`
+   Some googling tells me that this command deletes the reference heads in the original master branch, and updates the reference to the value of the top reflog entry.
+
+1. `git reflog expire --expire=now --all`
+   "Reference logs", or reflogs, record when the tips of branches and other references were updated in your local repo. In tandem with `expire` and `--all`, all older and current entries to reflog will be removed.
+
+1. `git gc --prune=now`
+   Apparently gc is like mass compression and garbage picking. It makes the whole git history smaller in size.
+
+1. `git push`
+   Push this back up to the remote repository!
+
+Please feel free to correct me if I've interpreted these commands incorrectly. I usually try anything til it works and this one seems to have worked best for me.
+
+I'd also love to hear about how you remove unwanted info that's previously committed locally or remotely!
+
+### Sources:
+
+[Removing (un-pushed) Files from a Repository's History | Github] (https://help.github.com/articles/removing-files-from-a-repository-s-history/)
+[Removing sensitive data from a repository | Github] (https://help.github.com/articles/removing-sensitive-data-from-a-repository/)
+[Delete Commits from A Branch in Git](https://stackoverflow.com/questions/1338728/delete-commits-from-a-branch-in-git)
+[Resetting, checking out & reverting | Atlassian Bitbucket](https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting)
+[Git | git-gc](https://git-scm.com/docs/git-gc)

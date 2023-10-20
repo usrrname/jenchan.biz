@@ -15,17 +15,20 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        headings: ['Shantell Sans', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        ...fontFamily,
+      },
       lineHeight: {
         11: '2.75rem',
         12: '3rem',
         13: '3.25rem',
         14: '3.5rem',
       },
-      fontFamily: {
-        sans: ['var(--font-space-grotesk)', ...fontFamily.sans],
-      },
       colors: {
-        primary: colors.pink,
+        primary: colors.violet,
+        secondary: colors.teal,
         gray: colors.gray,
       },
       typography: ({ theme }) => ({
@@ -34,7 +37,7 @@ module.exports = {
             a: {
               color: theme('colors.primary.500'),
               '&:hover': {
-                color: `${theme('colors.primary.600')}`,
+                color: `${theme('colors.primary.600')} `,
               },
               code: { color: theme('colors.primary.400') },
             },
@@ -44,6 +47,9 @@ module.exports = {
             },
             h3: {
               fontWeight: '600',
+            },
+            'h1,h2,h3,h4,h5,h6': {
+              fontFamily: theme('fontFamily.headings'),
             },
             code: {
               color: theme('colors.indigo.500'),
@@ -55,11 +61,12 @@ module.exports = {
             a: {
               color: theme('colors.primary.500'),
               '&:hover': {
-                color: `${theme('colors.primary.400')}`,
+                color: `${theme('colors.primary.400')} `,
               },
               code: { color: theme('colors.primary.400') },
             },
             'h1,h2,h3,h4,h5,h6': {
+              fontFamily: theme('fontFamily.headings'),
               color: theme('colors.gray.100'),
             },
           },

@@ -1,0 +1,20 @@
+---
+title: 'A no-fail workflow for starting a Mongo App'
+draft: false
+date: '2017-10-17'
+tags: [mongodb, beginner, backend, showdev]
+---
+
+1. `npm install express` and latest version of node
+1. Get server running first. Resist urge to write more code without testing
+1. Make `api` and `public/app` folders
+1. Make .gitignore to ignore `node_modules` and `config.js`
+1. `npm install —-save-dev` for dependencies
+1. `npm init` to create a package.json
+1. Make a server.js file with routing ‘/’ to res.send “hello world”
+1. Make a router.js file to use express/express.Router() to handle get and post requests. Include body.parser
+1. Test using Postman
+1. Write a mongo.js file to abstract mongo connection to rest of app
+1. Write a schema, test it with one key-value pair
+1. If using mLabs, remove `localhost` and port info from `mongo.js` and insert mlab uri in config.js
+1. Test on Postman

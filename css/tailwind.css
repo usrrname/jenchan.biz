@@ -29,3 +29,24 @@ input:-webkit-autofill:focus {
     background-color 600000s 0s,
     color 600000s 0s;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-headings {
+  font-family: var(--shantell-sans);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.wavy {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: red;
+  animation: wavy 1s infinite;
+}

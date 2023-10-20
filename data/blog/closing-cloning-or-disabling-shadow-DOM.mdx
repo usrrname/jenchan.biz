@@ -1,0 +1,142 @@
+---
+title: Closing, Cloning, or Disabling the Shadow DOM
+draft: false
+summary: "Farcical experiments in seeing if I can turn a web component into not-a-web-component, and I've found answers you don't want to hear"
+tags: [webcomponents]
+date: '2023-01-28'
+---
+
+![Swedish Chef in kitchen](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ukrv0ero30bs931xgrap.jpg)
+
+If you have been furiously trying to figure out how to close, disable or extrapolate the contents of the shadow DOM for any following reasons...
+
+- to prevent encapsulated styles from being manipulated by developers or content folks using your web component
+- to secure sensitive code from being exposed to consumers
+- in order to support light DOM because for whatever reason, your stakeholder or client believes that the shadow DOM must be eradicated and through any means, you must turn the web component into a "normal" component.
+
+TL;DR: DON'T DO IT.
+
+For folks familiar with web components, this may seem like an arcane task that's doomed to fail, but I've been asked to do some version of the above twice in my short career.
+
+The title was just search bait. This is the real article 👇
+
+## 5 Reasons Why You Should _NOT_ Close, Clone, Or Disable the Shadow DOM
+
+## 1. Browser APIs prevent disabling attachment of a shadow root
+
+The [`CustomElementRegistry.define()` specification](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define#creating_an_element_which_disables_the_ability_to_attach_a_shadow_root) specifically prevents the use of `static disabledFeature` from being applied to disable the attachment of shadow root on a web component.
+
+Your console will return a `DOMException NotSupportedError`.
+
+## 2. Browser APIs don't support cloning
+
+![One cannot simply walk into Mordor Game of Thrones meme replaced with "One cannot simply clone the shadow root" text](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/4v8gk402khqgrlj8f4df.png)
+
+The instant developer sensibility when I heard the client desire to convert shadow DOM children to light DOM ones: well, you gotta parse and transform DOM slotted nodes into generic HTML elements, then move them into the light DOM, right?
+
+With that we reach for [`Element.cloneNode()`](https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode)... and we'll find the error:
+`NotSupported ... "ShadowRoot nodes are not clonable."`
+
+Here are the exact [Chrome](https://chromium.googlesource.com/external/w3c/web-platform-tests/+/master/shadow-dom/Node-prototype-cloneNode.html) and and [Chromium](https://chromium.googlesource.com/chromium/src/+/c47ae70a879d7247c56a842716f4ab67ac25a71d/third_party/WebKit/Source/core/dom/shadow/ShadowRoot.cpp#107) tests preventing that.
+
+At this point, I should have probably stopped, but I didn't.
+
+Oh no, being unable to accept failure when presented with heroic feats of front end... I just have to see where this goes.
+
+Even though I couldn't clone the shadow root node, I was able to grab its children, parse and transform them into HTML elements and reattach them to their rightful parent.
+
+<iframe src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/cloned-shadow-dom-button/cloned-shadow-button.ts&view=editor"></iframe>
+
+Note: I used Fast Design to try out the above while doing my research.
+
+Easy win, right?
+_IT WORKED IN MY DOM._
+
+![flash of light DOM web component](https://media3.giphy.com/media/mXY9QMkMDjLKIB0njs/giphy.gif)
+
+But no. Utter failure. I get a "flash of light DOM component". As the shadow DOM remains open, styles continue to be scoped towards shadow DOM elements, looking to scope those styles towards flattened, projected content.
+
+Cloning and moving shadow DOM children nodes, transforming slots to HTML elements and attaching them to their "light DOM" parent element also easily re-trigger lifecycle events via changing the position of items within the DOM. And I _had_ to do all the above within the class constructor because that's where a shadow root is attached.
+
+I had thrown in a `setTimeout()` to prevent race conditions between the constructor operations and the component registration in the DOM.
+
+This led to multiple re-renders and attachments (go figure, moving the DOM order of children in a component is going to trigger `connectedCallback()` again and again!)
+
+Well all the above required keeping the shadow DOM open, cloning the shadow tree, parsing it, then to close it all within runtime. As long as the shadow DOM remained open, styles continue to be scoped towards
+
+This leads to my next epiphany... 👇
+
+## 3. Opening or Closing Shadow DOM on Runtime: Impossible
+
+In my previous example, I kept the shadow DOM open, cloned and transformed its children to light DOM nodes, and tried to close it as a final act to disable the shadow DOM so that my children could render with their new light DOM styles.
+
+I made another attempt at using the shiny-new, experimental declarative `shadowroot` API that's only available in Chrome currently on a template.
+
+Both were resounding failures. Why?
+
+### The shadow mode is set once on class instantiation
+
+![Figure 4.1. The start of a Web Component’s lifecycle: constructor first, and then connectedCallback after adding to the DOM, from "Chapter 4: ](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/gvzkjf4h7rnalmgf2yzm.png)
+
+If open, the shadow DOM can't be closed during runtime as the constructor that instantiates the attachment of a shadow root determines the `open` or `close` mode it is attached to the web component on instantiation.
+
+You're going to get this error:
+
+```
+Uncaught DOMException: Failed to execute 'createShadowRoot'
+on 'Element': Shadow root cannot be created on a host which already hosts a shadow tree.
+```
+
+Once a shadow mode is attached and connected, it [can't](https://stackoverflow.com/questions/20090059/how-to-remove-a-shadow-root-from-an-html-element-adorned-with-a-shadow-dom-from) be closed or deleted, but you can attach new ones.
+
+## 4. A Closed Shadow DOM doesn't secure sensitive code
+
+If you want to hide your styles and prevent them from being altered by whoever's using the components, fiiinee. This is definitely a way to prevent folks from adding extraneous classes to the component in the light DOM.
+
+Writing on shadow DOM V1, Eric Bidelman warns of how the functional and style encapsulation of shadow DOM can be [misunderstood as a security measure](https://web.dev/shadowdom-v1/#creating-closed-shadow-roots-should-avoid).
+
+> Closed shadow roots are not very useful. Some developers will see closed mode as an artificial security feature. But let's be clear, it's not... Closed mode simply prevents outside JS from drilling into an element's internal DOM.
+
+A black hatter could still inject malicious code into the component constructor.
+
+## 5. Ditch Shadow DOM; Lose Thy Scoped Styles
+
+As a result of disabling the shadow DOM or converting its children to light DOM elements, you lose the very benefit it offers in web components: scoped styles.
+
+Hypothetically you _could_ use [`adoptedStylesheets()`](https://developer.mozilla.org/en-US/docs/Web/API/Document/adoptedStyleSheets) to replace a pre-existing scoped styles with your new light DOM styles... but you'll have to figure out how to style your DOM to avoid conflicting styles in global CSS namespace. That's a lot of work to do for something you already did once.
+
+Now you need 2 sets of styles to alternate between! One that supports scoped styles, and the other that supports light DOM styles! Why would you do double the work?!
+
+### Disable shadow DOM: lose slots, styles, all good things about web components
+
+![light DOM component with slot references](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/wcgl0y2fh4t9at1d001p.png)
+
+Finally, my peer @Tebin tried disabling the shadow DOM by passing `shadowOptions: null` into the `define()` (custom element registry method provided by FAST). By parsing and reattaching slot-referencing children in a light DOM parent, he was trying to see if slots would continued to be supported. But no! In this case we lost all the style encapsulation and previously slotted content would render out of order.
+
+<iframe src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/light-dom-slot/light-dom-slot.ts&view=editor"></iframe>
+
+## Summary
+
+Most components in web applications and on websites, are based in Javascript. While React and Angular use a series of functions to abstract the creation and rendering of components in client-side applications, web components leverage browser-based APIs and HTML standards.
+
+Would you attempt to re-engineer how React handles children as "slots", or change the way `React.createElement()` works ...in the same way I tried to close the shadow DOM or make it's children work in the light DOM? (I hope not)
+
+Customizing a technology to do the opposite of how it works-on command-usually ends in increasing friction with the mechanisms that make it behave the way it does.
+
+If web components was already made as a choice for "build once, use everywhere" then your next spikes might be:
+
+- What can I do within the environment(s) I'm integrating this in to overcome perceived barriers of shadow DOM?
+
+- What can I do with the existing features and APIs of the framework I'm using? (with web components, it may be the framework you're using. If you're working in vanilla JS, it's most definitely browser APIs.)
+
+Let me know what you've tried!
+
+Thanks to Tebin Raouf @Tebin, Simon Macdonald @macdonst for programmatic support and guidance along the way!
+
+## Related Reading
+
+[^1] The question of removing the shadow DOM or creating the topic has been reported at the `webcomponents/polyfills` repository under issue [#82](https://github.com/webcomponents/polyfills/issues/82) , and `svelte/sveltjs` issue [#1748](https://github.com/sveltejs/svelte/issues/1748) .
+
+[^2] E. Bidelman. ["Shadow DOM v1 - Self-Contained Web Components"](https://web.dev/shadowdom-v1/), Web.dev by Chrome Devrel. Jun 27, 2020
+
+[^3] A. Sundara, ["The Closed Shadow DOM"](https://blog.ankursundara.com/shadow-dom/), May 12, 2022

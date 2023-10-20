@@ -1,0 +1,124 @@
+---
+title: Storybook and Chromatic for Visual Regression Testing
+draft: false
+summary: 'Setting up visual regression testing as part of build pipelines'
+tags: [react, testing, showdev, storybook]
+date: '2021-09-20'
+---
+
+This post continues some thoughts around [unit testing components](/blog/unit-testing-components-in-storybook) in design systems.
+
+To boost your component library's test coverage through development, each component should have a visual snapshot in addition to unit tests. The unit tests serve as a form of documentation for the expected behavioural outcomes of your component; snapshots help validate the before and after of expected visual changes.
+
+Compared to the unit test setup in [my last post](/blog/unit-testing-components-in-storybook-oc7), Chromatic is a breeze. It only takes 2 min to add to a project and integrates easily with Github and Bitbucket repos.
+
+Within "snapshotting", we'll discuss:
+
+1. DOM snapshots that capture changes in component markup
+2. Visual browser-based snapshots which I delegate to Chromatic in this post.
+
+#### DOM Snapshots
+
+DOM Snapshotting highlights exact changes to code, but it won't visually capture any regressions.
+
+[`@storybook/addon-storyshots`](https://storybook.js.org/addons/@storybook/addon-storyshots) can be plugged into the `.storybook/main.js`. Along with the Jest setup I mentioned in my [last post](https://dev.to/jenc/unit-testing-components-in-storybook-oc7), we can do this to set up snapshotting:
+
+```javascript
+// storyshots.test.ts
+
+import initStoryshots from '@storybook/addon-storyshots'
+initStoryshots()
+```
+
+> "DOM snapshots are awkward because it's tricky to determine > how a UI renders by evaluating an HTML blob."
+> Storybook [Visual Testing Handbook](https://storybook.js.org/tutorials/visual-testing-handbook/react/en/introduction/), 2021
+
+In fact, if you use a style framework like `styled-components`, unique class names are generated on component markup for compilation so you'll get meaningless inline changes that need to be updated.
+
+Such changes may be flagged as errors on a CI pipeline and break it. Regressions or not, we want our pipeline to store the results, and for Chromatic to help us deal with the tests!
+
+##### Automate DOM Snapshotting on a CI Pipeline
+
+So I appended the following flags to my Jest script on my Bitbucket Pipeline:
+
+`jest --ci --passWithNoTests -u`
+
+Here, my `package.json` script is told to run `npm run test:ci` as `jest --ci `
+
+The [`--ci`](https://jestjs.io/docs/cli#--ci) flag tells Jest that it's running in a pipeline. The alias [`--passWithNoTests`](https://jestjs.io/docs/cli#--passwithnotests) tells the test suite to complete if no test files are found. The alias [`-u`](https://jestjs.io/docs/cli#--updatesnapshot) flag stands for `--updateSnapshot`, thus telling our setup to take a new snapshot to replace the existing snapshot from a previous build. (Yes, you can push the snapshots to dev as a baseline to be compared future changes against.)
+
+The above takes the snapshots, but to start activating visual snapshots with Chromatic you run :
+`npm run chromatic --project-token=YOUR_PROJECT_TOKEN`
+
+![Screenshot of Bitbucket pipeline running Chromatic visual snapshotting tool with successful result](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pnqt7vnoy2b8r1n75kh9.png)
+
+The flag, `--exit-zero-on-changes` will tell Chromatic to stop running if there are no actual changes to your components, (or it'll keep looking and the process will not finish, your pipeline will timeout or not complete).
+
+#### Visual Snapshots for Regression Testing
+
+Chromatic's free tier offers 5000 free Chrome snapshots per month. This should be enough to get you covered for the first months on a new project, but if you inherited a legacy design system, that's questionable since it's prone to take a snapshot of every single component unless you use their option to [exclude snapshots on certain stories](https://www.chromatic.com/docs/ignoring-elements#ignore-stories). And if you're inheriting a legacy design system then you, my fellow developer, _should_ advocate to tool/automate for developer and QA efficiency. It's the right decision for a product.
+
+The codeblock I included previously is just the start to making Storybook do DOM snapshots. If you want to take a programmatic route to visual testing, Storybook's add-on [`@storybook/addon-storyshots-puppeteer`](https://storybook.js.org/addons/@storybook/addon-storyshots-puppeteer/) offers device emulation. I haven't used this on production, but from what I've seen, you're able to write full suites of end-to-end device tests!
+
+But why waste time on that when you can tell Chromatic to capture different [viewports](https://www.chromatic.com/docs/viewports#viewports-for-a-story)? (Ok yeah I get it, there's no match for actual device testing, since devices actually have different pixel density ratios and auto zoom.)
+
+Whether you automate this or decide to run it locally, on completion, Chromatic will supply a link to the latest version of a published Storybook and provide a link to click through to the UI Review dashboard.
+
+![Chromatic Dashboard](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/09dwhn3fsve6pljgrduz.png)
+
+One of the gotchas is that you need to commit and run on the same branch to capture the "before" and "after" of visual component changes. That means you need to have a history of running Chromatic on your `main` or a specific PR for every commit you make.
+
+![Screenshot of Chromatic Visual Regression testing software highlighting visual differences between previous code commit and next code commit](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qd4ef86jzi56jfy799c8.png)
+
+Teammates can be added as developer, viewer, and reviewer roles who can "Accept" or "Deny" the changes presented in snapshots.
+
+It's best used with designers and QA folks have have the capacity to perform [UI reviews](https://www.chromatic.com/docs/review). Here's me, reviewing my own.
+
+![Screenshot of webhooks notifying tech team of updates to visual snapshot tests](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/0f9xagvu9c51xuw1xd8s.png)
+That's a [Slack hook](https://www.chromatic.com/docs/integrations.html#slack-notifications) for build and UI Review results.
+
+It seems extra but when there's many components that need small changes, this quickly becomes helpful for making developer acceptance testing faster.
+
+### Developer Workflow
+
+💡 This is a suggested approach for moving from development to developer acceptance testing–the testing that ought to happen before, during code review, before it hits QA.
+
+Chromatic creates a snapshot for each story at each viewport, on each browser, and constantly compares any changes to an initial “baseline” snapshot.
+
+Prerequisites: To be able to run snapshot tests, a `stories.js|tsx` file must be created within each component folder, ideally with each variation of the component as a separate story. (Unit tests should also be included for expected visual and/or behavioural changes)
+
+1. Set your baseline snapshot:
+
+When you check out a new branch, establish a baseline by creating a commit and running Chromatic on it. If you already have Chromatic included as a CI step, this would only require pushing to remote.
+
+2. When a PR from a feature branch is created against `development` or trunk, an automated Chromatic step should run a snapshot test registering inline-DOM snapshot changes that differ from the previous commit. On a feature branch, [your last commit is the baseline](https://www.chromatic.com/docs/branching-and-baselines#multiple-branches) from which snapshots are compared.
+
+During UI review of changes on your feature branch, the 2-up diff shows what will change if you merge your feature branch into the `development` one.
+
+If you accept the changes, the visual testing baseline updates for that particular story.
+
+But if someone neglects to perform a UI review for ages? Warning: 🔥 UI review debt!
+
+- If it’s unchanged or identical to the previous baseline, that most recent unchanged one becomes the baseline
+
+- If it was unchanged or never approved then its previous baseline would become the baseline
+
+3. When you merge 2 branches, Chromatic accepts the [most recently approved changes](https://www.chromatic.com/docs/branching-and-baselines#multiple-branches) into the branch that you are merging into, and their stories’ baselines get added to the trunk.
+
+4. But what if you squash or rebase PRs on merge?
+   🦗 There will be a large gap between your ancestor commits, and possibly missing history if a change has no relationship to a previous commit. If there's no precedence to compare against so your latest commit will be flagged as a change, and you/someone will have to accept it to register it as the new baseline.
+
+The moral of the story is you should either run Chromatic locally and repeatedly approve/deny your changes, OR create commits to ensure changes are documented and visible in the `Changeset` (yeah, goodbye, singular squashed diffs)
+
+#### Summary
+
+Chromatic is a (primarily visual) snapshotting tool that takes the pain out of setting up visual snapshotting and regression tests once you've overcome the hurdle of setting up Jest with Storybook.
+
+Until we train AI to calculate the congruence of built UIs matching a design pixel-perfectly or the animated prototype perfectly... we'll still need humans to identify visual regressions.
+
+Assuming you have buy-in and dedicated resources for development of design systems, then Chromatic is a very useful tool that would save you the repetitive activity of going through BrowserStack for cross-browser testing.
+
+#### Relevant Reading
+
+- Chromatic. ["UI Review"](https://www.chromatic.com/docs/review), 2021.
+- Timothy Vernon. ["Automated Visual Regression Testing with Jest"](https://blog.logrocket.com/automated-visual-regression-testing-with-jest/), LogRocket. March 12, 2020.

@@ -1,0 +1,92 @@
+---
+title: Running IE 11 with VirtualBox on Mac
+draft: false
+date: '2020-05-06'
+tags: [virtualmachine, ie11, testing]
+---
+
+As of my time of writing, I am using a mid-2017 MacBook Pro on Catalina. (ymmv)
+
+Prerequisites:
+
+The app should already be provisioned to support [Angular on IE 11](https://dev.to/coly010/angular-how-to-support-ie11-4924), or the login page may not render.
+
+Example:
+![Login page that doesn't render on IE 11](https://dev-to-uploads.s3.amazonaws.com/i/8fliea8i4cjcw9x7szj3.png)
+
+If you plan on testing locally, then your app should already be running `localhost:4200` on your machine.
+
+If this still doesn’t work, there may be a firewall, VPN or other things preventing you from accessing localhost, in which case you are probably better off accessing a deployed version at a stable url
+
+Now you need:
+
+- at least 10GB of free hard disk space
+
+- download [VirtualBox](https://www.virtualbox.org/wiki/Downloads) for Mac OS
+
+- Download the VirtualBox file at this free [Microsoft VM](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) page
+
+- [Unarchiver](http://unarchiver.c3.cx/unarchiver) for unzipping the file above
+
+- patience (your computer may heat up and run slow. this VM doesn’t allow copy and pasting… etc etc)
+
+1. Install VirtualBox in your applications
+
+2. Unzip the `MSEdge-Win10-VMware` file.
+
+3. Open VirtualBox
+
+### Setting up the virtual machine
+
+1. Click “New”
+
+![VirtualBox Interface](https://dev-to-uploads.s3.amazonaws.com/i/yz1ektdz44swa3jrt9sn.png)
+
+2. Select “Windows 10”
+
+3. Click “Continue”
+
+4. Select 2048MB RAM and click “Continue”
+
+![Select 2048MB RAM and click “Continue”](https://dev-to-uploads.s3.amazonaws.com/i/6h27ya13cpkwcc8lm3ch.png)
+
+5. Select “Use an Existing Virtual Hard Disk File” and find the `.vmdk` in the VM file you just downloaded
+
+The vm disk image is now imported!
+
+### Configure the VM
+
+Right-click “IE Edge” or whatever you named it, and click on “Settings”.
+![The interface of VirtualBox on Mac after you import a new virtual machine image](https://dev-to-uploads.s3.amazonaws.com/i/70irafgpg7n9g8h14kmo.png)
+
+Under “Networks” > Adapter 1 you may select “NAT” or “Nat Network”
+
+Under System > Motherboard, set “Pointing Device” to USB Tablet
+
+Click “Start” in the Virtual Box GUI, or “Run” to start the VM
+
+### Get the env showing up on localhost
+
+Open Command Prompt and type `ipconfig`. Make note of the last line. Mine says `10.0.2.2`
+
+To get IE 11 to show localhost on our windows VM, go to the File searcher in the lower left hand corner and right-click “NotePad” to “Run As Administrator”.
+
+![Go to the File searcher in the lower left hand corner of the Windows desktop and right-click “NotePad” to “Run As Administrator”](https://dev-to-uploads.s3.amazonaws.com/i/y2d7w1oxinldiznavldq.png)
+
+You’ll be asked:
+![After finding “NotePad” and selecting “Run As Administrator"](https://dev-to-uploads.s3.amazonaws.com/i/1ifahkxzc4hoj1m653t6.png)
+
+Click Yes.
+
+When Notepad opens, open `C:\Windows\System32\drivers\etc\hosts.conf`
+![Go through the file system from C drive to Windows folder, System32, drivers, etc, select hosts.conf inside and open it ](https://dev-to-uploads.s3.amazonaws.com/i/rz6cbikuqgnu3u7n9fe5.png)
+
+Add `10.0.2.2` localhost to the last line of the Notepad file you opened, and save the file (not as a `.txt`, just agree to overwrite the original)
+
+Open IE 11 and hopefully, you see the app in `http://10.0.2.2:4200`
+
+### Tips:
+
+Command + E to take a screenshot of the VM desktop.
+
+A snapshot is not a screenshot. This creates a tiny copy of the state of the machine so that you can boot it up. Pretty useful for trying to keep this on beyond the 90 day free use.

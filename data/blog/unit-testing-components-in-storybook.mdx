@@ -1,0 +1,178 @@
+---
+title: Unit Testing Components in Storybook
+draft: false
+summary: An overview of unit testing with Storybook for components in design systems
+tags: [frontend, react, testing, showdev]
+images: ['/static/images/blog/bart-simpson-book.jpeg']
+date: '2021-09-22'
+---
+
+![Bart Simpson looking at book](/static/images/blog/bart-simpson-book.jpeg)
+
+### Background
+
+Unit tests are great as part of a testing strategy because they run quickly, test for functionality and even work as a form of documentation on expected behaviour. (More troubling though, is what to write them about? See Ian Cooper's talk on ["TDD: Where did it all go wrong?"](https://www.youtube.com/watch?v=EZ05e7EMOLM))
+
+Recently I came up with a testing strategy for a project on an aggressive deadline I couldn't fulfill. In fact, I didn't know how deep you could dig into validating that components behave the way they should!
+
+Basic testing on components in Storybook are two-part:
+
+1. Unit tests for functionality or expected visual outcomes
+2. Snapshotting: DOM snapshots and Visual Snapshots
+
+This article focuses on the first.
+
+### Setup
+
+`@storybook/addon-jest` is an add-on [package](https://www.npmjs.com/package/@storybook/addon-jest) you can add to create reports on the number of suites that passed or failed in a JSON file.
+
+Coupled with `withTests` decorator in preview.js/.ts, non-technical users get to preview whether tests passed or failed in the add-ons panel:
+![Storybook browser screenshot of Add-on Panel](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qt2c1nayorpwgtr3liqu.png)
+(PS: you need to add a script like `"test:generate-output": "jest --json --outputFile=./src/.jest-test-results.json || true",` to package.json to create the results `.json`)
+
+```jsx
+// preview.ts
+import { addDecorator } from '@storybook/react'
+import { withTests } from '@storybook/addon-jest'
+import results from '../src/.jest-test-results.json'
+
+addDecorator(
+  withTests({
+    // add this here and you won't have to add it to
+    results, // the default export declaration of each story
+  }) // the results of npm run test:generate-output
+) // will be reflected in the addons panel
+```
+
+Be warned:
+
+- the more types of media your components intake, the more fun you're going to have configuring the Babel options in `main.ts`.
+- The setup can take a while to get a hang of. Besides installing jest, Babel still needs to be configured to transpile ES6 to vanilla JS.
+
+Here's a look at all the setup files I created to test a set of components that would be used in Gatsby static sites:
+
+![Folder structure for setting up Jest unit tests for Storybook and Gatsby](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1wbxjmfl7jx69g06vwqd.png)
+
+All components with stories can have corresponding `.test.tsx` or `.test.js` files.
+
+![Folder structure of a component](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/u8vmy77rwxwevokkef0f.png)
+
+There's 2 ways I've seen folks approach testing in Storybook with React, neither of which I can really interpret as "better". Both use `@testing-library/react`, which is built on top of Jest.
+
+### 1. Unit Test using the original component with mock contents
+
+I'm slightly puzzled since frameworks like Jasmine/Karma advocate for creating a copy or instance of the component to test against to avoid using the "original" component or making a real API call. Either way, it seems to work out fine.
+
+Let's say for example, we want to show a primary and secondary button in the space of one story:
+
+```jsx
+import { Button } from './button';
+
+export default {
+  title: 'Components/Button',
+  component: Button,
+};
+
+export const Buttons = (args: ButtonProps) => (
+<>
+    <Button
+      {...args}
+      variant="primary">Primary</Button>
+
+ <Button
+      {...args}
+      variant="secondary">Secondary</Button>`)
+</>)
+```
+
+Unit test:
+
+```
+import { render, screen } from '@testing-library/react';
+import { Button } from './button';
+
+describe('should create Button', () => {
+  it('renders the Button content text', () => {
+    const rendered = render(
+      <Button variant="fixed-primary" label="Primary">
+        Primary
+      </Button>
+    );
+    const { container } = rendered;
+
+    expect(container.textContent).toEqual('Primary');
+  });
+});
+```
+
+### 2. Leverage the ["Component Story Format"](https://storybook.js.org/docs/react/api/csf) to create reusable stories
+
+Each story will define a component state or variant for use in unit tests.
+
+Story:
+
+```jsx
+import { Button } from './button';
+
+export default {
+  title: 'Components/Button',
+  component: Button,
+} as ComponentMeta<typeof Button>;
+
+const Template: ComponentStory<typeof Button> => <Button {...args}/>
+
+export const Primary = Template.bind({});
+Primary.args = {
+  variant: 'primary',
+  label: 'Primary Button'
+}
+```
+
+Unit test
+
+```jsx
+import { composeStories } from '@storybook/testing-react';
+import * as stories from './button.stories';
+
+const { Primary } = composeStories(stories);
+
+test('renders Primary CTA button with default args', () => {
+  render(<Primary />);
+  const buttonElement = screen.getByRole('button');
+  expect(buttonElement.textContent).toEqual(PrimaryCTA.args!.label);
+});
+
+```
+
+Of note: `const Template` is locally scoped such that the template for each story does not become a named export of a story. If you wrote `export const Template` it would actually show on storybook as a component state, and a very web-1.0-looking component unless you give it default args.
+
+The CSF approach to writing stories creates opportunities to reuse stories for unit tests. The arguments for different button types stay with the story with the component that is being tested.
+
+As I try to write unit tests, the part I find the most confounding is covering aspects that are purely functional, and then the ones that are visually expected as behavourial.
+
+`expect(renderedComponent).toBeDefined()` is not really that meaningful for checking expected behavior. With each type of component input I've found different challenges in terms of mocking the expected content or response, stubbing in an image, or spying on component functions.
+
+As Varun Vacchar puts it: ["Unit tests don't have eyeballs."](https://storybook.js.org/blog/stories-are-tests/)
+
+We don't have a way of knowing whether the change that happened is a reasonable deletion, a regression or merely a change. That's where visual snapshotting comes in.
+
+### Workflow: A Test Driven Development Approach
+
+1. Create `component.tsx` in `component-name` folder
+1. Create unit test(s) that are colocated inside the component folder ie. `component.test.ts`
+1. Create `component-name.stories.tsx`
+1. Create an `index.ts` that will allow for [Barrelling Files](https://www.notion.so/1f55e2e1bc804d9a9154cb4bf26765e2) as part of exporting a component library.
+1. Figure out what the functional behaviour of the component is (receiving correct state? displaying correct info? displaying correct data? ) and write tests, one at a time.
+1. Run Jest to try unit tests and move them from red ⛔ (failing) to green 🟢 (pass!).
+
+If a component begins to have more than 5 tests, you may consider including integration or e2e tests.
+
+#### Don't Forget The Role of Linting
+
+Having built in linters help monumentally with a11y needs, ES6/7+ conformance and even not breaking the build on pipeline when it runs on CI!
+
+#### Recommended Reading
+
+- [Visual Testing with Storybook](https://storybook.js.org/docs/react/workflows/testing-with-storybook)
+- [Visual Testing Handbook](https://storybook.js.org/tutorials/visual-testing-handbook/) for Storybook 6.3.
+- [Stories are Tests](https://storybook.js.org/blog/stories-are-tests/) By Varun Vacchar

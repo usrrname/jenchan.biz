@@ -1,0 +1,34 @@
+---
+title: Adapting Greensock (GSAP) SVGs for Firefox
+draft: false
+summary: 'Some things I discovered whilst debugging an ad banner for a code test.'
+tags: [beginner, productivity]
+date: '2017-09-06'
+---
+
+![Green socks](/static/images/blog/greensocks.webp)
+
+Disclaimer: I have zero experience with Greensock and SVG animations but here's what I've discovered, since there weren't enough forum posts for dimwits like me.
+
+Firefox has been lagging behind in supporting animation with CSS3 properties. TweenMax is for some reason more processor intensive than TweenLite. In some versions of Firefox, elements with BOTH a `boxShadow` AND 3D transforms applied don't always render correctly, with which the Greensock team is not aware of a fix.
+
+1. You need to specify `transformOrigin: 50% 50%;` in a `Tweenlite.set` function or else a motion starting from `0,0` point on a native element is going to look inexact in Firefox. It also doesn't handle percentages or keywords for positioning like `"center, top, right, bottom"` well. Probably should write the points of your polygon in-line.
+
+   > Firefox doesn't honor percentage-based origins. Normally, DOM elements measure transform-origin from their own top left corner. But SVG measures px-based transform-origin relative to the parent SVG canvas.
+
+   Jack Doyle, ["SVG Animation and CSS Transforms: A Complicated Love Story"](https://css-tricks.com/svg-animation-on-css-transforms/), CSS Tricks, Nov 10, 2014.
+
+2. Flickering and white-lines can be eliminated by adding 'backface-visibility:hidden' to the style of an image, or if there has been a z-index attribute set, then `transformStyle: 'preserve-3d'` to `TweenLite.set` function.
+3. Choppy image edges and white outlines on images may be fixed by adding `outline: transparent solid 1px;` to a particular image element's CSS.
+4. SVG colours might show up on Safari and Chrome, but not Firefox (because Firefox 3/4 doesn't render alpha channel in CSS, so you should provide RGB fallbacks (i.e. `background:rgb(250,250,250)`)).
+
+   Fig from MDN documentation to explain point 6.6. Mozilla handles linear and radial gradients differently compared to Safari and Chrome. It seems like you have to identify the actual element you want the gradient to show up on and write the style inline as a background and _not_ a background-image or background-color, as it has nothing to do with either and the mozilla console will actually say they can't parse it.
+
+   Example below:
+
+   ```css
+   background: -moz-radial-gradient(circle at center, #FFFFFF 0%, #FFFF00 18%,#EEFF00 40%)
+   background: -moz-linear-gradient(left, #ffffff 0%, #901A1C 51%, #ffffff 100%);
+   ```
+
+If you use positioning keywords, you may have to use `"to bottom"` or `"to bottom right"` of just `"bottom right"`. But specifying an angle instead (like `"-45deg"`) could also work for starting a colour from the top right.
