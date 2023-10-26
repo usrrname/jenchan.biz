@@ -6,7 +6,6 @@ export default function Footer() {
   return (
     <footer>
       <div className="mt-16 flex flex-col items-center">
-
         <div className="mb-3 flex space-x-4">
           {/* <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={6} /> */}
           <SocialIcon kind="rss" href={`./feed.xml`} size={6} />

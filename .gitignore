@@ -17,7 +17,7 @@
 /out/
 public/sitemap.xml
 .vercel
-
+.env*
 # production
 /build
 *.xml
