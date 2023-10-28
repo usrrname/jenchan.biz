@@ -1,0 +1,40 @@
+---
+title: Fixing emails for Outlook 2007, 2013, 2016
+summary: Writing Markup Like it's 1996.
+date: '2017-06-17'
+tags: [email, outlook]
+---
+
+Just want to vent about a bunch of things I've discovered on the job because I haven't seen many pages posting solutions to common Outlook rendering issues within this year:
+
+1. Outlook 2013 and 2016 uses Microsoft Word rendering engine instead of a browser rendering engine. Be prepared for tables to not align properly and CSS padding to defy logic. Text alignment is completely whack if you have an image on one side and text on the other, and want it on the same row. Outlook doesn't recognize alignment that is written as an attribute of a tag `("align=")`. So use `text-align` property `inline`.
+2. Image alignment: a nightmare. Outlook ignores margins & paddings applied to the `<img>` tags. From experience it seems a combination of table nesting, declaring fixed width and height in pixels, reducing the inner cell size by 2px (1 px on both sides) to account for the border that Outlook gives to images helps. Proper integration of images is discussed here, here, here and here.
+
+3. Outlook doesn't support gifs. Can't fix that.
+
+4. Bullet points may not render visibly, though you may have some luck putting them in a cell and increasing the font-size to 18px+. (Use `<td>&bull;</td>` instead). And even after that you need to control the next line's indentation so the text is justified against the bullet! (on the preceding cell try `style= "padding-left:20px; text-indent:-10px;"`) Don't use HTML lists.
+5. Outlook puts extra spaces underneath tables. You need to mediate that by adding mail client-specific fixes like:
+
+```html
+<!--[if (gte mso 9)|(IE)]>
+          </td>
+        </tr>
+      </table>
+      <![endif]-->
+```
+
+6. Even completed superscript tags `<sup>like this</sup>` will make the rest of a sentence hop up a level. `@moonstrips` has a lovely fix for that.
+7. Outlook 2003 and 2011 are exceptions. They use a browser rendering engine.
+8. The pre-header may show up in the body of the email.
+
+   Wrap it in:
+
+   ```html
+   <!--[if !gte mso 9]>
+   <!--preheader-->
+   <!--<![endif]->
+   ```
+
+9. Outlook doesn't recognize line-height unless you use `mso-line-height-rule: exactly;` before mentioning line height in internal CSS.
+
+That's basically everything I learned last 9 months. Be prepared for fixing one thing to break another aspect of the layout in a different client/browser. What else is going on in 2017?
