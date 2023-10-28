@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import Script from 'next/script'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
@@ -35,6 +36,21 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
   return (
     <SectionContainer>
+      <Script
+        src="https://giscus.app/client.js"
+        data-repo={process.env.NEXT_PUBLIC_GISCUS_REPO}
+        data-repo-id={process.env.NEXT_PUBLIC_GISCUS_REPOSITORY_ID}
+        data-category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY}
+        data-category-id={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID}
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        async
+      ></Script>
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
