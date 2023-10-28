@@ -45,7 +45,10 @@ Oh no, being unable to accept failure when presented with heroic feats of front 
 
 Even though I couldn't clone the shadow root node, I was able to grab its children, parse and transform them into HTML elements and reattach them to their rightful parent.
 
-<iframe src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/cloned-shadow-dom-button/cloned-shadow-button.ts&view=editor"></iframe>
+<iframe
+  src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/cloned-shadow-dom-button/cloned-shadow-button.ts&view=editor"
+  className="h-96 w-full"
+></iframe>
 
 Note: I used Fast Design to try out the above while doing my research.
 
@@ -113,7 +116,10 @@ Now you need 2 sets of styles to alternate between! One that supports scoped sty
 
 Finally, my peer @Tebin tried disabling the shadow DOM by passing `shadowOptions: null` into the `define()` (custom element registry method provided by FAST). By parsing and reattaching slot-referencing children in a light DOM parent, he was trying to see if slots would continued to be supported. But no! In this case we lost all the style encapsulation and previously slotted content would render out of order.
 
-<iframe src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/light-dom-slot/light-dom-slot.ts&view=editor"></iframe>
+<iframe
+  src="https://stackblitz.com/edit/vitejs-vite-h1bj7f?file=src/components/light-dom-slot/light-dom-slot.ts&view=editor"
+  className="h-96 w-full"
+></iframe>
 
 ## Summary
 
