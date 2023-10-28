@@ -80,7 +80,7 @@ export default function ListLayoutWithTags({
       <div>
         <div className="pb-6 pt-6">
           <h1
-            className={`${shantell_sans.variable} text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14`}
+            className="font-headings text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
           >
             {title}
           </h1>
@@ -137,8 +137,10 @@ export default function ListLayoutWithTags({
                       <div className="space-y-3">
                         <div>
                           <h2
-                            className={`${shantell_sans} text-2xl font-bold leading-8 tracking-tight`}
-                          >
+                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight`}
+                            style={{
+                              fontVariationSettings: `"BNCE" 2, ""INFM" 30`,
+                            }}>
                             <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                               {title}
                             </Link>
