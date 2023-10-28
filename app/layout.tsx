@@ -1,6 +1,6 @@
 import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
-import { GA } from 'pliny/analytics'
+import { GA, GoogleAnalyticsProps } from 'pliny/analytics'
 import { SearchProvider, SearchConfig } from 'pliny/search'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
@@ -51,6 +51,8 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  let googleAnalyticsId = siteMetadata?.analytics?.googleAnalytics as unknown as string;
+
   return (
     <html
       lang={siteMetadata.language}
@@ -67,12 +69,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
+        {googleAnalyticsId !== null && (
+          <GA googleAnalyticsId={googleAnalyticsId as string} />
+        )}
         <ThemeProviders>
-          <GA
-            googleAnalyticsId={
-              siteMetadata?.analytics?.googleAnalytics || process.env.NEXT_GOOGLE_ANALYTICS_ID
-            }
-          />
           <SectionContainer>
             <div className="flex h-screen flex-col justify-between font-sans">
               <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
