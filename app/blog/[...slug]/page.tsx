@@ -118,6 +118,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
 
   return (
     <>
+      <meta name="og:published_at" content={post.date} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
