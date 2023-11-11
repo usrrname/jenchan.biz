@@ -50,3 +50,6 @@ body {
   text-decoration-color: red;
   animation: wavy 1s infinite;
 }
+.katex-display {
+  overflow: auto hidden;
+}
