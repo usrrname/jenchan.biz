@@ -50,6 +50,7 @@ Internationalization support - [Template with i18n](https://tailwind-nextjs-star
 - [zS1m's Blog](https://contrails.space) - zS1m's personal blog for recording and sharing daily learning technical content ([source code](https://github.com/zS1m/nextjs-contrails))
 - [dariuszwozniak.net](https://dariuszwozniak.net/) - Software development blog
 - [Terminals.run](https://terminals.run) - Blog site for some thoughts and records for life and technology.
+- [markpitblado.me](https://markpitblado.me) - Mark's personal blog about the internet, privacy, and books ([source code](https://github.com/mark-pitblado/personal-website))
 
 >>>>>>> Fix the table element overflow (#787)
 Using the template? Feel free to create a PR and add your blog to this list.
