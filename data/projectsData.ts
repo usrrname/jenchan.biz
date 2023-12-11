@@ -1,4 +1,11 @@
-const projectsData = [
+interface Project {
+  title: string,
+  description: string,
+  href?: string,
+  imgSrc?: string,
+}
+
+const projectsData: Project[] = [
   {
     title: 'Enterprise Design System',
     description: `Lead and support 12-30 contributors at anytme to build and maintain design system with web components for use in Angular 1-16 and React 16-18 projects. Components are currently being used in chatbots within flagship products. `,
