@@ -52,7 +52,11 @@ Internationalization support - [Template with i18n](https://tailwind-nextjs-star
 - [dariuszwozniak.net](https://dariuszwozniak.net/) - Software development blog
 - [Terminals.run](https://terminals.run) - Blog site for some thoughts and records for life and technology.
 - [markpitblado.me](https://markpitblado.me) - Mark's personal blog about the internet, privacy, and books ([source code](https://github.com/mark-pitblado/personal-website))
+<<<<<<< HEAD
 - [Bryce Yu's Blog](https://earayu.github.io/) - Bryce Yu's personal Blog about distributed system, database, and web development. ([source code](https://github.com/earayu/earayu.github.io))
+=======
+- [Min71 Dev Blog](https://min71.dev) - My personal blog about Blockchain, Web dev etc. ([source code](https://github.com/mingi3442/blog))
+>>>>>>> Update README about V2 example
 
 >>>>>>> Fix the table element overflow (#787)
 Using the template? Feel free to create a PR and add your blog to this list.
