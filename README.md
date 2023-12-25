@@ -41,10 +41,12 @@ Internationalization support - [Template with i18n](https://tailwind-nextjs-star
 - [Rabby Hasan's Blog](https://blog.rabbyhasan.com.bd/) - Rabby Hasan's personal blog about full stack development with cloud ([source code](https://github.com/rabbyalone/myblog))
 - [enscribe.dev](https://enscribe.dev) - enscribe's personal blog; cybersecurity shenanigans, frontend webdev, etc. ([source code](https://github.com/jktrn/enscribe.dev))
 - [dalelarroder.com](https://dalelarroder.com) - Dale Larroder's personal website upgraded from V1 ([source code](https://github.com/dlarroder/dalelarroder))
-<<<<<<< HEAD
-- [hauhau.cn](https://www.hauhau.cn) - Homing's personal blog about the stuff he's learning ([source code](https://github.com/hominsu/blog))
-- [zS1m's Blog](https://contrails.space) - zS1m's personal blog for recording and sharing daily learning technical content _中文_
-- [Min71 Dev Blog](https://min71.dev) - My personal blog about Blockchain, Web dev etc. ([source code](https://github.com/mingi3442/blog))
+- [zS1m's Blog](https://contrails.space) - zS1m's personal blog for recording and sharing daily learning technical content ([source code](https://github.com/zS1m/nextjs-contrails))
+- [dariuszwozniak.net](https://dariuszwozniak.net/) - Software development blog
+- [Terminals.run](https://terminals.run) - Blog site for some thoughts and records for life and technology.
+- [markpitblado.me](https://markpitblado.me) - Mark's personal blog about the internet, privacy, and books ([source code](https://github.com/mark-pitblado/personal-website))
+- [francisaguilar.co blog](https://francisaguilar.co) - Francis Aguilar's personal blog that talks about tech, fitness, and personal development.
+>>>>>>> Add another blog V2 example
 
 Using the template? Feel free to create a PR and add your blog to this list.
 
