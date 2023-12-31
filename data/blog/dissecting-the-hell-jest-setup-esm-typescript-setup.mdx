@@ -1,0 +1,141 @@
+---
+title: "Dissecting the hell that is Jest setup with ESM and Typescript"
+draft: false
+summary: World's most delightful testing framework, held hostage by Node's ESM migration 2023
+images: ['/static/images/blog/duct-tape.jpg']
+tags: [testing, jest, typescript, react]
+date: '2023-12-31'
+---
+
+## Jest: Not So Delightful Anymore
+
+Several months ago, I had the hardest time setting up Jest with a React 18 Typescript project as part of a spike to help teams who wanted to use Jest to test web components that were built with ESM dependencies.
+
+As I polled my peers working on React products, many mentioned they had moved over to Vitest.
+
+The outlook for Jest leading up to this moment hasn't been great. In 2022, one of Jest's OSS maintainers mentioned ["no one at Facebook... worked on Jest for years"](https://github.com/jestjs/jest/pull/11529#issuecomment-1027152470). The project was subsequently [transferred to the OpenJS foundation](https://engineering.fb.com/2022/05/11/open-source/jest-openjs-foundation/) for maintenance and development has slowly fizzled since.   
+
+As of December 2023, Jest support for esmodules is [still experimental](https://jestjs.io/docs/ecmascript-modules) due to its unfortunate reliance on node's [vm module](https://nodejs.org/docs/latest/api/vm.html#class-vmmodule) for test isolation.
+
+If you discover yourself at a large company where tech isn't a core competency, you might realize there's a world where many revenue-generating products are still chugging along, one-Jenga-move-from-collapse, on ancient versions of Angular and React. A significant amount of time working as a dev at such a company will be spent helping teams figure out how to integrate extremely outdated frameworks and tools with modern web things.
+
+If I'm appropriately tactful, I might eventually persuade them to migrate and upgrade their already end-of-life-d framework if they realize the diminishing returns on clinging to legacy technical choices that only compounds in friction to new feature delivery... 
+
+More often, organizational politics make it such that you have to just make something irrelevantly old work with something rather new (and possibly immature) because upgrading or changing tools isn't an imaginable option for said team.
+
+Investigating how last 2 versions of Create React App (deprecated) and Jest could seamlessly import and test ESM web component library was the laughable situation I found myself in.
+
+Here's the [sample StackBlitz](https://stackblitz.com/~/github.com/usrrname/glowing-broccoli) if you don't feel like reading.
+
+## Overcoming Configuration Hell
+
+Rotating through some hell combinations of [`ts-jest`](https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/), [`ts-node`](https://www.npmjs.com/package/ts-node), and [`babel`](https://babeljs.io/) plugins as recommended by different official documentation sources, I rehashed the following to get it working: 
+
+1. Use the [`node --experimental-vm-modules`](https://gist.github.com/danpetitt/37f5c966886f54e457ece4b08d66e404#jest) when running the jest as part of your `package.json` `test` script due to Jest's API relying on a node vm API that's still in [experimental stage](https://github.com/nodejs/node/issues/37648) for esm scripts. 
+
+```
+// package.json
+"scripts": {
+  "test": "node --experimental-vm-modules node_modules/.bin/jest"
+}
+```
+
+2. We have to tell Node our project uses ESM, so we add `"type": "module"` to `package.json` just to support ESM import statements. 
+
+This leads to a [cascade of necessary changes](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) to turn a CommonJS project to ESM: 
+
+- changing all CommonJS files with `requires("module-name")` statements to `import x from 'module-name'` 
+- changing `module.exports` to `export default {}`
+- change any `.js` file extensions to `.cjs` or ESM config files to `.mts`.
+
+Should be fine right? ...Not if you already have a variety of components and views importing from CJS and ESM dependencies.
+
+At this point you have to decide whether you will isolate the folders that use ESM from the rest of the project to create a different package which can be imported into your CJS project, or if you will just convert the entire project to ESM.
+   
+3. Surprise! Whenever you have `package.json` type set to `module`, you'll encounter many errors:
+  
+  ``` 
+  ReferenceError: module is not defined in ES module scope
+  This file is being treated as an ES module because it has a '.js' file extension and '/Users/username/projectname/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+  ```
+This next one is easy; just rename `jest.config.js` to `jest.config.cjs`.
+
+
+4. Add Typescript support.
+   
+Install `ts-node` and `ts-jest` to help with the execution and transformation of `.ts` files to `.js` files before running tests.
+
+`npx npx ts-jest config:init` creates a `jest.config.js` file which you can configure to your liking.
+
+```
+// jest.config.cjs
+module.exports = {
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
+  transformIgnorePatterns: ['node_modules'],
+  testMatch: ['**/*.test.ts'],
+};
+```
+
+Using `ts-jest` and the `transform` property in `jest.config.ts` will help with recognizing `.ts` or `.tsx` test files. 
+
+But **don't** use the `transform` property if you're also using a `ts-jest` preset! (See the [module writer's disclaimer](https://kulshekhar.github.io/ts-jest/docs/getting-started/presets/#the-presets) on that)
+
+5. But wait, there's more! Our test-runner complains about the `import/export` syntax: 
+   
+  ```
+  SyntaxError: Cannot use import statement outside a module
+  ```
+
+Jest (with some support from Babel) transforms all files to CommonJS before running tests; it doesn't support `import/export` statements from ES2015.
+
+This is especially infuriating if you import a component or util function that has a direct dependency on an ESM export. 
+You literally will be blocked on running Jest tests on that particular component. (Even if you already configured your jest config to exclude `node_modules`). 
+
+6. If you by now, have decided to convert the entire project to ESM, you'll need to use `babel` to transform all `.js` files to `.cjs` files before running tests. 
+
+If you haven't already, you'll want to use a `babel.config.js` or `babel.config.json` to help with recognizing React `.jsx` files and transforming them to `.js` files before running tests.
+
+Our friend is [`@babel/preset-env`](https://babeljs.io/docs/babel-preset-env) 
+
+```
+// babel.config.js
+module.exports = {
+  presets: [
+    [
+      '@babel/preset-env',
+      '@babel/preset-react'
+    ]
+  ]
+};
+```
+
+I've personally found `babel/preset-typescript` to have no impact on Typescript transformation. 
+
+Side note: the maintenance-abandoned nature of CRA means installing `@babel/plugin-proposal-private-property-in-object` as a devDependency or plugin to be helpful for reducing console noise.
+
+## Summary
+
+At the end of the day, you catch yourself needing to decide when linting, transforming need to happen before tests run. I settled on:
+
+- typechecking it first with `tsc` , OR using `ts-jest` to ensure the types are correct as tests run. 
+- transpiling with babel to CJS before running tests 
+
+If all else fails, I also had some success downgrading to Jest 27.x or 28.x instead of bashing my head on bloated config and confusing doc on 29.x. 
+
+
+## Related Reading
+
+[tmvnty](https://news.ycombinator.com/user?id=tmvnty). ["Nobody at Facebook has worked on Jest for years"](https://news.ycombinator.com/item?id=30168241). Feb 1, 2022
+
+BigMan73. ["Answer: Jest Typescript with ES Module in node_modules error - Must use import to load ES Module"](https://stackoverflow.com/questions/68956636/how-to-use-esm-tests-with-jest), StackOverflow. Jan 4, 2023
+
+r/node. ["Jest Not Getting Support in Backend Node?"](https://www.reddit.com/r/node/comments/14rg9ym/esm_not_gaining_traction_in_backend_node/)
+
+["Jest Typescript with ES Module in node_modules error - Must use import to load ES Module"](https://stackoverflow.com/a/75001235), StackOverflow, Jan. 4, 2023
+
+Simen Bekkhus. ["Support ESM versions of all pluggable modules"](https://github.com/jestjs/jest/issues/11167) Mar 7, 2021 
+
+[Sindre Sorhus](https://gist.github.com/sindresorhus), ["Pure ESM package"](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c), 2023
