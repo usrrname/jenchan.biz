@@ -10,6 +10,7 @@ const siteMetadata = {
   siteRepo: 'https://github.com/usrrname/jenchan.biz',
   siteLogo: '/static/images/logo.svg',
   socialBanner: '/static/images/twitter-card.png',
+<<<<<<< HEAD
   mastodon: 'https://mstdn.party/@jenc',
   email: '',
   github: 'https://github.com/usrrname',
@@ -18,6 +19,17 @@ const siteMetadata = {
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com/in/jennifer7chan',
+=======
+  mastodon: 'https://mastodon.social/@mastodonuser',
+  email: 'address@yoursite.com',
+  github: 'https://github.com',
+  twitter: 'https://twitter.com/Twitter',
+  facebook: 'https://facebook.com',
+  youtube: 'https://youtube.com',
+  linkedin: 'https://www.linkedin.com',
+  threads: 'https://www.threads.net',
+  instagram: 'https://www.instagram.com',
+>>>>>>> adding in social options for instagram and threads
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the

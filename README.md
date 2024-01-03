@@ -46,7 +46,6 @@ Internationalization support - [Template with i18n](https://tailwind-nextjs-star
 - [Terminals.run](https://terminals.run) - Blog site for some thoughts and records for life and technology.
 - [markpitblado.me](https://markpitblado.me) - Mark's personal blog about the internet, privacy, and books ([source code](https://github.com/mark-pitblado/personal-website))
 - [francisaguilar.co blog](https://francisaguilar.co) - Francis Aguilar's personal blog that talks about tech, fitness, and personal development.
->>>>>>> Add another blog V2 example
 
 Using the template? Feel free to create a PR and add your blog to this list.
 
