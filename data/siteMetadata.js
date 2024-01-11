@@ -10,7 +10,6 @@ const siteMetadata = {
   siteRepo: 'https://github.com/usrrname/jenchan.biz',
   siteLogo: '/static/images/logo.svg',
   socialBanner: '/static/images/twitter-card.png',
-<<<<<<< HEAD
   mastodon: 'https://mstdn.party/@jenc',
   email: '',
   github: 'https://github.com/usrrname',
@@ -19,17 +18,8 @@ const siteMetadata = {
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
   linkedin: 'https://www.linkedin.com/in/jennifer7chan',
-=======
-  mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
-  threads: 'https://www.threads.net',
-  instagram: 'https://www.instagram.com',
->>>>>>> adding in social options for instagram and threads
+  // threads: 'https://www.threads.net',
+  // instagram: 'https://www.instagram.com',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
@@ -38,6 +28,9 @@ const siteMetadata = {
     // umamiAnalytics: {
     //   // We use an env variable for this site to avoid other users cloning our analytics ID
     //   umamiWebsiteId: process.env.NEXT_UMAMI_ID, // e.g. 123e4567-e89b-12d3-a456-426614174000
+    // You may also need to overwrite the script if you're storing data in the US - ex:
+    // src: 'https://us.umami.is/script.js'
+    // Remember to add 'us.umami.is' in `next.config.js` as a permitted domain for the CSP
     // },
     // plausibleAnalytics: {
     //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
