@@ -1,0 +1,63 @@
+---
+title: Bug Triage
+draft: false
+summary: 'Notes on prioritizing bugs and enhancements'
+tags: [beginner, bugs, agile, engineeringnotes]
+date: '2023-06-04'
+---
+
+In any situation where you discover a regression, maintenance need, or bug, providing the severity of the issue helps technical and managing leaders to prioritize.
+
+Developers cannot simply drop everything to fix a bug.
+
+For example, during MVP development, if a key contributor spends 50% of a sprint fixing bugs instead of doing new feature development, there's a much higher chance of their intended work for the sprint not getting complete. Not hitting general milestones means delivery delays. So on, and so forth.
+
+On the other hand, if you fix every bug you see as it emerges **and** get your allotted work done, you're overstretching yourself--and due to the nature of agile, business decisions and feature development keeps changing, so all that work you did really might not end up being released in a week.
+
+Note: There is nothing wrong with bugfixing as part of sprints. Maintenance and prevention is a great thing, just that in situations where new product development is the goal, a rule of thumb is no more than 20% of a sprint should be spent on bugfixing.
+
+A higher amount of bugfixing usually happens during product maintenance cycles.
+
+There's 3 aspects to consider when making an assessment of priority for a bug or enhancement:
+
+- Severity
+- Priority (in light of business goals and available personnel)
+- Dev Effort (individual/team capacity, difficulty)
+
+It's important to keep your team informed of any bugs you're working on, workarounds and solutions during standup and in daily updates.
+
+![severity analysis](/static/images/blog/severity-piechart.png)
+
+## Determining Severity
+
+**Personal**
+
+- Am I blocked on my current task?
+- Is my task critical to the success of this sprint?
+
+If both are "Yes", then alert your lead and PM.
+If any are "No", then log a ticket and tell your team, QA and product owner/manager about it.
+
+**Team Wide**
+
+- Does it block others (from doing their work)?
+- Does it prevent us from meeting sprint goals?
+
+If both are "Yes", then alert your lead and PM. If you have the ability to, start on a fix.
+If there is a workaround for now, inform your team of it.
+If you are already fixing something critical, have the lead or PM find someone else to solve that.
+If any are "No", log a ticket, inform your team of any workarounds, and ask your lead and PM to prioritize it for other sprints.
+
+**Org Wide**
+
+Does this cause:
+
+- Multiple teams to be impacted immediately ?
+- The business or its reputation to be placed at risk ?
+- Service Outage ?
+- Loss of Business ?
+- Death, Harm to lives ?
+
+Any of the above that leads to organization-wide impact is of extremely high severity. Think of the easiest way for them to understand the error and its impact; inform your manager and team immediately.
+
+![severity vs. priority tradeoff matrix](/static/images/blog/priority-vs-severity.png)

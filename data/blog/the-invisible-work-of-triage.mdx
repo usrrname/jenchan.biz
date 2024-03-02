@@ -1,0 +1,101 @@
+---
+title: "Error monitoring and bug triage: Whose job is it?"
+draft: true
+summary: "The invisible and thankless work of determining the right things to fix"
+tags: [agile, teamwork, management, prioritization]
+date: '2024-03-02'
+images: ['/static/images/blog/triage-spidey.png']
+---
+
+![3 spidermans pointing each other accusatorily meme](/static/images/blog/triage-spidey.png)
+
+I've had the luck of introducing feature request and [bug triage](/blog/bug-triage) at a previous workplace while working as a UX developer on a team of 12 on an idea-to-MVP project at a health startup.
+
+I first learned of issue triage as a support drone with way too much access to prod while working on a product that had 300 municipal customers. Several times a day I'd hop on a call with a CPO to (hassle him to) make decisions on escalated customer issues and relay the handoff or feedback to and from developers. Later these skills translated to subsequent dev roles where discussing triage and related issues seemed a lightning rod depending on the environment. At that point, my role as not-real-dev and troubleshooter was to be a buffer between devs and PMs. With the continued tightening of engineering budgets in 2024, most workplaces are likely expected to do more with less, so triage and prioritization is a great skill to have in your back pocket.
+
+## Competing incentives 
+
+From a non-engineering management perspective, any maintenance or tech debt can be thought of as a nuisance, taking your most expensive resource from focusing on activities that generate revenue: building and shipping new features. 
+
+I'm not surprised if developers don't eagerly volunteer to bug sweep on Sentry or resolve customer support fires. 
+
+Maintenance is unsexy; it doesn't directly support value delivery. You don't get the same payoff from working all night to ship a feature compared to shipping a hotfix for something found the day after release. 
+
+I haven't seen anyone celebrated or thanked for reducing error logs, patching a bug or backfilling a feature a customer might be losing their mind on.
+
+And yet, both backlog and bug triage are crucial to maintaining the ability to ship fast and resolve errors quickly. 
+
+## Someone's gotta do it
+
+If someone is already doing triage on a somewhat-regular basis, it's probably a product manager, engineering manager, QA or lead dev, or a support person who's combing through like a lone wolf and making independent decisions or chasing down the information they need to make escalations. 
+
+If the manager isn't technical, often some random unlucky dev gets assigned a ticket they have no idea how to fix or reproduce, and hopefully the 1-3 originary implementing devs, and try to reproduce and fix it without blowing through their already-missing time from the sprint.
+
+If there's an on-call or rotating support role on a team this might be handled periodically with no shared context or clear decision maker. This is still better than nothing, but the impact ends at delegation and the loop never gets completed on how certain bugs could be prioritized or delegated based on domain or sprint and quarterly goals.
+
+Ideally a core group composed of product, dev, QA leaders meet frequently to prioritize bugs surfaced by support and dev. Unless a company is highly collaborative and mature in agile processes, this doesn't happen as often as it should.
+
+The best triage experiences I had involve a max of 4 people, with SMEs who have done the bug reproduction or understand the backlog item to evaluate effort. The SME likely needs to be fairly confident with their craft or know who worked on a particular domain of the codebase to offer estimates and severity, in addition to considering the impact of taking on the fix to their current and upcoming work.
+
+Triage is only productive if the group agrees on a decision maker. Engineers who waffle on details too long need to be reminded that ultimately all are there to understand the viability and effort of a fix. Decision makers also need to be unafraid of hear out contrasting opinions and make quick difficult decisions given tradeoffs and constrained time. Triage meetings that go overtime because managers won't commit to decisions out of fear. In that situation it might move things along to ask a question as if followed up with your "recommendation" to give them an easy choice, then move onto the next thing instead of keeping them around to hem and haw. 
+
+
+## The cycle of neglect
+
+Some version of the following happens when bugs and regressions aren't triaged with input from different SMEs:
+
+- Managers delegate bugs to fill capacity in sprints to the brim, assuming an ever-present "nice-to-have" train of bugs devs could grab from when all their sprint work is done.
+ <center>👇🏻</center>
+
+- Developers are assigned bugs with little-to-no context or severity, and no one is assigned to reproduce or investigate the bug.
+  
+ <center>👇🏻</center>
+  
+- Every bug from previous releases get indiscriminately spread out across current or upcoming sprints. Cosmetic, pixel-pushing changes are mislabelled "medium" priority while bugs that are actually feature requests get labelled as high deathmarch feature-backfills.
+
+ <center>👇🏻</center>
+
+- Developers get pulled off sprint work to debug and bandaid the latest production fire.  
+
+ <center>👇🏻</center>
+
+- The team wastes time on low value fixes; the backlog keeps growing ends up frustrating much higher level execs who wonder why velocity and burndown never matches issue input since they have no visibility over the cause of a bloated backlog in the first place. 
+
+ <center>👇🏻</center>
+
+- Everyone contently ignores error logs and focuses on next urgent fires until some other leader escalates it to an exec, who is inevitably going to wonder "Why didn't we catch this issue sooner?"
+  
+ <center>👇🏻</center>
+
+
+- No attempt is made to plan for the future because you're already off course from pre-existing sprint goals that should have been done last quarter, and developers are already overwhelmed as is. All energy for improvement is exhausted by too many incoming tasks.
+
+ <center>👇🏻</center>
+  
+- The cycle repeats (and some uptight dev blogs about it)
+
+## Triage: process introduction as lightning rod
+
+Bug triage can be a touchy process to introduce, especially if there are unclear roles and many titles. If meetings are more often used to re-announce already-made decisions and work culture isn't particularly collaborative, introducing triage isn't going to bode well.
+
+If no one has been doing it, it's highly likely every party believes someone else should be responsible for triage.
+
+If you start doing it but no one knows, then you cheat yourself out of the recognition of technical leadership for helping your team become more effective. 
+
+If you start asking managers to participate you might get panicked faces or refusal to be a part of a new process someone else came up with. 
+
+If you start (god forbid) showing people how to do it, the people who should be doing it might feel like they're being told how to do their job! 
+
+In all likelihood, people already recognize gaps in planning and prioritizing, but are too overwhelmed to fit _just one more meeting_ in.
+
+## Summary
+
+On large cross functional teams with no clear decision maker, triage is often skipped or delegated away in the interest of keeping the greatest number of people working on sprint goals. This seems like a missed opportunity for preventing future fires and improving incident response.
+
+Any tools or systems set up for it is only helpful for firefighting or customer support in as much as the right errors are handled and captured. 
+
+Without rostered or routine patrols of logs we don't have a picture of what's not working well, and how it fits within org goals.
+
+If you set up logging or process and never check it, it's not being leveraged fully as part of quality or incident management. 
+
+Weigh out the fights you're unintentionally starting just by exercising your knowledge on process efficiency. Process improvement is of less concern if a company is prone to behave reactively.
