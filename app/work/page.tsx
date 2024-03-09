@@ -1,7 +1,7 @@
-import projectsData from '@/data/projectsData'
 import Card from '@/components/Card'
-import { genPageMetadata } from 'app/seo'
 import { shantell_sans } from '@/css/fonts'
+import projectsData from '@/data/projectsData'
+import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({ title: 'Work' })
 
@@ -29,8 +29,8 @@ export default function Projects() {
                 description={d.description}
                 imgSrc={d.imgSrc}
                 href={d.href}
-                press={d.press}
-                company={d.company}
+                press={d?.press}
+                company={d?.company}
               />
             ))}
           </div>
