@@ -1,6 +1,6 @@
-import Link from './Link'
-import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
+import siteMetadata from '@/data/siteMetadata'
+import Link from './Link'
 
 export default function Footer() {
   return (
@@ -13,14 +13,8 @@ export default function Footer() {
           {/* <SocialIcon kind="facebook" href={siteMetadata.facebook} size={6} />
           <SocialIcon kind="youtube" href={siteMetadata.youtube} size={6} /> */}
           <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size={6} />
-<<<<<<< HEAD
           <SocialIcon kind="mastodon" href={siteMetadata.mastodon} size={6} />
           <SocialIcon kind="devto" href={siteMetadata.devto} size={6} />
-=======
-          <SocialIcon kind="twitter" href={siteMetadata.twitter} size={6} />
-          <SocialIcon kind="instagram" href={siteMetadata.instagram} size={6} />
-          <SocialIcon kind="threads" href={siteMetadata.threads} size={6} />
->>>>>>> adding in social options for instagram and threads
         </div>
         <div className="mb-8 text-xs text-gray-500 dark:text-gray-400">
           Made with{' '}

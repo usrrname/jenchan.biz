@@ -1,18 +1,4 @@
-<<<<<<< HEAD
-import { Mail, Github, Facebook, Youtube, Linkedin, Twitter, Mastodon, DevTo, Rss } from './icons'
-=======
-import {
-  Mail,
-  Github,
-  Facebook,
-  Youtube,
-  Linkedin,
-  Twitter,
-  Mastodon,
-  Threads,
-  Instagram,
-} from './icons'
->>>>>>> adding in social options for instagram and threads
+import { DevTo, Facebook, Github, Linkedin, Mail, Mastodon, Rss, Twitter, Youtube } from './icons'
 
 const components = {
   mail: Mail,
@@ -22,13 +8,8 @@ const components = {
   linkedin: Linkedin,
   twitter: Twitter,
   mastodon: Mastodon,
-<<<<<<< HEAD
   devto: DevTo,
   rss: Rss,
-=======
-  threads: Threads,
-  instagram: Instagram,
->>>>>>> adding in social options for instagram and threads
 }
 
 type SocialIconProps = {
