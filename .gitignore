@@ -8,8 +8,8 @@
 !/.yarn/releases
 !/.yarn/plugins
 !/.yarn/sdks
-./.vscode/settings.json
-
+.vscode/*
+data/blog/_draft/*
 # testing
 /coverage
 
