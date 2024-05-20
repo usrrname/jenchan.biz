@@ -29,7 +29,7 @@ export default function Projects() {
                 description={d.description}
                 imgSrc={d.imgSrc}
                 href={d.href}
-                press={d?.press}
+                meta={d?.meta}
                 company={d?.company}
               />
             ))}

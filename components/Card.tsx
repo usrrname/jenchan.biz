@@ -1,7 +1,7 @@
 import Image from './Image'
 import Link from './Link'
 
-const Card = ({ title, description, imgSrc, href, press, company }) => (
+const Card = ({ title, description, imgSrc, href, meta, company }) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
@@ -50,8 +50,8 @@ const Card = ({ title, description, imgSrc, href, press, company }) => (
           </Link>
         )}
 
-        {press && press?.length > 0 ? <h3 className="font-medium">Press</h3> : null}
-        {press?.map((p: { title: string; href: string }) => (
+        {meta && meta?.links?.length > 0 ? <h3 className="font-medium">{meta.title}</h3> : null}
+        {meta?.links?.map((p: { title: string; href: string }) => (
           <p key={p.title}>
             <Link
               href={p.href}
