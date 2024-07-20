@@ -1,14 +1,14 @@
-import 'css/tailwind.css'
-import 'pliny/search/algolia.css'
-import { GA } from 'pliny/analytics'
-import { SearchProvider, SearchConfig } from 'pliny/search'
+import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
-import Footer from '@/components/Footer'
-import siteMetadata from '@/data/siteMetadata'
-import { ThemeProviders } from './theme-providers'
-import { Metadata } from 'next'
 import { inter } from '@/css/fonts'
+import siteMetadata from '@/data/siteMetadata'
+import 'css/tailwind.css'
+import { Metadata } from 'next'
+import { GA } from 'pliny/analytics'
+import { SearchConfig, SearchProvider } from 'pliny/search'
+import 'pliny/search/algolia.css'
+import { ThemeProviders } from './theme-providers'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
@@ -64,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png" />
       <link rel="manifest" href="/static/favicons/site.webmanifest" />
       <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+      <link rel="webmention" href="https://webmention.io/www.jenchan.biz/webmention" />
       <meta name="msapplication-TileColor" content="#000000" />
       <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
       <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
