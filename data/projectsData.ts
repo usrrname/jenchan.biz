@@ -13,7 +13,7 @@ interface Project {
 const projectsData: Project[] = [
   {
     title: 'Enterprise Design System',
-    description: `Led and support 12-30 contributors at anytme to build and maintain design system with web components for use in Angular 1-16 and React 16-18 projects. Components are now used in AI chatbots, developer portal and UI of 20+ products`,
+    description: `Led and support 12-30 contributors to build and maintain a design system with web components for use in Angular 1-16 and React 16-18 projects. Components are now used in AI chatbots, developer portal and UI of 20+ products`,
     company: `Thomson Reuters`,
     imgSrc: '/static/images/work/westlaw.jpg',
     meta: {
@@ -24,8 +24,16 @@ const projectsData: Project[] = [
           href: 'https://developers.thomsonreuters.com/',
         },
         {
-          title: `AI @ Thomson Reuters: Practical Law`,
-          href: `https://thomsonreuters.hubs.vidyard.com/watch/47WU7AiPsTfpao2wQqBQdN?autoplay=2&second=12.27`
+          title: `Practical Law`,
+          href: `https://thomsonreuters.hubs.vidyard.com/watch/47WU7AiPsTfpao2wQqBQdN?autoplay=2&second=12.27`,
+        },
+        {
+          title: `Co-Counsel`,
+          href: 'https://legal.thomsonreuters.com/en/c/cocounsel/generative-ai-suite',
+        },
+        {
+          title: `Westlaw Edge`,
+          href: 'https://www.thomsonreuters.ca/en/products/westlaw-edge',
         },
       ],
     },
@@ -33,7 +41,7 @@ const projectsData: Project[] = [
   {
     title: 'Radius 2.0 design system accelerator',
     company: 'Rangle.io',
-    description: `An internal tool with UI Kit and command line tool for accelerating the bootstrapping of design systems`,
+    description: `Worked on a rotating team of 4 to develop a command line tool with a boilerplate Figma UI Kit to accelerate the bootstrapping of design systems based on selection of JS framework, CSS strategy, and CI tool`,
     imgSrc: '/static/images/work/radius-home.svg',
     href: 'https://radius.rangle.io/',
   },
@@ -85,13 +93,7 @@ const projectsData: Project[] = [
         },
       ],
     },
-  },
-  {
-    title: 'The Carded',
-    description: `Civic Tech Project for helping people affected by racial profiling in Toronto.`,
-    imgSrc: '/static/images/work/thecarded.png',
-    href: 'http://thecarded.ca/',
-  },
+  }
 ]
 
 export default projectsData
