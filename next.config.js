@@ -65,6 +65,9 @@ module.exports = () => {
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },
+    serverActions: {
+      allowedOrigins: ['webmention.io'],
+    },
     images: {
       remotePatterns: [
         {
