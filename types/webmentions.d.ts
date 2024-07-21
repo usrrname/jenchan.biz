@@ -19,7 +19,7 @@ type WebMentionPostData = {
   author: WebMentionCommentAuthor
   name: string | null
   url: URL
-  content?: string | null
+  content?: string
   published?: Date | number | null
   published_ts?: number | null
 }
@@ -32,8 +32,8 @@ type WebMentionCommentAuthor = {
 
 interface WebMentionReplies {
   author: WebMentionCommentAuthor
-  content?: string
-  url: URL
+  content?: WebMentionPostData['content']
+  url: WebMentionPostData['url']
   published?: WebMentionPostData['published']
   published_ts?: WebMentionPostData['published_ts']
 }
