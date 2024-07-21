@@ -19,7 +19,7 @@ type WebMentionPostData = {
   author: WebMentionCommentAuthor
   name: string | null
   url: URL
-  content: string | unknown | null
+  content?: string | null
   published?: Date | number | null
   published_ts?: number | null
 }
