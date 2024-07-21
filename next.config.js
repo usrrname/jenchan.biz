@@ -65,8 +65,10 @@ module.exports = () => {
     eslint: {
       dirs: ['app', 'components', 'layouts', 'scripts'],
     },
-    serverActions: {
-      allowedOrigins: ['webmention.io'],
+    experimental: {
+      serverActions: {
+        allowedOrigins: ['webmention.io'],
+      },
     },
     images: {
       remotePatterns: [
@@ -74,7 +76,7 @@ module.exports = () => {
           protocol: 'https',
           hostname: 'picsum.photos',
         },
-         {
+        {
           protocol: 'https',
           hostname: 'webmention.io',
         },
