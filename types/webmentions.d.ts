@@ -5,7 +5,7 @@ type WebMentionPostResponse = {
 type WebMentionPost = {
   data: WebMentionPostData
   activity: {
-    type: 'like' | 'repost' | 'mention' | 'reply'
+    type: 'like' | 'repost' | 'mention' | 'reply' | 'link' | 'bookmark'
   }
   source: URL | string
   verified: boolean
