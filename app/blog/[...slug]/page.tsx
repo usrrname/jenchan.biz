@@ -4,11 +4,13 @@ import siteMetadata from '@/data/siteMetadata'
 import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
+import getDevToPublishedArticles from 'app/api/devToPosts'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 import { Metadata } from 'next'
+import NextLink from 'next/link'
 import { notFound } from 'next/navigation'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import {
@@ -92,6 +94,38 @@ const parseWebMentionResults = (results: WebMentionPostResponse) => {
   return { likes, mentions, replies, reposts }
 }
 
+type DevToArticleStats = {
+  id: number;
+  path: string;
+  url: string;
+  positive_reaction_count: number;
+  public_reaction_count: number;
+  comments_count: number;
+};
+
+async function findDevToArticleByCanonicalUrl(slug: string): Promise<DevToArticleStats | undefined> {
+  'use server'
+
+  const collection = new Set()
+
+  await getDevToPublishedArticles().then((data) => {
+
+    data.find((article) => {
+      if (article.canonical_url.includes(slug)) {
+        collection.add({
+          id: article.id,
+          path: article.path,
+          url: article.url,
+          positive_reaction_count: article.positive_reaction_count,
+          public_reaction_count: article.public_reactions_count,
+          comments_count: article.comments_count,
+        })
+      }
+    })
+  })
+  return [...collection][0] as DevToArticleStats
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -147,8 +181,7 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  const paths = allBlogs.map((p) => ({ slug: p.slug.split('/') }))
-
+  const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
   return paths
 }
 
@@ -164,10 +197,11 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   const prev = sortedCoreContents[postIndex + 1]
   const next = sortedCoreContents[postIndex - 1]
   const post = allBlogs.find((p) => p.slug === slug) as Blog
+
+  const devToArticle = await findDevToArticleByCanonicalUrl(post.slug)
+
   const webmentionsForPost = await getWebMentionsPerPost(post)
-
   const results = parseWebMentionResults(webmentionsForPost)
-
   const { likes, mentions, replies, reposts } = results || {}
 
   const authorList = post?.authors || ['default']
@@ -204,6 +238,13 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
           components={components}
           toc={post.toc}
         />
+
+        {devToArticle && (<>
+          {devToArticle.comments_count > 0 ? (<span className="font-semibold">📝&nbsp;&nbsp;{devToArticle.comments_count} comments&nbsp;&nbsp;•&nbsp;&nbsp;</span>) : null}
+          {devToArticle.positive_reaction_count > 0 ? (<span className="font-semibold ">💖🔥🦄 {devToArticle.positive_reaction_count}&nbsp;&nbsp;•&nbsp;&nbsp;</span>) : null}
+          {devToArticle.public_reaction_count > 0 ? (<span className="font-semibold ">{devToArticle.public_reaction_count} total reactions</span>) : null}
+          &nbsp;at <NextLink href={devToArticle.url}>Dev.to</NextLink>
+        </>)}
         {likes && <WebMentions data={likes} title="Likes" />}
         {reposts && <WebMentions data={reposts} title="Reposts" />}
         {mentions && <WebMentions data={mentions} title="Mentions" />}
