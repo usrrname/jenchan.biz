@@ -29,7 +29,11 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
           />
         ))}
       <div className="p-6">
-        {company && <p className="font-small text-gray-500 dark:text-gray-400">{company}</p>}
+        {company && (
+          <p className="font-small text-gray-500 dark:text-gray-400">
+            {company}
+          </p>
+        )}
         <h2 className="mb-3 text-2xl font-bold leading-8 tracking-tight">
           {href ? (
             <Link href={href} aria-label={`Link to ${title}`}>
@@ -39,7 +43,9 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
             title
           )}
         </h2>
-        <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">{description}</p>
+        <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
         {href && (
           <Link
             href={href}
@@ -50,7 +56,9 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
           </Link>
         )}
 
-        {meta && meta?.links?.length > 0 ? <h3 className="font-medium">{meta.title}</h3> : null}
+        {meta && meta?.links?.length > 0 ? (
+          <h3 className="font-medium">{meta.title}</h3>
+        ) : null}
         {meta?.links?.map((p: { title: string; href: string }) => (
           <p key={p.title}>
             <Link

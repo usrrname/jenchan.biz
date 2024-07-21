@@ -11,7 +11,11 @@ import 'katex/dist/katex.css'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
+import {
+  allCoreContent,
+  coreContent,
+  sortPosts,
+} from 'pliny/utils/contentlayer'
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,
@@ -33,13 +37,12 @@ async function getWebMentionsPerPost(post: Blog) {
 const parseWebMentionResults = (results: WebMentionPostResponse) => {
   const { links } = results
 
-  if (links.length < 1) return
+  if (!links.length) return
 
-  let mentions, replies, likes, reposts
-  const mentionsData: WebMentionReplies[] = []
-  const repliesData: WebMentionReplies[] = []
-  const likesData: WebMentionReaction[] = []
-  const repostsData: WebMentionReaction[] = []
+  const mentions: WebMentionReplies[] = []
+  const replies: WebMentionReplies[] = []
+  const likes: WebMentionReaction[] = []
+  const reposts: WebMentionReaction[] = []
 
   links.forEach((mention) => {
     const { data, activity } = mention
@@ -51,23 +54,22 @@ const parseWebMentionResults = (results: WebMentionPostResponse) => {
     switch (activity.type) {
       case 'like':
       case 'bookmark':
-        likesData.push({
+        likes.push({
           author,
           url,
         })
         break
       case 'repost':
-        repostsData.push({
+        reposts.push({
           url,
           author,
         })
         break
       case 'reply':
       case 'link':
-
         if (!content) content = `<a href="${url}">${url}</a>`
 
-        repliesData.push({
+        replies.push({
           author,
           content,
           url,
@@ -76,7 +78,7 @@ const parseWebMentionResults = (results: WebMentionPostResponse) => {
         })
         break
       case 'mention':
-        mentionsData.push({
+        mentions.push({
           author,
           content,
           url,
@@ -87,32 +89,7 @@ const parseWebMentionResults = (results: WebMentionPostResponse) => {
     }
   })
 
-  if (mentionsData.length > 0) {
-    mentions = {
-      title: 'Mentions',
-      data: mentionsData,
-    }
-  }
-  if (repliesData.length > 0) {
-    replies = {
-      title: 'Replies',
-      data: repliesData,
-    }
-  }
-  if (likesData.length > 0) {
-    likes = {
-      title: 'Likes',
-      data: likesData,
-    }
-  }
-  if (repostsData.length > 0) {
-    reposts = {
-      title: 'Reposts',
-      data: repostsData,
-    }
-  }
-
-  return { mentions, replies, likes, reposts }
+  return { likes, mentions, replies, reposts }
 }
 
 export async function generateMetadata({
@@ -188,7 +165,10 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   const next = sortedCoreContents[postIndex - 1]
   const post = allBlogs.find((p) => p.slug === slug) as Blog
   const webmentionsForPost = await getWebMentionsPerPost(post)
-  const { likes, mentions, replies, reposts } = parseWebMentionResults(webmentionsForPost)
+
+  const results = parseWebMentionResults(webmentionsForPost)
+
+  const { likes, mentions, replies, reposts } = results || {}
 
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
@@ -213,14 +193,21 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
-
-        <WebMentions data={likes?.data} title={likes?.title} />
-        <WebMentions data={reposts?.data} title={reposts?.title} />
-
-        <WebMentions data={mentions?.data} title={mentions?.title} />
-        <WebMentions data={replies?.data} title={replies?.title} />
+      <Layout
+        content={mainContent}
+        authorDetails={authorDetails}
+        next={next}
+        prev={prev}
+      >
+        <MDXLayoutRenderer
+          code={post.body.code}
+          components={components}
+          toc={post.toc}
+        />
+        {likes && <WebMentions data={likes} title="Likes" />}
+        {reposts && <WebMentions data={reposts} title="Reposts" />}
+        {mentions && <WebMentions data={mentions} title="Mentions" />}
+        {replies && <WebMentions data={replies} title="Replies" />}
       </Layout>
     </>
   )

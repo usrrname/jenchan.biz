@@ -50,7 +50,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const googleAnalyticsId = process.env.NEXT_GOOGLE_ANALYTICS_ID as string
 
   return (
@@ -59,23 +63,59 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.style.fontFamily} scroll-smooth`}
       suppressHydrationWarning
     >
-      <link rel="apple-touch-icon" sizes="76x76" href="/static/favicons/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/static/favicons/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/static/favicons/favicon-16x16.png" />
+      <link
+        rel="apple-touch-icon"
+        sizes="76x76"
+        href="/static/favicons/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/static/favicons/favicon-32x32.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/static/favicons/favicon-16x16.png"
+      />
       <link rel="manifest" href="/static/favicons/site.webmanifest" />
-      <link rel="mask-icon" href="/static/favicons/safari-pinned-tab.svg" color="#5bbad5" />
-      <link rel="webmention" href="https://webmention.io/www.jenchan.biz/webmention" />
-      <link rel="pingback" href="https://webmention.io/www.jenchan.biz/xmlrpc" />
+      <link
+        rel="mask-icon"
+        href="/static/favicons/safari-pinned-tab.svg"
+        color="#5bbad5"
+      />
+      <link
+        rel="webmention"
+        href="https://webmention.io/www.jenchan.biz/webmention"
+      />
+      <link
+        rel="pingback"
+        href="https://webmention.io/www.jenchan.biz/xmlrpc"
+      />
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
-      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: light)"
+        content="#fff"
+      />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: dark)"
+        content="#000"
+      />
       <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
-        {googleAnalyticsId !== null && <GA googleAnalyticsId={googleAnalyticsId as string} />}
+        {googleAnalyticsId !== null && (
+          <GA googleAnalyticsId={googleAnalyticsId as string} />
+        )}
         <ThemeProviders>
           <SectionContainer>
             <div className="flex h-screen flex-col justify-between font-sans">
-              <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+              <SearchProvider
+                searchConfig={siteMetadata.search as SearchConfig}
+              >
                 <Header />
                 <main className="mb-auto">{children}</main>
               </SearchProvider>
