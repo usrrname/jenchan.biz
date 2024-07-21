@@ -6,7 +6,7 @@ const siteMetadata = {
   description: 'Technically good on paper, but reality is something else',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://jenchan.biz',
+  siteUrl: 'https://www.jenchan.biz',
   siteRepo: 'https://github.com/usrrname/jenchan.biz',
   siteLogo: '/static/images/logo.svg',
   socialBanner: '/static/images/twitter-card.png',
