@@ -1,20 +1,20 @@
-import { ReactNode } from 'react'
-import Script from 'next/script'
-import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog, Authors } from 'contentlayer/generated'
 import Comments from '@/components/Comments'
+import Image from '@/components/Image'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import SectionContainer from '@/components/SectionContainer'
-import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import type { Authors, Blog } from 'contentlayer/generated'
+import Script from 'next/script'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import { ReactNode } from 'react'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
-const discussUrl = (path) =>
-  `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${path}`)}`
-
+const discussUrl = (path) => {
+  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`
+}
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
   year: 'numeric',
@@ -85,10 +85,10 @@ export default function PostLayout({
               <dt className="sr-only">Authors</dt>
               <dd>
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                  {authorDetails.map((author) => (
+                  {authorDetails.map((author, index) => (
                     <li
                       className="flex items-center space-x-2"
-                      key={author.name}
+                      key={`${author.name}-${index}`}
                     >
                       {author!.avatar && (
                         <Image
@@ -129,7 +129,7 @@ export default function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussUrl(path)} rel="nofollow">
+                <Link href={discussUrl(path)} rel="nofollow" key={path}>
                   Discuss on Twitter
                 </Link>
                 {` • `}
