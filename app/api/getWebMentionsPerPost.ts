@@ -1,16 +1,16 @@
-import { Blog } from ".contentlayer/generated/types"
-import siteMetadata from "@/data/siteMetadata"
+import { Blog } from '.contentlayer/generated/types'
+import siteMetadata from '@/data/siteMetadata'
 
 async function getWebMentionsPerPost(post: Blog) {
-    'use server'
-    const url = siteMetadata.siteUrl
-    const res = await fetch(
-        `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
-        {
-            next: { revalidate: 3600 * 24 }, // revalidate once a day
-        }
-    )
-    return res.json()
+  'use server'
+  const url = siteMetadata.siteUrl
+  const res = await fetch(
+    `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
+    {
+      next: { revalidate: 3600 * 24 }, // revalidate once a day
+    }
+  )
+  return res.json()
 }
 
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {
@@ -19,7 +19,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   if (!links.length) return
 
   const mentions: WebMentionReplies[] = []
-  const replies: WebMentionReplies[] = []
+  let replies: WebMentionReplies[] = []
   const likes: WebMentionReaction[] = []
   const reposts: WebMentionReaction[] = []
 
@@ -67,6 +67,12 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         break
     }
   })
+
+  if (replies.length > 0) {
+    replies = replies.toSorted(
+      (a, b) => (b.published_ts ?? 0) - (a.published_ts ?? 0)
+    )
+  }
 
   return { likes, mentions, replies, reposts }
 }
