@@ -4,7 +4,8 @@ import siteMetadata from '@/data/siteMetadata'
 import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
-import getDevToPublishedArticles from 'app/api/devToPosts'
+import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
+import getWebMentionsPerPost, { parseWebMentionResults } from 'app/api/getWebMentionsPerPost'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import 'css/prism.css'
@@ -23,107 +24,6 @@ const layouts = {
   PostSimple,
   PostLayout,
   PostBanner,
-}
-
-async function getWebMentionsPerPost(post: Blog) {
-  const url = siteMetadata.siteUrl
-  const res = await fetch(
-    `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
-    {
-      next: { revalidate: 3600 * 24 }, // revalidate once a day
-    }
-  )
-  return res.json()
-}
-
-const parseWebMentionResults = (results: WebMentionPostResponse) => {
-  const { links } = results
-
-  if (!links.length) return
-
-  const mentions: WebMentionReplies[] = []
-  const replies: WebMentionReplies[] = []
-  const likes: WebMentionReaction[] = []
-  const reposts: WebMentionReaction[] = []
-
-  links.forEach((mention) => {
-    const { data, activity } = mention
-    let { author, content, url, published, published_ts } = data
-    const { name } = author
-    // Ignore webmentions and promo from myself
-    if (name === 'Jen Chan') return
-
-    switch (activity.type) {
-      case 'like':
-      case 'bookmark':
-        likes.push({
-          author,
-          url,
-        })
-        break
-      case 'repost':
-        reposts.push({
-          url,
-          author,
-        })
-        break
-      case 'reply':
-      case 'link':
-        if (!content) content = `<a href="${url}">${url}</a>`
-
-        replies.push({
-          author,
-          content,
-          url,
-          published,
-          published_ts,
-        })
-        break
-      case 'mention':
-        mentions.push({
-          author,
-          content,
-          url,
-          published,
-          published_ts,
-        })
-        break
-    }
-  })
-
-  return { likes, mentions, replies, reposts }
-}
-
-type DevToArticleStats = {
-  id: number;
-  path: string;
-  url: string;
-  positive_reaction_count: number;
-  public_reaction_count: number;
-  comments_count: number;
-};
-
-async function findDevToArticleByCanonicalUrl(slug: string): Promise<DevToArticleStats | undefined> {
-  'use server'
-
-  const collection = new Set()
-
-  await getDevToPublishedArticles().then((data) => {
-
-    data.find((article) => {
-      if (article.canonical_url.includes(slug)) {
-        collection.add({
-          id: article.id,
-          path: article.path,
-          url: article.url,
-          positive_reaction_count: article.positive_reaction_count,
-          public_reaction_count: article.public_reactions_count,
-          comments_count: article.comments_count,
-        })
-      }
-    })
-  })
-  return [...collection][0] as DevToArticleStats
 }
 
 export async function generateMetadata({
@@ -238,12 +138,11 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
           components={components}
           toc={post.toc}
         />
-
+        <hr className="my-4" />
         {devToArticle && (<>
-          {devToArticle.comments_count > 0 ? (<span className="font-semibold">📝&nbsp;&nbsp;{devToArticle.comments_count} comments&nbsp;&nbsp;•&nbsp;&nbsp;</span>) : null}
-          {devToArticle.positive_reaction_count > 0 ? (<span className="font-semibold ">💖🔥🦄 {devToArticle.positive_reaction_count}&nbsp;&nbsp;•&nbsp;&nbsp;</span>) : null}
-          {devToArticle.public_reaction_count > 0 ? (<span className="font-semibold ">{devToArticle.public_reaction_count} total reactions</span>) : null}
-          &nbsp;at <NextLink href={devToArticle.url}>Dev.to</NextLink>
+          {devToArticle.comments_count > 0 ? (<><NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200 ">📝  {devToArticle.comments_count} comments</NextLink>{`  •  `}</>) : null}
+          {devToArticle.public_reaction_count > 0 ? (<NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200">💖🔥🦄  {devToArticle.public_reaction_count} reactions</NextLink>) : null}
+          &nbsp;on <NextLink href={devToArticle.url} className='no-underline'>Dev.to</NextLink>
         </>)}
         {likes && <WebMentions data={likes} title="Likes" />}
         {reposts && <WebMentions data={reposts} title="Reposts" />}
