@@ -1,4 +1,4 @@
-import Comments from '@/components/Comments'
+
 import Image from '@/components/Image'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -6,15 +6,19 @@ import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import SectionContainer from '@/components/SectionContainer'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
-import Script from 'next/script'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { ReactNode } from 'react'
 
-const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
-const discussUrl = (path) => {
+const discussOnTwitter = (path) => {
   return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`
 }
+const discussOnDevTo = async (path) => {
+  const result = await findDevToArticleByCanonicalUrl(`${path.split('blog/')[1]}`)
+  return result?.url
+}
+
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
   year: 'numeric',
@@ -30,7 +34,7 @@ interface LayoutProps {
   children: ReactNode
 }
 
-export default function PostLayout({
+export default async function PostLayout({
   content,
   authorDetails,
   next,
@@ -39,24 +43,10 @@ export default function PostLayout({
 }: LayoutProps) {
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
+  const devToArticle = await discussOnDevTo(path)
 
   return (
     <SectionContainer>
-      <Script
-        src="https://giscus.app/client.js"
-        data-repo={process.env.NEXT_PUBLIC_GISCUS_REPO}
-        data-repo-id={process.env.NEXT_PUBLIC_GISCUS_REPOSITORY_ID}
-        data-category={process.env.NEXT_PUBLIC_GISCUS_CATEGORY}
-        data-category-id={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID}
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        async
-      ></Script>
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
@@ -129,20 +119,15 @@ export default function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussUrl(path)} rel="nofollow" key={path}>
+                <Link href={discussOnTwitter(path)} rel="nofollow" key={path}>
                   Discuss on Twitter
                 </Link>
                 {` • `}
-                <Link href={editUrl(filePath)}>View on GitHub</Link>
+                {devToArticle && <Link href={devToArticle} rel="nofollow" key={path}>
+                  Discuss on Dev.to
+                </Link>}
               </div>
-              {siteMetadata.comments && (
-                <div
-                  className="pb-6 pt-6 text-center text-gray-700 dark:text-gray-300"
-                  id="comment"
-                >
-                  <Comments slug={slug} />
-                </div>
-              )}
+
             </div>
             <footer>
               <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
