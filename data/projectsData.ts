@@ -13,27 +13,31 @@ interface Project {
 const projectsData: Project[] = [
   {
     title: 'Enterprise Design System',
-    description: `Led and support 12-30 contributors to build and maintain a design system with web components for use in Angular 1-16 and React 16-18 projects. Components are now used in AI chatbots, developer portal and UI of 20+ products`,
+    description: `Led and support 12-30 contributors to build and maintain a design system with web components for use in Angular 1-16 and React 16-18 projects. Components are now used in over 150+ products`,
     company: `Thomson Reuters`,
     imgSrc: '/static/images/work/westlaw.jpg',
     meta: {
       title: 'Adopted by',
       links: [
         {
-          title: `Thomson Reuters Developer Portal`,
-          href: 'https://developers.thomsonreuters.com/',
+          title: `Co-Counsel`,
+          href: 'https://legal.thomsonreuters.com/en/c/cocounsel/generative-ai-suite',
+        },
+        {
+          title: 'Onvio',
+          href: 'https://tax.thomsonreuters.com/en/accounting-solutions/onvio',
         },
         {
           title: `Practical Law`,
           href: `https://thomsonreuters.hubs.vidyard.com/watch/47WU7AiPsTfpao2wQqBQdN?autoplay=2&second=12.27`,
         },
         {
-          title: `Co-Counsel`,
-          href: 'https://legal.thomsonreuters.com/en/c/cocounsel/generative-ai-suite',
-        },
-        {
           title: `Westlaw Edge`,
           href: 'https://www.thomsonreuters.ca/en/products/westlaw-edge',
+        },
+        {
+          title: `Developer Portal`,
+          href: 'https://developers.thomsonreuters.com/',
         },
       ],
     },
@@ -76,7 +80,7 @@ const projectsData: Project[] = [
     company: `Capintel`,
     description: `Internal user account settings and portfolio allocation features for a product connecting asset managers and financial advisors. Designs by Niclas Erst at Fintory`,
     imgSrc: '/static/images/work/allocation.png',
-    href: 'https://capintel.com/independent-advisors/',
+    href: 'https://www.capintel.com/independent-advisors#:~:text=Instant%20analytics%20at%20your%20fingertips.',
   },
   {
     title: 'V/Art: A virtual art gallery',
