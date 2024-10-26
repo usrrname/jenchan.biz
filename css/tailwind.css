@@ -53,3 +53,12 @@ body {
 .katex-display {
   overflow: auto hidden;
 }
+
+details summary {
+    list-style-type: '📁 ';
+}
+
+
+details[open] summary {
+    list-style-type: '📂 ';
+}
