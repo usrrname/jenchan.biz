@@ -19,13 +19,11 @@ export default function GlossaryItem({
 
     return (
         <article>
-            <div className="space-y-1 pb-10 dark:border-gray-700">
-                <div className="pt-10">
-                    <details className="prose max-w-none py-4 dark:prose-invert hover:cursor-pointer">
-                        <summary className="text-md">{title}</summary>
-                        <div className="mt-2" dangerouslySetInnerHTML={{ __html: body.raw }} />
-                    </details>
-                </div>
+            <div className="space-y-1 -pl-4 border-l border-solid dark:border-l-gray-400">
+                <details className="prose max-w-none first:pt-0 last:pb-0 py-4 dark:prose-invert hover:cursor-pointer">
+                    <summary className="text-md">{title}</summary>
+                    <div className="pl-5 mt-2" dangerouslySetInnerHTML={{ __html: body.raw }} />
+                </details>
             </div>
         </article>
     )
