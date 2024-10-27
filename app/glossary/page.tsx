@@ -22,7 +22,7 @@ export default function Page() {
 
             {sortedDefinitions.map((definition, index) => (
                 <div className="border-l-gray-200" key={index}>
-                    <GlossaryItem GlossaryItem content={definition} key={definition.path} >
+                    <GlossaryItem content={definition} key={definition.path} >
                         {definition.summary}
                     </GlossaryItem>
                 </div>
