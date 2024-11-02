@@ -1,4 +1,5 @@
 import GlossaryItem from '@/components/GlossaryItem'
+import PageTitle from '@/components/PageTitle'
 import { genPageMetadata } from 'app/seo'
 import { allGlossaryDefinitions } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
@@ -18,7 +19,8 @@ export default function Page() {
     const sortedDefinitions = allGlossaryDefinitions.sort((a, b) => a.title.localeCompare(b.title))
     return (
         <div>
-            <p className='my-6'>In my time across many dysfunctional setups, I've come up with the following terms to humor myself when things are inefficient or hard to figure out.</p>
+            <PageTitle>Agile Glossary</PageTitle>
+            <p className='my-6'>Terms I've come up with to humor myself when things are inefficient or hard to figure out.</p>
 
             {sortedDefinitions.map((definition, index) => (
                 <div className="border-l-gray-200" key={index}>
