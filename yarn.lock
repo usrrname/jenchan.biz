@@ -1995,6 +1995,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/darwin-arm64@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "@esbuild/darwin-arm64@npm:0.24.0"
+  checksum: 52164fb9114401f87280485178d138be31355b95b43b21ad37d5682a9fdc19f561c5eb61c7f23d36d1c19a954f41c8b08320dce5ca3851cf59a3741376e6f88a
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/darwin-x64@npm:0.18.11":
   version: 0.18.11
   resolution: "@esbuild/darwin-x64@npm:0.18.11"
@@ -10929,6 +10937,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tailwind-nextjs-starter-blog@workspace:."
   dependencies:
+    "@esbuild/darwin-arm64": ^0.24.0
     "@next/bundle-analyzer": 14.1.0
     "@svgr/webpack": ^8.0.1
     "@tailwindcss/forms": ^0.5.4
