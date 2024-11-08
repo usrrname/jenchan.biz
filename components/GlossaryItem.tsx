@@ -1,9 +1,8 @@
 import type { GlossaryDefinition } from 'contentlayer/generated'
-import { CoreContent } from 'pliny/utils/contentlayer'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
-    content: CoreContent<GlossaryDefinition>
+    content: GlossaryDefinition
     children: ReactNode
     next?: { path: string; title: string }
     prev?: { path: string; title: string }
@@ -15,7 +14,12 @@ export default function GlossaryItem({
     prev,
     children,
 }: LayoutProps) {
-    const { title, body } = content
+    const { title, body, slug } = content
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+
+    }
 
     return (
         <article>
