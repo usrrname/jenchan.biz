@@ -5,7 +5,9 @@ import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
-import getWebMentionsPerPost, { parseWebMentionResults } from 'app/api/getWebMentionsPerPost'
+import getWebMentionsPerPost, {
+  parseWebMentionResults,
+} from 'app/api/getWebMentionsPerPost'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import 'css/prism.css'
@@ -33,19 +35,19 @@ export async function generateMetadata({
 }): Promise<Metadata | undefined> {
   const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
-
-  const authorList = post?.authors || ['default']
-  const authorDetails = authorList.map((author) => {
-    const authorResults = allAuthors.find((p) => p.slug === author)
-    return coreContent(authorResults as Authors)
-  })
   if (!post) {
     return
   }
 
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList?.map((author) => {
+    const authorResults = allAuthors?.find((p) => p.slug === author)
+    return authorResults ? coreContent(authorResults as Authors) : null
+  })
+
   const publishedAt = new Date(post.date).toISOString()
   const modifiedAt = new Date(post.lastmod || post.date).toISOString()
-  const authors = authorDetails.map((author) => author.name)
+  const authors = authorDetails.map((author) => author?.name)
   let imageList = [siteMetadata.socialBanner]
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images
@@ -69,7 +71,7 @@ export async function generateMetadata({
       modifiedTime: modifiedAt,
       url: './',
       images: ogImages,
-      authors: authors.length > 0 ? authors : [siteMetadata.author],
+      authors: siteMetadata.author,
     },
     twitter: {
       card: 'summary_large_image',
@@ -139,11 +141,33 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
           toc={post.toc}
         />
         <hr className="my-4" />
-        {devToArticle && (<>
-          {devToArticle.comments_count > 0 ? (<><NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200 ">📝  {devToArticle.comments_count} comments</NextLink>{`  •  `}</>) : null}
-          {devToArticle.public_reaction_count > 0 ? (<NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200">💖🔥🦄  {devToArticle.public_reaction_count} reactions</NextLink>) : null}
-          &nbsp;on <NextLink href={devToArticle.url} className='no-underline'>Dev.to</NextLink>
-        </>)}
+        {devToArticle && (
+          <>
+            {devToArticle.comments_count > 0 ? (
+              <>
+                <NextLink
+                  href={devToArticle.url}
+                  className="font-bold no-underline hover:bg-yellow-200 "
+                >
+                  📝 {devToArticle.comments_count} comments
+                </NextLink>
+                {`  •  `}
+              </>
+            ) : null}
+            {devToArticle.public_reaction_count > 0 ? (
+              <NextLink
+                href={devToArticle.url}
+                className="font-bold no-underline hover:bg-yellow-200"
+              >
+                💖🔥🦄 {devToArticle.public_reaction_count} reactions
+              </NextLink>
+            ) : null}
+            &nbsp;on{' '}
+            <NextLink href={devToArticle.url} className="no-underline">
+              Dev.to
+            </NextLink>
+          </>
+        )}
         {likes && <WebMentions data={likes} title="Likes" />}
         {reposts && <WebMentions data={reposts} title="Reposts" />}
         {mentions && <WebMentions data={mentions} title="Mentions" />}

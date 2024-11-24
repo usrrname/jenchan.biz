@@ -6,8 +6,8 @@ const getDevToPublishedArticles = async () => {
   headers.append('accept', 'application/vnd.forem.api-v1+json')
 
   const res = await fetch(endpoint, {
-      headers: headers,
-      cache: 'force-cache'
+    headers: headers,
+    cache: 'force-cache',
   })
   return res.json()
 }

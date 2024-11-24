@@ -1,4 +1,8 @@
-import { ComputedFields, defineDocumentType, makeSource } from 'contentlayer/source-files'
+import {
+  ComputedFields,
+  defineDocumentType,
+  makeSource,
+} from 'contentlayer/source-files'
 import { writeFileSync } from 'fs'
 import { slug } from 'github-slugger'
 import path from 'path'
@@ -185,5 +189,6 @@ export default makeSource({
     const { allBlogs, allGlossaryDefinitions } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
+    createSearchIndex(allGlossaryDefinitions)
   },
 })
