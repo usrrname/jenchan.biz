@@ -39,15 +39,15 @@ export async function generateMetadata({
     return
   }
 
-  const authorList = post?.authors || ['default']
-  const authorDetails = authorList?.map((author) => {
+  const authorList = post.authors || ['default']
+  const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors?.find((p) => p.slug === author)
-    return authorResults ? coreContent(authorResults as Authors) : null
+    return authorResults ? coreContent(authorResults as Authors) : ''
   })
 
   const publishedAt = new Date(post.date).toISOString()
   const modifiedAt = new Date(post.lastmod || post.date).toISOString()
-  const authors = authorDetails.map((author) => author?.name)
+
   let imageList = [siteMetadata.socialBanner]
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images
