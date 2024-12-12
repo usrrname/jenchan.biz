@@ -10,7 +10,7 @@ import { SearchConfig, SearchProvider } from 'pliny/search'
 import 'pliny/search/algolia.css'
 import { ThemeProviders } from './theme-providers'
 
-export const dynamic = "force-dynamic";
+export const dynamic = "error";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
