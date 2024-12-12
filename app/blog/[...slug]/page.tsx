@@ -31,10 +31,12 @@ const layouts = {
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
 
-export async function generateMetadata(props: {
+export async function generateMetadata({
+  params,
+}: {
   params: { slug: string[] }
 }): Promise<Metadata | undefined> {
-  const slug = decodeURI(props.params.slug.join('/'))
+  const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
