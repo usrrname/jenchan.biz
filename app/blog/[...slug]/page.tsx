@@ -28,11 +28,11 @@ const layouts = {
   PostBanner,
 }
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
+export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
 export async function generateMetadata(props: {
-  params: Promise<{ slug: string[] }>
+  params: { slug: string[] }
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
@@ -84,9 +84,8 @@ export async function generateMetadata(props: {
 }
 
 export const generateStaticParams = async () => {
-  return allBlogs.map((p) => ({
-    slug: p.slug.split('/').map((name) => decodeURI(name)),
-  }))
+  const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
+  return paths
 }
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
