@@ -5,13 +5,11 @@ import { inter } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
 import 'css/tailwind.css'
 import { Metadata } from 'next'
+import { useRouter } from 'next/router'
 import { GA } from 'pliny/analytics'
 import { SearchConfig, SearchProvider } from 'pliny/search'
 import 'pliny/search/algolia.css'
 import { ThemeProviders } from './theme-providers'
-
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
@@ -59,7 +57,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const googleAnalyticsId = process.env.NEXT_GOOGLE_ANALYTICS_ID as string
+  const router = useRouter()
 
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
   return (
     <html
       lang={siteMetadata.language}
