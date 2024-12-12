@@ -27,8 +27,7 @@ const layouts = {
   PostLayout,
   PostBanner,
 }
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-cache"
+export const dynamic = "error";
 
 export async function generateMetadata({
   params,
