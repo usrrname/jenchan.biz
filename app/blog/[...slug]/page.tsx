@@ -34,8 +34,7 @@ export const fetchCache = 'force-no-store'
 export async function generateMetadata(props: {
   params: { slug: string[] }
 }): Promise<Metadata | undefined> {
-  const params = await props.params
-  const slug = decodeURI(params.slug.join('/'))
+  const slug = decodeURI(props.params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
