@@ -29,8 +29,9 @@ const layouts = {
   PostBanner,
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string[] }>
+
+async function generateMetadata(props: {
+  params: Promise<{ slug: string[], name: string }>
 }): Promise<Metadata | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
@@ -82,7 +83,7 @@ export async function generateMetadata(props: {
   }
 }
 
-export const generateStaticParams = async () => {
+const generateStaticParams = async () => {
   const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
   return paths
 }

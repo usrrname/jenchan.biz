@@ -8,7 +8,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 
-export async function generateMetadata(props: {
+async function generateMetadata(props: {
   params: Promise<{ tag: string }>
 }): Promise<Metadata> {
   const params = await props.params
@@ -25,7 +25,7 @@ export async function generateMetadata(props: {
   })
 }
 
-export const generateStaticParams = async () => {
+const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const paths = tagKeys.map((tag) => ({
