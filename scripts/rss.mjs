@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from 'fs'
 import { slug } from 'github-slugger'
 import path from 'path'
+import { sortPosts } from 'pliny/utils/contentlayer'
 import { escape } from 'pliny/utils/htmlEscaper.js'
 import { allBlogs } from '../.contentlayer/generated/index.mjs'
 import tagData from '../app/tag-data.json' assert { type: 'json' }
