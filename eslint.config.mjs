@@ -48,9 +48,10 @@ export default [
     },
 
     rules: {
-      'prettier/prettier': 'error',
+      'prettier/prettier': 'warn',
       'react/react-in-jsx-scope': 'off',
       'prefer-const': 'warn',
+      'no-constant-binary-expression': 'warn',
       'jsx-a11y/anchor-is-valid': [
         'error',
         {
