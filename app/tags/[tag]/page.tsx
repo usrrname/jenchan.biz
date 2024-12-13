@@ -1,7 +1,7 @@
+import tagData from '@/app/tag-data.json' with { type: "json" }
 import siteMetadata from '@/data/siteMetadata'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { genPageMetadata } from 'app/seo'
-import tagData from 'app/tag-data.json' with { type: "json" }
 import { allBlogs } from 'contentlayer/generated'
 import { slug } from 'github-slugger'
 import { Metadata } from 'next'

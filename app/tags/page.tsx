@@ -1,8 +1,8 @@
+import tagData from '@/app/tag-data.json' assert { type: 'json' }
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { shantell_sans } from '@/css/fonts'
 import { genPageMetadata } from 'app/seo'
-import tagData from 'app/tag-data.json' with { type: "json" }
 import { slug } from 'github-slugger'
 
 export const metadata = genPageMetadata({
