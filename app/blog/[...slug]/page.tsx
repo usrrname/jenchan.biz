@@ -5,7 +5,9 @@ import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
-import getWebMentionsPerPost, { parseWebMentionResults } from 'app/api/getWebMentionsPerPost'
+import getWebMentionsPerPost, {
+  parseWebMentionResults,
+} from 'app/api/getWebMentionsPerPost'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import 'css/prism.css'
@@ -14,7 +16,11 @@ import { Metadata } from 'next'
 import NextLink from 'next/link'
 import { notFound } from 'next/navigation'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
+import {
+  allCoreContent,
+  coreContent,
+  sortPosts,
+} from 'pliny/utils/contentlayer'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -81,7 +87,9 @@ export const generateStaticParams = async () => {
   return paths
 }
 
-export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
+export default async function Page(props: {
+  params: Promise<{ slug: string[] }>
+}) {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   // Filter out drafts in production
@@ -136,11 +144,33 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
           toc={post.toc}
         />
         <hr className="my-4" />
-        {devToArticle && (<>
-          {devToArticle.comments_count > 0 ? (<><NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200 ">📝  {devToArticle.comments_count} comments</NextLink>{`  •  `}</>) : null}
-          {devToArticle.public_reaction_count > 0 ? (<NextLink href={devToArticle.url} className="no-underline font-bold hover:bg-yellow-200">💖🔥🦄  {devToArticle.public_reaction_count} reactions</NextLink>) : null}
-          &nbsp;on <NextLink href={devToArticle.url} className='no-underline'>Dev.to</NextLink>
-        </>)}
+        {devToArticle && (
+          <>
+            {devToArticle.comments_count > 0 ? (
+              <>
+                <NextLink
+                  href={devToArticle.url}
+                  className="font-bold no-underline hover:bg-yellow-200 "
+                >
+                  📝 {devToArticle.comments_count} comments
+                </NextLink>
+                {`  •  `}
+              </>
+            ) : null}
+            {devToArticle.public_reaction_count > 0 ? (
+              <NextLink
+                href={devToArticle.url}
+                className="font-bold no-underline hover:bg-yellow-200"
+              >
+                💖🔥🦄 {devToArticle.public_reaction_count} reactions
+              </NextLink>
+            ) : null}
+            &nbsp;on{' '}
+            <NextLink href={devToArticle.url} className="no-underline">
+              Dev.to
+            </NextLink>
+          </>
+        )}
         {likes && <WebMentions data={likes} title="Likes" />}
         {reposts && <WebMentions data={reposts} title="Reposts" />}
         {mentions && <WebMentions data={mentions} title="Mentions" />}

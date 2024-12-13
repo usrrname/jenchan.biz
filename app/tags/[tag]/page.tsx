@@ -34,7 +34,9 @@ export const generateStaticParams = async () => {
   return paths
 }
 
-export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
+export default async function TagPage(props: {
+  params: Promise<{ tag: string }>
+}) {
   const params = await props.params
   const tag = decodeURI(params.tag)
   // Capitalize first letter and convert space to dash

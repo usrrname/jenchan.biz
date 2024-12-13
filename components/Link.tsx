@@ -19,7 +19,13 @@ const CustomLink = ({
   }
 
   return (
-    <a className="break-words" target="_blank" rel="noopener noreferrer" href={href} {...rest} />
+    <a
+      className="break-words"
+      target="_blank"
+      rel="noopener noreferrer"
+      href={href}
+      {...rest}
+    />
   )
 }
 

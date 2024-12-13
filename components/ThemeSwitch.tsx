@@ -58,7 +58,15 @@ const ThemeSwitch = () => {
       <Menu as="div" className="relative inline-block text-left">
         <div className="flex items-center justify-center hover:text-primary-500 dark:hover:text-primary-400">
           <Menu.Button aria-label="Theme switcher">
-            {mounted ? resolvedTheme === 'dark' ? <Moon /> : <Sun /> : <Blank />}
+            {mounted ? (
+              resolvedTheme === 'dark' ? (
+                <Moon />
+              ) : (
+                <Sun />
+              )
+            ) : (
+              <Blank />
+            )}
           </Menu.Button>
         </div>
         <Transition
@@ -77,8 +85,9 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? 'bg-primary-600 text-white' : ''
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? 'bg-primary-600 text-white' : ''
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <div className="mr-2">
                           <Sun />
@@ -92,8 +101,9 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? 'bg-primary-600 text-white' : ''
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? 'bg-primary-600 text-white' : ''
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <div className="mr-2">
                           <Moon />
@@ -107,8 +117,9 @@ const ThemeSwitch = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? 'bg-primary-600 text-white' : ''
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? 'bg-primary-600 text-white' : ''
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <div className="mr-2">
                           <Monitor />

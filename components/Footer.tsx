@@ -14,6 +14,6 @@ export default function Footer() {
           <SocialIcon kind="devto" href={siteMetadata.devto} size={6} />
         </div>
       </div>
-    </footer >
+    </footer>
   )
 }

@@ -51,8 +51,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const basePath = process.env.BASE_PATH || ''
   const googleAnalyticsId = process.env.NEXT_GOOGLE_ANALYTICS_ID as string
 
@@ -79,7 +82,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         sizes="16x16"
         href={`${basePath}/static/favicons/favicon-16x16.png`}
       />
-      <link rel="manifest" href={`${basePath}/static/favicons/site.webmanifest`} />
+      <link
+        rel="manifest"
+        href={`${basePath}/static/favicons/site.webmanifest`}
+      />
       <link
         rel="mask-icon"
         href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
@@ -93,11 +99,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         rel="pingback"
         href="https://webmention.io/www.jenchan.biz/xmlrpc"
       />
-      <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        href={`${basePath}/feed.xml`}
+      />
 
       <meta name="msapplication-TileColor" content="#000000" />
-      <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff" />
-      <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: light)"
+        content="#fff"
+      />
+      <meta
+        name="theme-color"
+        media="(prefers-color-scheme: dark)"
+        content="#000"
+      />
 
       {googleAnalyticsId !== null && (
         <GA googleAnalyticsId={googleAnalyticsId as string} />
