@@ -29,7 +29,6 @@ const layouts = {
   PostBanner,
 }
 
-
 async function generateMetadata(props: {
   params: Promise<{ slug: string[], name: string }>
 }): Promise<Metadata | undefined> {
@@ -91,7 +90,7 @@ const generateStaticParams = async () => {
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>
 }) {
-  const params = await props.params
+  const params = await props?.params
   const slug = decodeURI(params.slug.join('/'))
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
