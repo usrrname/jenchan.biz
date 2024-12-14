@@ -8,7 +8,7 @@ import siteMetadata from '@/data/siteMetadata'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 const discussOnTwitter = (path) => {
   return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`

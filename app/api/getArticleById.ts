@@ -1,5 +1,3 @@
-export const dynamic = 'force-static'
-
 const getArticleById = async (id: number) => {
   'use server'
   const endpoint = `https://dev.to/api/articles/${id}`

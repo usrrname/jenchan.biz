@@ -7,7 +7,7 @@ import siteMetadata from '@/data/siteMetadata'
 import type { Blog } from 'contentlayer/generated'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { formatDate } from 'pliny/utils/formatDate'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 interface LayoutProps {
   content: CoreContent<Blog>

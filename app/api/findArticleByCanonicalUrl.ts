@@ -1,5 +1,4 @@
 import getDevToPublishedArticles from './getDevToPublishedArticles'
-export const dynamic = 'force-static'
 
 async function findDevToArticleByCanonicalUrl(
   slug: string

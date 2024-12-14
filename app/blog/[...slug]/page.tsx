@@ -25,6 +25,8 @@ import {
 } from 'pliny/utils/contentlayer'
 import React from 'react'
 
+export const dynamic = 'force-dynamic'
+
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,
@@ -49,7 +51,7 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats;
 }
 
-async function generateMetadata(props: {
+export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<BlogPostProps> {
   const params = await props.params
@@ -130,7 +132,7 @@ async function generateMetadata(props: {
   }
 }
 
-export const generateStaticParams = async () => {
+export async function generateStaticParams() {
   return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
