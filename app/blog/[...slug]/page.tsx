@@ -50,7 +50,7 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats;
 }
 
-async function generateMetadata(props: {
+export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<BlogPostProps> {
   const params = await props.params
@@ -131,7 +131,7 @@ async function generateMetadata(props: {
   }
 }
 
-const generateStaticParams = async () => {
+export async function generateStaticParams() {
   const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
   return paths
 }
@@ -151,7 +151,7 @@ export default async function Page(props: {
 
   return (
     <>
-      <meta name="og:published_at" content={post.date} />
+      <meta name="og:published_at" content={post?.date} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
