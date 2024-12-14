@@ -30,8 +30,6 @@ const layouts = {
   PostLayout,
   PostBanner,
 }
-export const dynamic = 'force-dynamic'
-export const fetchCache = 'force-cache'
 
 interface BlogPostProps extends Metadata {
   post: Blog;
