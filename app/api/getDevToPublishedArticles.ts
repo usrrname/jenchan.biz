@@ -1,3 +1,5 @@
+export const dynamic = 'force-static'
+
 const getDevToPublishedArticles = async () => {
   'use server'
   const endpoint = `https://dev.to/api/articles/me/published`

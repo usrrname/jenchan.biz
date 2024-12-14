@@ -7,6 +7,7 @@ import { slug } from 'github-slugger'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
+import React from 'react'
 
 async function generateMetadata(props: {
   params: Promise<{ tag: string }>
@@ -25,7 +26,7 @@ async function generateMetadata(props: {
   })
 }
 
-const generateStaticParams = async () => {
+export const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const paths = tagKeys.map((tag) => ({

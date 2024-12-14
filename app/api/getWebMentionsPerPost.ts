@@ -1,5 +1,6 @@
 import { Blog } from '.contentlayer/generated/types'
 import siteMetadata from '@/data/siteMetadata'
+export const dynamic = 'force-static'
 
 async function getWebMentionsPerPost(post: Blog) {
   'use server'
