@@ -23,6 +23,7 @@ import {
   coreContent,
   sortPosts
 } from 'pliny/utils/contentlayer'
+import React from 'react'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
