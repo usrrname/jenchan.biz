@@ -6,8 +6,9 @@ async function findDevToArticleByCanonicalUrl(
   'use server'
 
   const collection = new Set()
+  try {
+    const data = await getDevToPublishedArticles()
 
-  await getDevToPublishedArticles().then((data) => {
     data.find((article) => {
       if (article.canonical_url.includes(slug)) {
         collection.add({
@@ -20,8 +21,13 @@ async function findDevToArticleByCanonicalUrl(
         })
       }
     })
-  })
-  return [...collection][0] as DevToArticleStats
+    return [...collection][0] as DevToArticleStats
+
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error in findDevToArticleByCanonicalUrl: ${error.message}`)
+    }
+  }
 }
 
 export default findDevToArticleByCanonicalUrl
