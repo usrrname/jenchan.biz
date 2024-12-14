@@ -130,9 +130,9 @@ async function generateMetadata(props: {
   }
 }
 
-export async function generateStaticParams() {
+async function getStaticPaths() {
   const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
-  return paths
+  return { paths, fallback: false }
 }
 
 export default async function Page(props: {
