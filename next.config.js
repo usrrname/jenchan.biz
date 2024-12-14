@@ -74,8 +74,7 @@ module.exports = () => {
     experimental: {
       serverActions: {
         allowedOrigins: ['webmention.io'],
-      },
-      typedRoutes: true,
+      }
     },
     images: {
       remotePatterns: [

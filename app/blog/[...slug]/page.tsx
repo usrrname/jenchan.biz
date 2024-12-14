@@ -49,6 +49,8 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats;
 }
 
+export const dynamic = 'force-dynamic'
+
 async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<BlogPostProps> {
@@ -131,9 +133,8 @@ async function generateMetadata(props: {
   }
 }
 
-async function getStaticPaths() {
-  const paths = allBlogs.map((p: Blog) => ({ slug: p.slug.split('/') }))
-  return { paths, fallback: false }
+export const generateStaticParams = async () => {
+  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
 }
 
 export default async function Page(props: {
