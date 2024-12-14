@@ -52,6 +52,7 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'prefer-const': 'warn',
       'no-constant-binary-expression': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',
       'jsx-a11y/anchor-is-valid': [
         'error',
         {
