@@ -50,9 +50,10 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats;
 }
 
-export async function generateMetadata(props: {
+async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<BlogPostProps> {
+  'use server'
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug) as Blog
@@ -60,7 +61,7 @@ export async function generateMetadata(props: {
   // Filter out drafts in production
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
-  if (postIndex === -1) {
+  if (!post || postIndex === -1) {
     return notFound()
   }
 
