@@ -49,8 +49,8 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats;
 }
 
-export const dynamic = 'force-dynamic'
-
+export const dynamicParams = true
+export const runtime = 'nodejs'
 async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
 }): Promise<BlogPostProps> {
