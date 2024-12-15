@@ -1,8 +1,10 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
-import { ImageProps } from 'next/image'
-import NextImage from 'next/image'
+import NextImage, { ImageProps } from 'next/image'
+import React from 'react'
 
-const Image = ({ ...rest }: ImageProps) => <NextImage {...rest} />
+const basePath = process.env.BASE_PATH
+
+const Image = ({ src, ...rest }: ImageProps) => (
+  <NextImage src={`${basePath || ''}${src}`} {...rest} />
+)
 
 export default Image

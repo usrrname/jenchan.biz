@@ -1,4 +1,5 @@
 import Link from '@/components/Link'
+import React from 'react'
 
 export default function NotFound() {
   return (

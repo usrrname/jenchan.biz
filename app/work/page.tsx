@@ -2,6 +2,7 @@ import Card from '@/components/Card'
 import { shantell_sans } from '@/css/fonts'
 import projectsData from '@/data/projectsData'
 import { genPageMetadata } from 'app/seo'
+import React from 'react'
 
 export const metadata = genPageMetadata({ title: 'Work' })
 

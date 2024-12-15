@@ -1,15 +1,15 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 'use client'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import { shantell_sans } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json'
+import tagData from 'app/tag-data.json' with { type: "json" }
 import type { Blog } from 'contentlayer/generated'
 import { slug } from 'github-slugger'
 import { usePathname } from 'next/navigation'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { formatDate } from 'pliny/utils/formatDate'
+import React from 'react'
 
 interface PaginationProps {
   totalPages: number
@@ -113,7 +113,7 @@ export default function ListLayoutWithTags({
                 {sortedTags.map((t) => {
                   return (
                     <li key={t} className="my-3">
-                      {pathname.split('/tags/')[1] === slug(t) ? (
+                      {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
                         <h3 className="inline px-3 py-2 text-sm font-bold uppercase text-primary-500">
                           {`${t} (${tagCounts[t]})`}
                         </h3>
@@ -142,7 +142,7 @@ export default function ListLayoutWithTags({
                       <dl>
                         <dt className="sr-only">Published on</dt>
                         <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                          <time dateTime={date}>
+                          <time dateTime={date} suppressHydrationWarning>
                             {formatDate(date, siteMetadata.locale)}
                           </time>
                         </dd>
@@ -150,7 +150,7 @@ export default function ListLayoutWithTags({
                       <div className="space-y-3">
                         <div>
                           <h2
-                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight`}
+                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight my-4`}
                             style={{
                               fontVariationSettings: `"BNCE" 2, ""INFM" 30`,
                             }}

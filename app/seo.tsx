@@ -1,5 +1,5 @@
-import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
+import { Metadata } from 'next'
 
 interface PageSEOProps {
   title: string
@@ -17,6 +17,7 @@ export function genPageMetadata({
 }: PageSEOProps): Metadata {
   return {
     title,
+    description: description || siteMetadata.description,
     openGraph: {
       title: `${title} | ${siteMetadata.title}`,
       description: description || siteMetadata.description,

@@ -1,4 +1,3 @@
-
 import Image from '@/components/Image'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -9,13 +8,15 @@ import siteMetadata from '@/data/siteMetadata'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 const discussOnTwitter = (path) => {
   return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`
 }
 const discussOnDevTo = async (path) => {
-  const result = await findDevToArticleByCanonicalUrl(`${path.split('blog/')[1]}`)
+  const result = await findDevToArticleByCanonicalUrl(
+    `${path.split('blog/')[1]}`
+  )
   return result?.url
 }
 
@@ -94,20 +95,6 @@ export default async function PostLayout({
                         <dd className="text-gray-900 dark:text-gray-100">
                           {author.name}
                         </dd>
-                        <dt className="sr-only">Twitter</dt>
-                        <dd>
-                          {author.twitter && (
-                            <Link
-                              href={author.twitter}
-                              className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                            >
-                              {author.twitter.replace(
-                                'https://twitter.com/',
-                                '@'
-                              )}
-                            </Link>
-                          )}
-                        </dd>
                       </dl>
                     </li>
                   ))}
@@ -123,11 +110,12 @@ export default async function PostLayout({
                   Discuss on Twitter
                 </Link>
                 {` • `}
-                {devToArticle && <Link href={devToArticle} rel="nofollow" key={path}>
-                  Discuss on Dev.to
-                </Link>}
+                {devToArticle && (
+                  <Link href={devToArticle} rel="nofollow" key={path}>
+                    Discuss on Dev.to
+                  </Link>
+                )}
               </div>
-
             </div>
             <footer>
               <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">

@@ -1,12 +1,11 @@
-import Image from './Image'
-import Link from './Link'
+import React from 'react';
+import Image from './Image';
+import Link from './Link';
 
 const Card = ({ title, description, imgSrc, href, meta, company }) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">
     <div
-      className={`${
-        imgSrc && 'h-full'
-      } overflow-hidden rounded-md border-2 border-gray-300 border-opacity-60 dark:border-gray-700`}
+      className={`${imgSrc && 'h-full'} overflow-hidden rounded-md border-2 border-gray-300 border-opacity-60 dark:border-gray-700`}
     >
       {imgSrc &&
         (href ? (
@@ -59,16 +58,16 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
         {meta && meta?.links?.length > 0 ? (
           <h3 className="font-medium">{meta.title}</h3>
         ) : null}
-        {meta?.links?.map((p: { title: string; href: string }) => (
-          <p key={p.title}>
+        {meta?.links?.map((p: { title: string; href: string }, index: number) => (
+          <span key={p.title}>
             <Link
               href={p.href}
               className="prose text-base font-medium leading-6 text-secondary-500 hover:text-secondary-600 dark:hover:text-secondary-400"
               aria-label={`Link to ${p.title}`}
             >
               {p.title}
-            </Link>
-          </p>
+            </Link> {index < meta.links.length - 1 && '•'}{' '}
+          </span>
         ))}
       </div>
     </div>

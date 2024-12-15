@@ -8,6 +8,8 @@ import { Metadata } from 'next'
 import { GA } from 'pliny/analytics'
 import { SearchConfig, SearchProvider } from 'pliny/search'
 import 'pliny/search/algolia.css'
+import React from 'react'
+import 'remark-github-blockquote-alert/alert.css'
 import { ThemeProviders } from './theme-providers'
 
 export const metadata: Metadata = {
@@ -55,6 +57,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const basePath = process.env.BASE_PATH || ''
   const googleAnalyticsId = process.env.NEXT_GOOGLE_ANALYTICS_ID as string
 
   return (
@@ -66,24 +69,27 @@ export default function RootLayout({
       <link
         rel="apple-touch-icon"
         sizes="76x76"
-        href="/static/favicons/apple-touch-icon.png"
+        href={`${basePath}/static/favicons/apple-touch-icon.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="32x32"
-        href="/static/favicons/favicon-32x32.png"
+        href={`${basePath}/static/favicons/favicon-32x32.png`}
       />
       <link
         rel="icon"
         type="image/png"
         sizes="16x16"
-        href="/static/favicons/favicon-16x16.png"
+        href={`${basePath}/static/favicons/favicon-16x16.png`}
       />
-      <link rel="manifest" href="/static/favicons/site.webmanifest" />
+      <link
+        rel="manifest"
+        href={`${basePath}/static/favicons/site.webmanifest`}
+      />
       <link
         rel="mask-icon"
-        href="/static/favicons/safari-pinned-tab.svg"
+        href={`${basePath}/static/favicons/safari-pinned-tab.svg`}
         color="#5bbad5"
       />
       <link
@@ -94,6 +100,12 @@ export default function RootLayout({
         rel="pingback"
         href="https://webmention.io/www.jenchan.biz/xmlrpc"
       />
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        href={`${basePath}/feed.xml`}
+      />
+
       <meta name="msapplication-TileColor" content="#000000" />
       <meta
         name="theme-color"
@@ -105,22 +117,18 @@ export default function RootLayout({
         media="(prefers-color-scheme: dark)"
         content="#000"
       />
-      <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
-      <body className="bg-white text-black antialiased dark:bg-gray-950 dark:text-white">
-        {googleAnalyticsId !== null && (
-          <GA googleAnalyticsId={googleAnalyticsId as string} />
-        )}
+
+      {googleAnalyticsId !== null && (
+        <GA googleAnalyticsId={googleAnalyticsId as string} />
+      )}
+      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
         <ThemeProviders>
           <SectionContainer>
-            <div className="flex h-screen flex-col justify-between font-sans">
-              <SearchProvider
-                searchConfig={siteMetadata.search as SearchConfig}
-              >
-                <Header />
-                <main className="mb-auto">{children}</main>
-              </SearchProvider>
-              <Footer />
-            </div>
+            <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
+              <Header />
+              <main className="mb-auto">{children}</main>
+            </SearchProvider>
+            <Footer />
           </SectionContainer>
         </ThemeProviders>
       </body>

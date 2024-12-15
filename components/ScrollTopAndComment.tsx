@@ -1,7 +1,7 @@
 'use client'
 
 import siteMetadata from '@/data/siteMetadata'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const ScrollTopAndComment = () => {
   const [show, setShow] = useState(false)
