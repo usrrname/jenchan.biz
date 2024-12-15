@@ -3,6 +3,7 @@ import Tag from '@/components/Tag'
 import { shantell_sans } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
+import React from 'react'
 
 const MAX_DISPLAY = 5
 
@@ -12,7 +13,7 @@ export default function Home({ posts }) {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1
-            className={`${shantell_sans.variable} text-1xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14`}
+            className={`${shantell_sans.variable} font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-3xl sm:leading-10 md:text-6xl md:leading-14 lg:text-5xl lg:leading-5`}
           >
             Latest
           </h1>

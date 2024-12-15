@@ -1,5 +1,5 @@
 import { shantell_sans } from '@/css/fonts'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 interface Props {
   children: ReactNode

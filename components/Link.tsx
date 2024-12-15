@@ -6,6 +6,7 @@ type CustomLinkProps = LinkProps<any> & Omit<React.AnchorHTMLAttributes<HTMLAnch
 
 const CustomLink: FC<CustomLinkProps> = ({
   href,
+  className,
   ...rest
 }: CustomLinkProps) => {
   const isInternalLink = typeof href === 'string' && href.startsWith('/')
@@ -13,7 +14,8 @@ const CustomLink: FC<CustomLinkProps> = ({
 
   if (isInternalLink) {
     return (
-      <Link href={href as string} {...rest} className="break-words" />
+      <Link href={href as string} {...rest} className={`${className} break-words`
+      } />
     )
   }
 

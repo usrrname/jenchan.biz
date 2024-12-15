@@ -150,7 +150,7 @@ export default function ListLayoutWithTags({
                       <div className="space-y-3">
                         <div>
                           <h2
-                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight`}
+                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight my-4`}
                             style={{
                               fontVariationSettings: `"BNCE" 2, ""INFM" 30`,
                             }}

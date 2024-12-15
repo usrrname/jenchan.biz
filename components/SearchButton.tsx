@@ -1,6 +1,7 @@
+import siteMetadata from '@/data/siteMetadata'
 import { AlgoliaButton } from 'pliny/search/AlgoliaButton'
 import { KBarButton } from 'pliny/search/KBarButton'
-import siteMetadata from '@/data/siteMetadata'
+import React from 'react'
 
 const SearchButton = () => {
   if (

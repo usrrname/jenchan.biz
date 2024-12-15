@@ -1,5 +1,5 @@
-import { ImageProps } from 'next/image'
-import NextImage from 'next/image'
+import NextImage, { ImageProps } from 'next/image'
+import React from 'react'
 
 const basePath = process.env.BASE_PATH
 

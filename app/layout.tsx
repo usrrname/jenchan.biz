@@ -8,6 +8,7 @@ import { Metadata } from 'next'
 import { GA } from 'pliny/analytics'
 import { SearchConfig, SearchProvider } from 'pliny/search'
 import 'pliny/search/algolia.css'
+import React from 'react'
 import 'remark-github-blockquote-alert/alert.css'
 import { ThemeProviders } from './theme-providers'
 
