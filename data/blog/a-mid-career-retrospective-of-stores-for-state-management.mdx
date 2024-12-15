@@ -226,10 +226,11 @@ The store is definitely split into modules that pertain to domain features, but 
 And so, the more features added, the busier the team gets with patching and reconciling state in both stores 😱
 
 ![An illustration of daisychain-ed monitors feeding into a laptop](https://mmdmonitors.com/wp-content/uploads/2024/08/1200x628_linkedin_Daisychain.jpg)
+
 <figcaption>Poorly architected stores can act like daisychained info flows, but not in the way that you'd want!</figcaption>
 
 
-Eventually someone has to rip the bandaid off in order to move ahead:
+Eventually, someone has to rip the bandaid off in order to move ahead:
 
 - retire the use of `accountStore` and relocate Canadian and American orders to show under `OrderStore`
 
