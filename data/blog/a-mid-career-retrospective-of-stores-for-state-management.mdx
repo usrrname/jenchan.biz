@@ -3,7 +3,7 @@ title: "A mid-career retrospective of stores for state management"
 draft: false
 summary: 'Looking back at flux-style stores for modernizing front end applications. A tale of 3 projects, at 3 different businesses.'
 date: '2024-11-24'
-tags: [redux, react, architecture, frontend, vue, angular, statemanagement, halloween]
+tags: [redux, react, architecture, frontend, vue, angular, statemanagement, codinghorror]
 ---
 
 Working on a living product after 2 years on design systems and component libraries has inspired reflections on technical choices of startups past.
@@ -113,7 +113,7 @@ What happens when you only use services to share state?
 
 Where you had conditional adding of fields you'd have to loop through form groups to check whether an `AbstractControl` on a particular nested form group form value had been interacted with.
 
-All fields and validations that depended on selected form values all relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
+Conditional rendering and live validations based on selected form values at any time relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
 
 Form state could only be inspected at runtime by console logging different lines within and after functions, but not in any devtool particularly painful when it came to debugging regressions or checking our own work.
 
