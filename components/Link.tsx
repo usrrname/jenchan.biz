@@ -20,12 +20,12 @@ const CustomLink: FC<CustomLinkProps> = ({
   }
 
   if (isAnchorLink) {
-    return <a className="break-words" href={href} {...rest} />
+    return <a className={`${className} break-words`} href={href} {...rest} />
   }
 
   return (
     <a
-      className="break-words"
+      className={`${className} break-words`} 
       target="_blank"
       rel="noopener noreferrer"
       href={href as string}

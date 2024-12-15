@@ -48,7 +48,7 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
         {href && (
           <Link
             href={href}
-            className="mb-3 text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="mb-3 text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:text-underline"
             aria-label={`Link to ${title}`}
           >
             Learn more &rarr;
@@ -59,10 +59,10 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
           <h3 className="font-medium">{meta.title}</h3>
         ) : null}
         {meta?.links?.map((p: { title: string; href: string }, index: number) => (
-          <span key={p.title}>
+          <span key={p.title + index}>
             <Link
               href={p.href}
-              className="prose text-base font-medium leading-6 text-secondary-500 hover:text-secondary-600 dark:hover:text-secondary-400"
+              className="prose font-medium leading-6 text-orange-400 hover:underline hover:semibold hover:text-orange-600 dark:hover:text-orange-300"
               aria-label={`Link to ${p.title}`}
             >
               {p.title}
