@@ -12,15 +12,7 @@ In this post, I recount some learnings from using or refusing common, "boring", 
 
 🍿 The following is a tale of 3 front end architectures spanning 2018-2024, each with a different stack and state management solution in a regulated domain. [^1] 
 
-- [1. The fintech app with several thousand trial users](#1-the-fintech-app-with-several-thousand-trial-users)
-- [2: Modernizing a surgery prioritization system in Angular 9](#2-modernizing-a-surgery-prioritization-system-in-angular-9)
-- [3: A 7 year old shopping app that was never refactored](#3-a-7-year-old-shopping-app-that-was-never-refactored)
-  - [What could go wrong?](#what-could-go-wrong)
-- [What people hate about stores](#what-people-hate-about-stores)
-  - [Setup drudgery and boilerplate](#setup-drudgery-and-boilerplate)
-  - [Premature optimization leads to higher maintenance efforts](#premature-optimization-leads-to-higher-maintenance-efforts)
-- [To store or not to store?](#to-store-or-not-to-store)
-- [Contemporary state management](#contemporary-state-management)
+<TOCInline toc={props.toc} />
 
 
 ## 1. The fintech app with several thousand trial users
@@ -85,6 +77,7 @@ It's not as serious as a medical device, but impactful to patient health outcome
 Angular’s MVC structure meant service classes performed the passing of state between views. 
 
 Our form was doubly-dynamic: 
+
 - fields that were displayed depended on a question-answer model, basically running through `Formbuilder` 
 - subsequent fields that were displayed were dependent on combinations of inputted values of other fields
 
@@ -120,7 +113,7 @@ What happens when you only use services to share state?
 
 Where you had conditional adding of fields you'd have to loop through form groups to check whether an `AbstractControl` on a particular nested form group form value had been interacted with.
 
-Conditionally rendering fields and validations according to selected form values all relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
+All fields and validations that depended on selected form values all relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
 
 Form state could only be inspected at runtime by console logging different lines within and after functions, but not in any devtool particularly painful when it came to debugging regressions or checking our own work.
 
@@ -216,11 +209,11 @@ The specific project team hurtles to roll out a new store for American orders, b
 
 The store is definitely split into modules that pertain to domain features, but it has a couple oddities:
 
-- Mismatching or similarly named state properties and actions. `orderStore().confirmOrders()` and `accountStore.purchaseItems()` perform the same function, but they're in different stores. The `accountStore` has an `items` property that tracks `order.data.items` in the cart pre-checkout, but so does the `orderStore` for `orderStore.items` in the cart, post-checkout!
+- Similarly named state properties and actions. `orderStore().confirmOrders()` and `accountStore.purchaseItems()` perform the same function, but they're in different stores. The `accountStore` has an `items` property that tracks `order.data.items` in the cart pre-checkout, but so does the `orderStore` for `orderStore.items` in the cart, post-checkout!
 
 - Duplicated state: while the account store would be populated with user-adjacent info right after login, the order store is updated whenever it's instantiated in American users' sessions.
 
-- Missing knowledge sharing: Many features of the app still rely on the legacy `order.data.items` property, but the `orderStore`'s `order.items` inventory needs to be displayed in US currency. Without cataloging and updating areas that rely on the old store, the display of the correct cart continues to falter. 
+- Missing knowledge loops: Many features of the app still rely on the legacy `order.data.items` property, but the `orderStore`'s `order.items` inventory needs to be displayed in US currency. Without cataloging and updating areas that rely on the old store, the display of the correct cart continues to falter. 
 
 - Getter abuse: The `accountStore` has getters that detail trivial pieces of user state that have been tacked on over time: 
 
@@ -232,6 +225,10 @@ The store is definitely split into modules that pertain to domain features, but 
 
 And so, the more features added, the busier the team gets with patching and reconciling state in both stores 😱
 
+![An illustration of daisychain-ed monitors feeding into a laptop](https://mmdmonitors.com/wp-content/uploads/2024/08/1200x628_linkedin_Daisychain.jpg)
+<figcaption>Poorly architected stores can act like daisychained info flows, but not in the way that you'd want!</figcaption>
+
+
 Eventually someone has to rip the bandaid off in order to move ahead:
 
 - retire the use of `accountStore` and relocate Canadian and American orders to show under `OrderStore`
@@ -241,7 +238,7 @@ Eventually someone has to rip the bandaid off in order to move ahead:
   - we can get the second store to subscribe to the first on load, then on state change, dispatch the actions in the second store.
   - OR, we get rid of hydrating the first store and instead hydrate the second on load so we won't have to keep 2 stores' data in sync.
 
-## What people hate about stores
+## Why devs hate stores
 
 ### Setup drudgery and boilerplate
 
@@ -255,13 +252,11 @@ To be effective with stores, developers needed profiency with a framework's rend
 
 Every action had to be created and dispatched via the reducer, and any container view using the store had to be connected to it. I don't recall how many times I wrote `mapStateToProps` and `mapDispatchToProps`.
 
-Redux as a choice is rather overkill in today's front end ecosystem if you're building an MVP, and as of late more have been using [redux-toolkit](https://redux-toolkit.js.org/) or `useReducer` to update slices of state.[^4]
+Redux is rather overkill in today's front end ecosystem if you're building an MVP, and as of late more have been using [redux-toolkit](https://redux-toolkit.js.org/) or `useReducer` to update slices of state.[^4]
 
 ### Premature optimization leads to higher maintenance efforts
 
-It can be tempting to create a store for every feature of an app too soon. This can result in unnecessary complexity or abstraction that's easy to overlook by newer devs when they're not familiar with the pattern. 
-
-Premature codesplitting confuses the team when the data source is the same, leading to higher cognitive overhead to keep more stores' state updated, especially if they share the same data source.
+Creating a store for every app feature can lead to unnecessary complexity and coupling. This is especially problematic when multiple stores share the same data source, increasing cognitive overhead to keep states synchronized. Premature code splitting can confuse teams and make maintenance harder.
 
 The more stores you have, the more state you have to keep track of!
 
@@ -271,11 +266,11 @@ Using a store for state management is ideal when:
 
 - There is complex, domain-specific logic that needs to be diligently updated as part of a larger product or platform as a user navigates through different views.
 
-- It's become unsustainable to manage state within one or two components and you find that you're requesting or passing the same data properties across multiple components. (aka. [prop-drilling](https://kentcdodds.com/blog/prop-drilling))
+- It becomes unsustainable to manage state within one or two components and you find that you're passing the same data properties across multiple components. (aka. [prop-drilling](https://kentcdodds.com/blog/prop-drilling))
 
 - There's a need to present or update different types of data across different features of an app, or work with nested deep data structures to update the UI.
 
-If there are multiple dimensions of state to track, a store might not provoide enough granularity. It may be worth looking at implementing a state machine (some libraries include [XState](https://xstate.js.org/) or [Immer](https://immerjs.github.io/immer/))
+If there are multiple dimensions of state to track, a store may not offer enough granularity for defining exact state transitions. It may be worth looking at implementing a state machine (some libraries include [XState](https://xstate.js.org/) or [Immer](https://immerjs.github.io/immer/))
    
 For example, if you need interaction changes through multi-step forms, wizards or like the combinatories of form fields I previously described. 
 
@@ -292,28 +287,21 @@ It's easy to get to a place where no single pattern is used, but someone somewhe
 - a [singleton](https://www.patterns.dev/vanilla/singleton-pattern) that can be updated from anywhere in the app (React Context and Vue composables might be lightweight ways to do this, but I have found that composables are not good replacements for behaviour you'd expect from singletons.)
 
 ## Contemporary state management
+Front end frameworks today offer lightweight options for state management.Leveraging out-of-the-box mechanisms will suffice for small to medium-sized apps.
 
-Front end frameworks today have more lightweight and facile options for managing state. Often times, the built in mechanisms of a framework are enough to handle the state of a small to medium-sized app, and definitely not even a concern for most marketing sites.
+React's hooks (`useState`, `useEffect`, `useContext`) allow for easy encapsulation of reactive business logic. The [Context API](https://legacy.reactjs.org/docs/context.html) reduces prop drilling by making state accessible at any component level.
 
-Hooks in React 16.8 and further allowed devs to separate out local, global state. Custom hooks built with bread-and-butter `useState`, `useEffect`, `useContext` made encapsulation of reactive business logic much easier.
+Vue's `computed()`, `ref()`, and `watch()` functions, along with composables, achieve similar results to React hooks and context.
 
-The [Context API](https://legacy.reactjs.org/docs/context.html) vastly reduced the need for prop drilling by being able to refer to context values anytime at any level of view depth within a component. 
+Newer options like [signals](https://github.com/tc39/proposal-signals) in Svelte and Angular are also emerging.
 
-Leveraging the [provider pattern](https://www.patterns.dev/vanilla/provider-pattern/), context helped make state accessible from any level of an app. 
+Frameworks aim to:
+- Reactively update the UI when data changes
+- Subscribe/unsubscribe to data changes
+- Manage side effects
+- Distinguish between local, shared, and global state
 
-Vue's `computed()`, `ref()` and `watch()` functions and composables allow us to accomplish the same things as React `useState` and `useEffect` in hooks and context in a local component.
-
-And even newer, sexier options: [signals](https://github.com/tc39/proposal-signals) -currently only available in Svelte and Angular- will be making it into Javascript.
-
-The problems I see frameworks solving for are the same: 
-- the need to reactively update the UI when data sources change, 
-- the need to subscribe and unsubscribe to changes in data sources,
-- managing side effects: to handle or mitigate behavioral changes in response to user actions
-- to draw clean lines between state changes that should be local to components, shared across components, or global to the app.
-
-On large and rapid-moving projects, clean state management becomes a moving target. If you're able to motivate and inspire others on ways to manage complexity amongst the chaos of business pressures, I applaud you.
-
-But where you need it, choose a strategy to manage the entropy before it turns into unreadable spaghetti!
+Where you need it, it's probably wise to choose a strategy before entropy takes hold.
 
 [^1]: The contents of this post are based on my work experiences but I've changed exact details. 
 
