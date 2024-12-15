@@ -77,3 +77,13 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+
+details summary {
+  list-style-type: '📁 ';
+  margin-left: -0.5rem;
+}
+
+
+details[open] summary {
+  list-style-type: '📂 ';
+}
