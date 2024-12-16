@@ -25,7 +25,7 @@ My first encounter with sophisticated store usage was React-Redux at a B2B finte
  
 Redux solved the need for a view-level source of truth to organize feature-specific state, especially when different parts of the app needed to access information specific to a particular feature. 
 
-The following is a simplistic view of feature states to enable the user to add stocks to portfolios, and contact customer service. 
+Below is a simplistic view of feature states to enable the user to add stocks to portfolios, and contact customer service. 
 
 Each feature has its own reducer, and the store combines them all.
 
@@ -49,9 +49,9 @@ const configureStore = () => {
 ``` 
 The plans reflect these business requirements: 
 
-- the ability to find and add stocks to one’s own portfolio
-- the view and compare the progress of purchased stocks
-- the ability to privately discuss stock choices with customer support agents
+- the ability to find and add stocks to a portfolio
+- to view and compare the progress of purchased stocks
+- the ability to privately discuss portfolios with customer support agents
 
 Just as you wouldn't make an API call to the server every time you need to display data, a store acts as an intermediary space for storing and manipulating presentational data. `POST` or `DELETE` requests to your server could then be made as needed and responses would also update the store.
 
@@ -63,9 +63,9 @@ The Stack: Angular 8, [Dynamic forms](https://angular.dev/guide/forms/dynamic-fo
 
 ![A patient intake form](https://cdn.dribbble.com/userupload/14411927/file/original-b1ec7a14d5ed923ab01675e05fa78b56.png)
 
-I landed at a health tech company whose forte was clinical data storage but they were trying to make headway on health apps. On one of their projects, my team was tasked to rewrite a legacy .NET surgery prioritization system into an Angular 9 app for a provincial health organization. Their primary users would be hospital admin staff.
+In 2020, I landed at a health tech company whose forte was clinical data storage, but they were trying to make headway on health apps. On one of their projects, my team was tasked to rewrite a legacy .NET surgery prioritization system into an Angular 9 app for a provincial health organization. Their primary users would be hospital admin staff.
 
-The app would take a combination of answers entered into an 8-part form with 120 fields to assess how soon a patient had to undergo a surgery for a health condition.
+The app would take a combination of answers entered into an 8-part form with 120 fields to assess how soon a patient had to undergo surgery.
 
 It's not as serious as a medical device, but impactful to patient health outcomes to the extent the app decides who gets a brain scan before whom. 
 
@@ -102,21 +102,17 @@ export class QuestionService {
 }
 ```
 
-What happens when you only use services to share state?
-
 - Service classes get longer and longer with custom methods to check for specific conditions.
 
 - State was transient and could only be debugged through inline console logs
 
-Where you had conditional adding of fields you'd have to loop through form groups to check whether an `AbstractControl` on a particular nested form group form value had been interacted with.
+- Where you had conditional adding of fields you'd have to loop through form groups to check whether an `AbstractControl` on a particular nested form group's form value had been interacted with.
 
-Conditional rendering and live validations relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
-
-Form state could only be inspected at runtime by console logging different lines within functions, but not in any devtool.
+- Conditional rendering and live validations relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
 
 - Business logic starts creeping into controllers, and lines blur for where to put functions that load and update state or cause side-effects.
 
-- Abuse of post and fetch requests to keep the form state updated in the absence of a sink to hold the state
+- We abused post and fetch requests to store any state change in the absence of a sink to hold any change in state
 
 At the time, Angular didn't have standalone components and we didn't know about Angular Universal's capabilities of SSR.[^3] We made multiple API calls sequentially to fetch and populate form questions and previous answers after login, instead of server-side rendering the form statically.
 
@@ -164,7 +160,7 @@ export class DynamicFormComponent implements OnInit {
   }
 }
 ```
-App architecture wise, we had some weird hybrid between modules separated by domain and angular's "shared" folder structure. 
+App architecture wise, we used some weird hybrid between modules separated by domain and angular's "shared" folder structure. 
 
 Dynamic forms and reactive forms fulfilled the need to render different form data models, but this got tacky as soon as we needed to:
 
@@ -218,7 +214,7 @@ The store is split into modules that pertain to domain features, but it has a co
   
   - `isVegetable()` might be helpful for vegetarian users, just as  `ordersWithoutPeanuts()` would for all cart items without peanuts, and might have been a feature request quickly implemented to serve those with allergies, but not needed by all users. These two would be better off as computed properties in a `useDietaryRestrictions()` composable.
   
-- neither of the stores are fully migrated to Vue 3 composition API.
+- neither store was fully migrated to Vue 3 composition API.
 
 And so, the more features added, the busier the team gets with patching and reconciling state in both stores 😱
 
@@ -240,7 +236,7 @@ Eventually, someone has to rip the bandaid off in order to move ahead:
 
 ### Setup drudgery and boilerplate
 
-The amount of code needed to set up a store, actions, reducers and dispatchers can be overwhelming for newcomers. The learning gradient for Redux and VueX is particularly rough for programming newcomers. 
+The amount of code needed to set up a store, actions, reducers and dispatchers can be overwhelming for newcomers. 
 
 ![Diagram displaying the state management model for a Vue library](/static/images/blog/vuex-diagram.png)
 
@@ -285,6 +281,7 @@ It's easy to get to a place where no single pattern is used, but someone somewhe
 - a [singleton](https://www.patterns.dev/vanilla/singleton-pattern) that can be updated from anywhere in the app (React Context and Vue composables might be lightweight ways to do this, but I have found that composables are not good replacements for behaviour you'd expect from singletons.)
 
 ## Contemporary state management
+
 Front end frameworks today offer lightweight options for state management.Leveraging out-of-the-box mechanisms will suffice for small to medium-sized apps.
 
 React's hooks (`useState`, `useEffect`, `useContext`) allow for easy encapsulation of reactive business logic. The [Context API](https://legacy.reactjs.org/docs/context.html) reduces prop drilling by making state accessible at any component level.
