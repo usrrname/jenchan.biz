@@ -102,11 +102,11 @@ export default async function PostLayout({
                       </dl>
                     </li>
                   ))}
-                  <li>
+                  {toc && (<li>
                     <span className='sr-only'>Table of Contents</span>
                     <h3 className='text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3'>Contents</h3>
                     <TOCInline toc={toc} ulClassName='list-none list-inside' liClassName='dark:text-secondary-200 text-slate-500 hover:underline hover:decoration-underline-offset-3 hover:text-slate-600 dark:hover:text-secondary-500 mb-3' asDisclosure={false} collapse={false} fromHeading={1} toHeading={2} />
-                  </li>
+                  </li>)}
                 </ul>
               </dd>
             </dl>
