@@ -63,9 +63,9 @@ The Stack: Angular 8, [Dynamic forms](https://angular.dev/guide/forms/dynamic-fo
 
 ![A patient intake form](https://cdn.dribbble.com/userupload/14411927/file/original-b1ec7a14d5ed923ab01675e05fa78b56.png)
 
-After the fintech stint, I landed at a health tech company whose forte was clinical data storage but they were trying to make headway on health apps. On one of their projects, my team was tasked to rewrite a legacy .NET surgery prioritization system into an Angular 9 app for a provincial health organization. Their primary users would be hospital admin staff.
+I landed at a health tech company whose forte was clinical data storage but they were trying to make headway on health apps. On one of their projects, my team was tasked to rewrite a legacy .NET surgery prioritization system into an Angular 9 app for a provincial health organization. Their primary users would be hospital admin staff.
 
-The app would take the combination of answers entered into a single-page 8-part form with 120 fields assess how soon a patient had to undergo a surgery for a health condition.
+The app would take a combination of answers entered into an 8-part form with 120 fields to assess how soon a patient had to undergo a surgery for a health condition.
 
 It's not as serious as a medical device, but impactful to patient health outcomes to the extent the app decides who gets a brain scan before whom. 
 
@@ -110,9 +110,9 @@ What happens when you only use services to share state?
 
 Where you had conditional adding of fields you'd have to loop through form groups to check whether an `AbstractControl` on a particular nested form group form value had been interacted with.
 
-Conditional rendering and live validations based on selected form values at any time relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
+Conditional rendering and live validations relied on runtime checks against a JSON file with 280 combinations of custom form validation rules.
 
-Form state could only be inspected at runtime by console logging different lines within and after functions, but not in any devtool particularly painful when it came to debugging regressions or checking our own work.
+Form state could only be inspected at runtime by console logging different lines within functions, but not in any devtool.
 
 - Business logic starts creeping into controllers, and lines blur for where to put functions that load and update state or cause side-effects.
 
@@ -120,7 +120,7 @@ Form state could only be inspected at runtime by console logging different lines
 
 At the time, Angular didn't have standalone components and we didn't know about Angular Universal's capabilities of SSR.[^3] We made multiple API calls sequentially to fetch and populate form questions and previous answers after login, instead of server-side rendering the form statically.
 
-Due to the length of the form, there was a requirement to save any answers up to point it had been filled. I forget what we did, but `LocalStorage` wasn't an acceptable solution due to the sensitivity of patient health information. It's likely we posted the "auto-saved" versions at idle intervals to a different endpoint.
+Due to the length of the form, there was a requirement to save any answers up to point it had been filled. `LocalStorage` wasn't an acceptable solution due to the sensitivity of patient health information. It's likely we posted the "auto-saved" versions at idle intervals to a different endpoint.
 
 ```javascript
 // dynamic-form.component.ts
@@ -196,7 +196,7 @@ At the beginning, the business only runs in Canada. It's good enough to have eve
 
 Later, this app decides to expand in the US and also sell American goods, and offer specific coupons and promotional discounts to American users.
 
-Developers logically decide they need to create an order store to handle the possibility a user may shop in different currencies and payment methods (A contrived example, but not far from what I've seen in the wild).
+Developers decide they need to create an order store to handle the possibility a user may shop in different currencies and payment methods (A contrived example, but not far from what I've seen in the wild).
 
 The specific project team hurtles to roll out a new store for American orders, but still keep the original one to handle Canadian orders.
 
@@ -204,7 +204,7 @@ The specific project team hurtles to roll out a new store for American orders, b
 
 ![Animated talking muppet gif reading "Still... [chuckles] what could go wrong?"](https://y.yarn.co/89a9cea5-cd47-4dbb-843b-c2683e748392_text.gif)
 
-The store is definitely split into modules that pertain to domain features, but it has a couple oddities:
+The store is split into modules that pertain to domain features, but it has a couple oddities:
 
 - Similarly named state properties and actions. `orderStore().confirmOrders()` and `accountStore.purchaseItems()` perform the same function, but they're in different stores. The `accountStore` has an `items` property that tracks `order.data.items` in the cart pre-checkout, but so does the `orderStore` for `orderStore.items` in the cart, post-checkout!
 
@@ -231,7 +231,7 @@ Eventually, someone has to rip the bandaid off in order to move ahead:
 
 - retire the use of `accountStore` and relocate Canadian and American orders to show under `OrderStore`
 
-- If the separation is worth the longterm sustainability of the app, then 2 stores might co-exist independently with the same data:
+- If the separation is worth longterm sustainability, then 2 stores might co-exist independently with the same data:
 
   - we can get the second store to subscribe to the first on load, then on state change, dispatch the actions in the second store.
   - OR, we get rid of hydrating the first store and instead hydrate the second on load so we won't have to keep 2 stores' data in sync.
@@ -254,7 +254,7 @@ Redux is rather overkill in today's front end ecosystem if you're building an MV
 
 ### Premature optimization leads to higher maintenance efforts
 
-Creating a store for every app feature can lead to unnecessary complexity and coupling. This is especially problematic when multiple stores share the same data source, increasing cognitive overhead to keep states synchronized. Premature code splitting can confuse teams and make maintenance harder.
+Creating a store for every app feature can lead to unnecessary complexity and coupling. When multiple stores share the same data source, developers have to remember to keep states synchronized or remember which store depends on another. Premature code splitting can confuse teams and make maintenance harder.
 
 The more stores you have, the more state you have to keep track of!
 
