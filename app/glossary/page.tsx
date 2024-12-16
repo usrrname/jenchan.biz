@@ -1,5 +1,6 @@
 import GlossaryItem from '@/components/GlossaryItem'
 import PageTitle from '@/components/PageTitle'
+import Pagination from '@/components/Pagination'
 import { genPageMetadata } from 'app/seo'
 import { allGlossaryDefinitions } from 'contentlayer/generated'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
@@ -35,6 +36,13 @@ export default function Page() {
           </GlossaryItem>
         </div>
       ))}
+
+      {pagination && pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+        />
+      )}
     </div>
   )
 }
