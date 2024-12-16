@@ -7,6 +7,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
+import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import React, { ReactNode } from 'react'
 
@@ -42,19 +43,21 @@ export default async function PostLayout({
   prev,
   children,
 }: LayoutProps) {
-  const { filePath, path, slug, date, title, tags } = content
+  const { path, date, title, tags, readingTime, toc } = content
   const basePath = path.split('/')[0]
   const devToArticle = await discussOnDevTo(path)
-
   return (
     <SectionContainer>
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
           <header className="pt-6 xl:pb-6">
-            <div className="space-y-1 text-center">
-              <dl className="space-y-10">
-                <div>
+            <div className="space-y-10 text-center">
+              <div>
+                <PageTitle>{title}</PageTitle>
+              </div>
+              <div className='flex justify-between'>
+                <dl>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
                     <time dateTime={date}>
@@ -64,10 +67,11 @@ export default async function PostLayout({
                       )}
                     </time>
                   </dd>
-                </div>
               </dl>
-              <div>
-                <PageTitle>{title}</PageTitle>
+                <dl>
+                  <dt className="sr-only">Reading Time</dt>
+                  <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400"> {readingTime.text}</dd>
+                </dl>
               </div>
             </div>
           </header>
@@ -98,6 +102,11 @@ export default async function PostLayout({
                       </dl>
                     </li>
                   ))}
+                  <li className="sticky">
+                    <span className='sr-only'>Table of Contents</span>
+                    <h3>Table of Contents</h3>
+                    <TOCInline toc={toc} ulClassName='list-none list-inside' liClassName='text-primary-400 hover:underline hover:text-primary-500 leading-8' />
+                  </li>
                 </ul>
               </dd>
             </dl>
