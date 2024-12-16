@@ -166,6 +166,7 @@ export default async function Page(props: {
           code={post.body.code}
           components={components}
           toc={post.toc}
+          readingTime={post.readingTime}
         />
         <hr className="my-4" />
         {article && (
