@@ -11,9 +11,7 @@ import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { ReactNode } from 'react'
 
-const discussOnTwitter = (slug) => {
-  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${slug}`)}`
-}
+
 const discussOnDevTo = async (path) => {
   const result = await findDevToArticleByCanonicalUrl(
     `${path.split('blog/')[1]}`
@@ -130,9 +128,6 @@ export default async function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussOnTwitterLink} rel="nofollow" key={path}>
-                  Discuss on Twitter
-                </Link>
 
                 {devToArticle && (
                   <Link href={devToArticle} rel="nofollow" key={path}>
