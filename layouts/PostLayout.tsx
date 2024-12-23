@@ -9,10 +9,10 @@ import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
 import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 
-const discussOnTwitter = (path) => {
-  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`
+const discussOnTwitter = (slug) => {
+  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${slug}`)}`
 }
 const discussOnDevTo = async (path) => {
   const result = await findDevToArticleByCanonicalUrl(
@@ -115,7 +115,7 @@ export default async function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussOnTwitter(path)} rel="nofollow" key={path}>
+                <Link href={discussOnTwitter(slug)} rel="nofollow" key={path}>
                   Discuss on Twitter
                 </Link>
                 {` • `}
