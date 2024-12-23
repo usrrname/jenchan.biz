@@ -23,7 +23,6 @@ import {
   coreContent,
   sortPosts
 } from 'pliny/utils/contentlayer'
-import React from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,7 +52,7 @@ interface BlogPostProps extends Metadata {
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
-}): Promise<BlogPostProps> {
+}): Promise<BlogPostProps | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug) as Blog
@@ -83,124 +82,127 @@ export async function generateMetadata(props: {
   })
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
-  const webmentionsForPost = await getWebMentionsPerPost(post)
-  const results = parseWebMentionResults(webmentionsForPost)
+  if (!devToArticle) {
+    const webmentionsForPost = await getWebMentionsPerPost(post)
+    const results = parseWebMentionResults(webmentionsForPost)
 
-  const publishedAt = new Date(post.date).toISOString()
-  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
-  const authors = authorDetails.map((author) => author.name)
-  let imageList = [siteMetadata.socialBanner]
-  if (post.images) {
-    imageList = typeof post.images === 'string' ? [post.images] : post.images
-  }
-  const ogImages = imageList.map((img) => {
-    return {
-      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+    const publishedAt = new Date(post.date).toISOString()
+    const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+    const authors = authorDetails.map((author) => author.name)
+    let imageList = [siteMetadata.socialBanner]
+    if (post.images) {
+      imageList = typeof post.images === 'string' ? [post.images] : post.images
     }
-  })
+    const ogImages = imageList.map((img) => {
+      return {
+        url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+      }
+    })
 
-  return {
-    title: post.title,
-    description: post.summary,
-    layout: post.layout || defaultLayout,
-    post: post,
-    mainContent,
-    jsonLd,
-    authorDetails,
-    openGraph: {
+    return {
       title: post.title,
       description: post.summary,
-      siteName: siteMetadata.title,
-      locale: 'en_US',
-      type: 'article',
-      publishedTime: publishedAt,
-      modifiedTime: modifiedAt,
-      url: './',
-      images: ogImages,
-      authors: authors.length > 0 ? authors : [siteMetadata.author],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.summary,
-      images: imageList,
-    },
-    webmentions: results,
-    article: devToArticle,
-    prev: prev,
-    next: next,
+      layout: post.layout || defaultLayout,
+      post: post,
+      mainContent,
+      jsonLd,
+      authorDetails,
+      openGraph: {
+        title: post.title,
+        description: post.summary,
+        siteName: siteMetadata.title,
+        locale: 'en_US',
+        type: 'article',
+        publishedTime: publishedAt,
+        modifiedTime: modifiedAt,
+        url: './',
+        images: ogImages,
+        authors: authors.length > 0 ? authors : [siteMetadata.author],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.summary,
+        images: imageList,
+      },
+      webmentions: results,
+      article: devToArticle,
+      prev: prev,
+      next: next,
+    }
   }
-}
 
-export async function generateStaticParams() {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
-}
-
-export default async function Page(props: {
-  params: Promise<{ slug: string[] }>
-}) {
-
-  const { post, mainContent, prev, next, article, jsonLd, authorDetails, webmentions } = await generateMetadata(await props);
-  let articleUrl = {}
-  if (article) {
-    articleUrl = new URL(article?.url)
+  export async function generateStaticParams() {
+    return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
   }
-  const Layout = layouts[post.layout || defaultLayout]
 
-  const { likes, mentions, replies, reposts } = webmentions || {}
+  export default async function Page(props: {
+    params: Promise<{ slug: string[] }>
+  }) {
 
-  return (
-    <>
-      <meta name="og:published_at" content={post?.date} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Layout
-        content={mainContent}
-        authorDetails={authorDetails}
-        next={next}
-        prev={prev}
-      >
-        <MDXLayoutRenderer
-          code={post.body.code}
-          components={components}
-          toc={post.toc}
-          readingTime={post.readingTime}
+    const { post, mainContent, prev, next, article, jsonLd, authorDetails, webmentions } = await generateMetadata(await props);
+    let articleUrl: URL | undefined = ''
+    if (article) articleUrl = new URL(article?.url)
+
+    const Layout = layouts[post.layout || defaultLayout]
+
+    const { likes, mentions, replies, reposts } = webmentions || {}
+
+    return (
+      <>
+        <meta name="og:type" content="article" />
+        <meta name="og:title" content={post?.title} />
+        <meta name="og:description" content={post?.summary} />
+        <meta name="og:published_at" content={post?.date} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <hr className="my-4" />
-        {article && (
-          <>
-            {article.comments_count > 0 ? (
-              <>
+        <Layout
+          content={mainContent}
+          authorDetails={authorDetails}
+          next={next}
+          prev={prev}
+        >
+          <MDXLayoutRenderer
+            code={post.body.code}
+            components={components}
+            toc={post.toc}
+            readingTime={post.readingTime}
+          />
+          <hr className="my-4" />
+          {article && (
+            <>
+              {article.comments_count > 0 ? (
+                <>
+                  <NextLink
+                    href={articleUrl}
+                    className="font-bold no-underline hover:bg-yellow-200 "
+                  >
+                    📝 {article.comments_count} comments
+                  </NextLink>
+                  {`  •  `}
+                </>
+              ) : void 0}
+              {article.public_reaction_count > 0 ? (
                 <NextLink
                   href={articleUrl}
-                  className="font-bold no-underline hover:bg-yellow-200 "
+                  className="font-bold no-underline hover:bg-yellow-200"
                 >
-                  📝 {article.comments_count} comments
+                  💖🔥🦄 {article.public_reaction_count} reactions
                 </NextLink>
-                {`  •  `}
-              </>
-            ) : void 0}
-            {article.public_reaction_count > 0 ? (
-              <NextLink
-                href={articleUrl}
-                className="font-bold no-underline hover:bg-yellow-200"
-              >
-                💖🔥🦄 {article.public_reaction_count} reactions
+              ) : null}&nbsp;on{' '}
+              <NextLink href={articleUrl!} className="no-underline">
+                Dev.to
               </NextLink>
-            ) : null}
-            &nbsp;on{' '}
-            <NextLink href={articleUrl} className="no-underline">
-              Dev.to
-            </NextLink>
-          </>
-        )}
-        {likes && <WebMentions data={likes} title="Likes" />}
-        {reposts && <WebMentions data={reposts} title="Reposts" />}
-        {mentions && <WebMentions data={mentions} title="Mentions" />}
-        {replies && <WebMentions data={replies} title="Replies" />}
-      </Layout>
-    </>
-  )
+            </>
+          )}
+          {likes && <WebMentions data={likes} title="Likes" />}
+          {reposts && <WebMentions data={reposts} title="Reposts" />}
+          {mentions && <WebMentions data={mentions} title="Mentions" />}
+          {replies && <WebMentions data={replies} title="Replies" />}
+        </Layout>
+      </>
+    )
+  }
 }
