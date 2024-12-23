@@ -51,7 +51,16 @@ const computedFields: ComputedFields = {
     type: 'string',
     resolve: (doc) => doc._raw.sourceFilePath,
   },
-  toc: { type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw) },
+  toc: {
+    type: 'json', resolve: (doc) => extractTocHeadings(doc.body.raw)
+  },
+  series: {
+    type: "string",
+    resolve: (doc) => {
+      const series = doc._raw.flattenedPath.match(/blog\/series\/(.+?)\//)
+      return series ? series[1] : null
+    },
+  }
 }
 
 /**
@@ -136,6 +145,7 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    series: { type: 'string' },
   },
   computedFields: {
     ...computedFields,

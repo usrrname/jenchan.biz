@@ -22,10 +22,11 @@ async function findDevToArticleByCanonicalUrl(
       }
     })
     return [...collection][0] as DevToArticleStats
-
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Error in findDevToArticleByCanonicalUrl: ${error.message}`)
+      throw new Error(
+        `Error in findDevToArticleByCanonicalUrl: ${error.message}`
+      )
     }
   }
 }
