@@ -2,7 +2,8 @@
 import Link, { LinkProps } from 'next/link'
 import React, { FC } from 'react'
 
-type CustomLinkProps = LinkProps<any> & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>
+type CustomLinkProps = LinkProps<any> &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>
 
 const CustomLink: FC<CustomLinkProps> = ({
   href,
@@ -14,8 +15,11 @@ const CustomLink: FC<CustomLinkProps> = ({
 
   if (isInternalLink) {
     return (
-      <Link href={href as string} {...rest} className={`${className} break-words`
-      } />
+      <Link
+        href={href as string}
+        {...rest}
+        className={`${className} break-words`}
+      />
     )
   }
 
@@ -25,7 +29,7 @@ const CustomLink: FC<CustomLinkProps> = ({
 
   return (
     <a
-      className={`${className} break-words`} 
+      className={`${className} break-words`}
       target="_blank"
       rel="noopener noreferrer"
       href={href as string}
