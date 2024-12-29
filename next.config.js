@@ -13,7 +13,7 @@ const ContentSecurityPolicy = `
   media-src *.s3.amazonaws.com;
   connect-src *;
   font-src 'self';
-  frame-src giscus.app stackblitz.com codesandbox.io;
+  frame-src giscus.app stackblitz.com codepen.io codesandbox.io youtube.com;
 `
 
 const securityHeaders = [
@@ -74,7 +74,7 @@ module.exports = () => {
     experimental: {
       serverActions: {
         allowedOrigins: ['webmention.io'],
-      }
+      },
     },
     images: {
       remotePatterns: [

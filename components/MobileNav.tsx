@@ -77,7 +77,7 @@ const MobileNav = () => {
             <Dialog.Panel className="fixed left-0 top-0 z-70 h-full w-full bg-white opacity-95 duration-300 dark:bg-gray-950 dark:opacity-[0.98]">
               <nav
                 ref={navRef}
-                className="mt-12 flex h-full basis-0 flex-col items-start overflow-y-auto px-12 pt-12 text-left text-lg gap-y-3"
+                className="mt-12 flex h-full basis-0 flex-col items-start gap-y-3 overflow-y-auto px-12 pt-12 text-left text-lg"
               >
                 {headerNavLinks.map((link) => (
                   <Link

@@ -1,5 +1,5 @@
 ---
-title: "🛑 Stop resizing your browser: improve testing for responsiveness"
+title: '🛑 Stop resizing your browser: improve testing for responsiveness'
 summary: "An in-the-weeds tirade to put an end to the lackluster practice of browser resizing. Use the browser's device mode or a whole range of free tools to improve accuracy"
 draft: false
 images: ['/static/images/blog/responsive-mode-chrome-devtools-og.png']
@@ -13,11 +13,15 @@ TLDR; use device mode on browser devtools to accurate emulate the experience on 
 
 ## A familiar story
 
-<img src="/static/images/blog/sweat.png" alt="clip art of sweating" width="100"/>
+<img
+  src="/static/images/blog/sweat.png"
+  alt="clip art of sweating"
+  width="100"
+/>
 
-You learn that you have one week to rewrite the frontend for an app and you're given incredibly high fidelity designs. 
+You learn that you have one week to rewrite the frontend for an app and you're given incredibly high fidelity designs.
 
-After confirming that the designs are mobile-first, you agonize over the breakpoints. 
+After confirming that the designs are mobile-first, you agonize over the breakpoints.
 
 Then come time for business review or quality desk checks, and you notice your colleagues resizing the browser, then mentioning that things don't look right on tablet or mobile.
 
@@ -35,26 +39,26 @@ When you resize your browser, you're not testing for responsiveness. You're test
 
 - ### Zoom level
 
-  Depending on what the developer wrote into the meta viewport tag, the browser is not going to zoom reliably. 
+  Depending on what the developer wrote into the meta viewport tag, the browser is not going to zoom reliably.
   Zooming changes the width of the visible viewport according to device pixel ratio. For example, zooming in 150% from 1440px on a Macbook Pro with a device pixel ratio of 2 will give you a viewport width of 960px.
 
 - ### Touch event emulation
 
-   There's are no hover or click events on touch devices.
+  There's are no hover or click events on touch devices.
 
 - ### Orientation
 
-   The transition or initial load in portrait or landscape mode won't be captured.
+  The transition or initial load in portrait or landscape mode won't be captured.
 
 - ### User agent strings
-   
+
   These are the series of headers that a browser sends to the server with information about the particular device and operating system that the browser is running on.
 
   So for example, if someone is using Safari on iOS 12 and iPhone 8 and the product specifically has a banner for iOS asking users to use Chrome, you might miss that.
 
- - ### Device pixel ratio
+- ### Device pixel ratio
 
-  This is the relationship between the resolution and the way in software, pixels are drawn on a screen.
+This is the relationship between the resolution and the way in software, pixels are drawn on a screen.
 
 ## Between Hardware resolution pixels, Device pixels, and CSS pixels
 
@@ -69,6 +73,7 @@ So there's [a physical basis to CSS pixels](https://www.w3.org/TR/css3-values/#a
 The spec explains there's 2 ways a pixel can be made apparent for us developers:
 
 > For a CSS device, these dimensions are anchored either:
+>
 > - by relating the physical units to their physical measurements, or
 > - by relating the pixel unit to the reference pixel.
 
@@ -76,7 +81,12 @@ Alternately, we can think of the CSS pixel as something developers use when deve
 
 Lo and behold, the spec defines the [device pixel](https://www.w3.org/TR/css3-values/#reference-pixel) to refer to the smallest physical unit of a screen". Such pixels are usually constituted by subpixels of red, green and blue. On screens with aspect ratios like 16:9, these pixels are even rectangular!
 
-<img src="https://velog.velcdn.com/images/aromahyang/post/9d431942-b414-460d-b066-1e718be1603b/image.png" alt="Device pixel ratio" width="500" className="content-center"/>
+<img
+  src="https://velog.velcdn.com/images/aromahyang/post/9d431942-b414-460d-b066-1e718be1603b/image.png"
+  alt="Device pixel ratio"
+  width="500"
+  className="content-center"
+/>
 
 Higher density display screens have way more hardware pixels than the standard 96dpi, so through some magical [downsampling](https://zpl.fi/image-processing-basics-in-the-browser/) or [supersampling](https://www.reddit.com/r/oculus/comments/878scp/how_does_supersampling_work_why_does_rendering_a/), the browser uses device pixel ratio to jam more pixels into 1 CSS pixel.
 
@@ -100,27 +110,35 @@ In the gif, you'll see that resizing down will lead to the horizontal layout of 
 
 ![animated gif of Wayfair's Bed and Bath category page being resized](/static/images/blog/wayfair-resize.gif)
 
-<figcaption>System specs: Macbook M2 with a resolution of 3024 x 1964 using Chrome 124.0.6367.62 with a Device Pixel Ratio of 2</figcaption>
+<figcaption>
+  System specs: Macbook M2 with a resolution of 3024 x 1964 using Chrome
+  124.0.6367.62 with a Device Pixel Ratio of 2
+</figcaption>
 
 ![screenshot of Wayfair's Bed and Bath category page in Chrome devtools](/static/images/blog/wayfair-devtools.png)
 
-<figcaption>Wayfair's Bed and Bath category page in Chrome devtools on a Pixel 7</figcaption>
+<figcaption>
+  Wayfair's Bed and Bath category page in Chrome devtools on a Pixel 7
+</figcaption>
 
 ## The viewport meta tag
 
 You might recognize this piece of markup found in the document head of websites. It tells the content of the browser to render according to device-width with an initial zoom scale of 1.
 
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 ```
 
 You won’t leverage this native capability unless you load your page in the device width in your browser devtools.
 
 ![Screenshot of responsive mode in chrome devtools](/static/images/blog/responsive-mode-chrome-devtools.png)
 
-<figcaption className="text-center">Resizing in responsive mode: Inadequate for components with listeners</figcaption>
+<figcaption className="text-center">
+  Resizing in responsive mode: Inadequate for components with listeners
+</figcaption>
 
-<br/><br/>
+<br />
+<br />
 
 # Improved approaches to testing responsiveness
 
@@ -152,9 +170,18 @@ You can also read about that time I trolled the internet for free device testing
 
 ## 4. Automate visual regression testing as part of CI
 
-<img src="/static/images/blog/chromatic-diff.png" alt="Screenshot of Chromatic Visual Regression testing software highlighting visual differences between previous code commit and next code commit" className="w-[400px] h-auto" />
+<img
+  src="/static/images/blog/chromatic-diff.png"
+  alt="Screenshot of Chromatic Visual Regression testing software highlighting visual differences between previous code commit and next code commit"
+  className="h-auto w-[400px]"
+/>
 
-<img src="/static/images/blog/bitbucket-ci-storybook.png" alt="Screenshot of Bitbucket pipeline running Chromatic visual snapshotting tool with successful result" width="50%" className="w-[400px]" />
+<img
+  src="/static/images/blog/bitbucket-ci-storybook.png"
+  alt="Screenshot of Bitbucket pipeline running Chromatic visual snapshotting tool with successful result"
+  width="50%"
+  className="w-[400px]"
+/>
 
 If you’re working on a design system or component library, then automating your unit tests and having [visual regression snapshot tests](/blog/storybook-and-chromatic-for-visual-regression-testing) chained up in a pipeline gives you full confidence your front end is behaving as it should!
 
@@ -165,6 +192,3 @@ Next time you're testing for responsiveness, remember that resizing your browser
 [^1]: There's a history of thought on this topic due to the freakout around responsive design introduced by the iPhone 3. I really recommend reading ["A pixel is not a pixel is not a pixel"](https://www.quirksmode.org/blog/archives/2010/04/a_pixel_is_not.html) and ["A tale of two viewports"](https://www.quirksmode.org/mobile/viewports.html) by Peter Paul Koch.
 
 [^2]: This [demo by Dan Rodney](https://www.danrodney.com/blog/2x-1x-demo/) is one of the best I've seen on the impact of device pixel ratio on image rendering. In case you're worried, today it's possible to export at 1-3x density from Figma and to use the `srcset` attribute in HTML to serve the right image to the right device.
-
-
-

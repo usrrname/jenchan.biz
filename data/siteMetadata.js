@@ -84,7 +84,7 @@ const siteMetadata = {
   //     lang: 'en',
   //     loading: 'eager',
   //   }
- // },
+  // },
   search: {
     provider: 'kbar', // kbar or algolia
     kbarConfig: {

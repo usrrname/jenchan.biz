@@ -16,6 +16,5 @@ const getArticleById = async (id: number) => {
       throw new Error(`Error in getArticleById: ${error.message}`)
     }
   }
-  
 }
 export default getArticleById

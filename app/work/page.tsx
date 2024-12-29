@@ -17,7 +17,8 @@ export default function Projects() {
             Work
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Stuff I worked on that's now on the internet.<br />
+            Stuff I worked on that's now on the internet.
+            <br />
           </p>
         </div>
         <div className="container py-12">

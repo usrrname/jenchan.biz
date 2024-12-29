@@ -4,7 +4,7 @@ import path from 'path'
 import { sortPosts } from 'pliny/utils/contentlayer.js'
 import { escape } from 'pliny/utils/htmlEscaper.js'
 import { allBlogs } from '../.contentlayer/generated/index.mjs'
-import tagData from '../app/tag-data.json' with { type: "json" }
+import tagData from '../app/tag-data.json' with { type: 'json' }
 import siteMetadata from '../data/siteMetadata.js'
 
 const outputFolder = process.env.EXPORT ? 'out' : 'public'
