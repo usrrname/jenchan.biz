@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * 6'
-    
+
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
@@ -26,15 +26,15 @@ jobs:
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   Publish-dev-to:
-      name: "Publish Article to Dev.to"
-      runs-on: ubuntu-latest
-      steps:
-        - uses: dorny/paths-filter@v3
-          id: changes
-          with:
-            filters: |
-              data:
-                - 'data/blog/**'
-        - run: | # publish article to dev.to
-            echo "Data has changed" >> $GITHUB_OUTPUT
-            node app/api/publishArticle.ts
+    name: 'Publish Article to Dev.to'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            data:
+              - 'data/blog/**'
+      - run: | # publish article to dev.to
+          echo "Data has changed" >> $GITHUB_OUTPUT
+          node app/api/publishArticle.ts
