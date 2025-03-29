@@ -20,9 +20,10 @@ This was actually the hardest thing for me to wrap my head around coming from Mo
 Ben Sinclair gave perhaps a more comprehensible clarification of what I tried to say above:
 
 <blockquote>
-  "The "relational" in a relational database is just talking about the relations inside a table,
-  i.e. the fields which all belong to a table form a relationship. What you're talking about with
-  regards to other tables are foreign keys."
+  "The "relational" in a relational database is just talking about the relations
+  inside a table, i.e. the fields which all belong to a table form a
+  relationship. What you're talking about with regards to other tables are
+  foreign keys."
 </blockquote>
 
 ## Joining is great for finding granular (edit: NOT granola) trends and commonalities between tables, but sometimes it’s overkill
@@ -67,16 +68,18 @@ Dian Fay corrected me a bit on my assumption(s) above:
 
 <blockquote>
   {' '}
-  Views are just stored queries that get run when you invoke the view. The space and power consumption
-  is negligible unless you create a materialized view which actually stores its results (and therefore
-  has to be manually refreshed).
+  Views are just stored queries that get run when you invoke the view. The space
+  and power consumption is negligible unless you create a materialized view
+  which actually stores its results (and therefore has to be manually
+  refreshed).
 </blockquote>
 
 <blockquote>
-  GROUP BY is only necessary if you're actually doing aggregate calculations. If you're just pulling
-  individual records without counting, summing, or otherwise deriving a value from multiple rows,
-  you don't even need to specify it. If you just have duplicate rows you want to filter out, you can
-  SELECT DISTINCT instead.
+  GROUP BY is only necessary if you're actually doing aggregate calculations. If
+  you're just pulling individual records without counting, summing, or otherwise
+  deriving a value from multiple rows, you don't even need to specify it. If you
+  just have duplicate rows you want to filter out, you can SELECT DISTINCT
+  instead.
 </blockquote>
 
 If you’re a fan of PostgreSQL or sql what do you think it’s best at? What are use cases best suited for it? What types of projects have you done implementing a pg database? Let me know!

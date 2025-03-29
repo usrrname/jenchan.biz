@@ -9,10 +9,10 @@ import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
 import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 
-const discussOnTwitter = (path) => {
-  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.devto}/${path.split('blog/')[1]}`)}`
+const discussOnTwitter = (slug) => {
+  return `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${slug}`)}`
 }
 const discussOnDevTo = async (path) => {
   const result = await findDevToArticleByCanonicalUrl(
@@ -46,6 +46,7 @@ export default async function PostLayout({
   const { path, date, title, tags, readingTime, toc } = content
   const basePath = path.split('/')[0]
   const devToArticle = await discussOnDevTo(path)
+  const discussOnTwitterLink = discussOnTwitter(path)
   return (
     <SectionContainer>
       <ScrollTopAndComment />
@@ -56,7 +57,7 @@ export default async function PostLayout({
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
-              <div className='flex justify-between'>
+              <div className="flex justify-between">
                 <dl>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
@@ -67,10 +68,12 @@ export default async function PostLayout({
                       )}
                     </time>
                   </dd>
-              </dl>
+                </dl>
                 <dl>
                   <dt className="sr-only">Reading Time</dt>
-                  <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400"> {readingTime.text}</dd>
+                  <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                    {readingTime.text}
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -102,11 +105,23 @@ export default async function PostLayout({
                       </dl>
                     </li>
                   ))}
-                  {toc && (<li>
-                    <span className='sr-only'>Table of Contents</span>
-                    <h3 className='text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3'>Contents</h3>
-                    <TOCInline toc={toc} ulClassName='list-none list-inside' liClassName='dark:text-secondary-200 text-slate-500 hover:underline hover:decoration-underline-offset-3 hover:text-slate-600 dark:hover:text-secondary-500 mb-3' asDisclosure={false} collapse={false} fromHeading={1} toHeading={2} />
-                  </li>)}
+                  {toc && (
+                    <li>
+                      <span className="sr-only">Table of Contents</span>
+                      <h3 className="mb-3 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Contents
+                      </h3>
+                      <TOCInline
+                        toc={toc}
+                        ulClassName="list-none list-inside"
+                        liClassName="dark:text-secondary-200 text-slate-500 hover:underline hover:decoration-underline-offset-3 hover:text-slate-600 dark:hover:text-secondary-500 mb-3"
+                        asDisclosure={false}
+                        collapse={false}
+                        fromHeading={1}
+                        toHeading={2}
+                      />
+                    </li>
+                  )}
                 </ul>
               </dd>
             </dl>
@@ -115,10 +130,10 @@ export default async function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussOnTwitter(path)} rel="nofollow" key={path}>
+                <Link href={discussOnTwitterLink} rel="nofollow" key={path}>
                   Discuss on Twitter
                 </Link>
-                {` • `}
+
                 {devToArticle && (
                   <Link href={devToArticle} rel="nofollow" key={path}>
                     Discuss on Dev.to

@@ -95,3 +95,20 @@ details summary {
 details[open] summary {
   list-style-type: folder-open;
 }
+/* dont show backticks as part of markdown code tags */
+.prose
+  :where(code):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  )::before {
+  content: '';
+}
+.prose
+  :where(code):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  )::after {
+  content: '';
+}
+
+figcaption {
+  text-align: center;
+}

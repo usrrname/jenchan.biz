@@ -1,4 +1,3 @@
-
 import { components } from '@/components/MDXComponents'
 import WebMentions from '@/components/WebMentions'
 import siteMetadata from '@/data/siteMetadata'
@@ -21,9 +20,8 @@ import {
   CoreContent,
   allCoreContent,
   coreContent,
-  sortPosts
+  sortPosts,
 } from 'pliny/utils/contentlayer'
-import React from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,25 +33,27 @@ const layouts = {
 }
 
 interface BlogPostProps extends Metadata {
-  post: Blog;
-  layout: string,
-  mainContent: CoreContent<Blog>;
-  jsonLd: JSON;
-  prev: CoreContent<Blog>;
-  next: CoreContent<Blog>;
-  authorDetails: CoreContent<Authors>[];
-  webmentions: {
-    likes: WebMentionReaction[];
-    mentions: WebMentionReplies[];
-    replies: WebMentionReplies[];
-    reposts: WebMentionReaction[];
-  } | undefined;
-  article?: DevToArticleStats;
+  post: Blog
+  layout: string
+  mainContent: CoreContent<Blog>
+  jsonLd: JSON
+  prev: CoreContent<Blog>
+  next: CoreContent<Blog>
+  authorDetails: CoreContent<Authors>[]
+  webmentions:
+    | {
+        likes: WebMentionReaction[]
+        mentions: WebMentionReplies[]
+        replies: WebMentionReplies[]
+        reposts: WebMentionReaction[]
+      }
+    | undefined
+  article?: DevToArticleStats
 }
 
-export async function generateMetadata(props: {
+async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
-}): Promise<BlogPostProps> {
+}): Promise<BlogPostProps | undefined> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug) as Blog
@@ -83,74 +83,95 @@ export async function generateMetadata(props: {
   })
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
-  const webmentionsForPost = await getWebMentionsPerPost(post)
-  const results = parseWebMentionResults(webmentionsForPost)
+  if (!devToArticle) {
+    const webmentionsForPost = await getWebMentionsPerPost(post)
+    const results = parseWebMentionResults(webmentionsForPost)
 
-  const publishedAt = new Date(post.date).toISOString()
-  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
-  const authors = authorDetails.map((author) => author.name)
-  let imageList = [siteMetadata.socialBanner]
-  if (post.images) {
-    imageList = typeof post.images === 'string' ? [post.images] : post.images
-  }
-  const ogImages = imageList.map((img) => {
-    return {
-      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+    const publishedAt = new Date(post.date).toISOString()
+    const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+    const authors = authorDetails.map((author) => author.name)
+    let imageList = [siteMetadata.socialBanner]
+    if (post.images) {
+      imageList = typeof post.images === 'string' ? [post.images] : post.images
     }
-  })
+    const ogImages = imageList.map((img) => {
+      return {
+        url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+      }
+    })
 
-  return {
-    title: post.title,
-    description: post.summary,
-    layout: post.layout || defaultLayout,
-    post: post,
-    mainContent,
-    jsonLd,
-    authorDetails,
-    openGraph: {
+    return {
       title: post.title,
       description: post.summary,
-      siteName: siteMetadata.title,
-      locale: 'en_US',
-      type: 'article',
-      publishedTime: publishedAt,
-      modifiedTime: modifiedAt,
-      url: './',
-      images: ogImages,
-      authors: authors.length > 0 ? authors : [siteMetadata.author],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: post.title,
-      description: post.summary,
-      images: imageList,
-    },
-    webmentions: results,
-    article: devToArticle,
-    prev: prev,
-    next: next,
+      layout: post.layout || defaultLayout,
+      post: post,
+      mainContent,
+      jsonLd,
+      authorDetails,
+      openGraph: {
+        title: post.title,
+        description: post.summary,
+        siteName: siteMetadata.title,
+        locale: 'en_US',
+        type: 'article',
+        publishedTime: publishedAt,
+        modifiedTime: modifiedAt,
+        url: './',
+        images: ogImages,
+        authors: authors.length > 0 ? authors : [siteMetadata.author],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: post.title,
+        description: post.summary,
+        images: imageList,
+      },
+      webmentions: results,
+      article: devToArticle,
+      prev: prev,
+      next: next,
+    }
   }
 }
 
-export async function generateStaticParams() {
-  return allBlogs.map((p) => ({ slug: p.slug.split('/').map((name) => decodeURI(name)) }))
+async function generateStaticParams() {
+  return allBlogs.map((p) => ({
+    slug: p.slug.split('/').map((name) => decodeURI(name)),
+  }))
 }
 
 export default async function Page(props: {
-  params: Promise<{ slug: string[] }>
+  params: Promise<{ slug: string[]; page: string }>
 }) {
-
-  const { post, mainContent, prev, next, article, jsonLd, authorDetails, webmentions } = await generateMetadata(await props);
-  let articleUrl = {}
-  if (article) {
-    articleUrl = new URL(article?.url)
+  const metadata = await generateMetadata(await props)
+  if (!metadata) {
+    return notFound()
   }
-  const Layout = layouts[post.layout || defaultLayout]
+  const {
+    post,
+    mainContent,
+    prev,
+    next,
+    article,
+    jsonLd,
+    authorDetails,
+    webmentions,
+  } = metadata
+
+  let articleUrl: URL | undefined = undefined
+  if (article) articleUrl = new URL(article?.url)
+
+  const Layout = layouts[
+    post.layout || defaultLayout
+  ] as React.ComponentType<any>
 
   const { likes, mentions, replies, reposts } = webmentions || {}
 
   return (
     <>
+      <meta name="og:type" content="article" />
+      <meta name="og:title" content={post?.title} />
+      <meta name="og:description" content={post?.summary} />
       <meta name="og:published_at" content={post?.date} />
       <script
         type="application/ld+json"
@@ -174,24 +195,26 @@ export default async function Page(props: {
             {article.comments_count > 0 ? (
               <>
                 <NextLink
-                  href={articleUrl}
+                  href={articleUrl!}
                   className="font-bold no-underline hover:bg-yellow-200 "
                 >
                   📝 {article.comments_count} comments
                 </NextLink>
                 {`  •  `}
               </>
-            ) : void 0}
+            ) : (
+              void 0
+            )}
             {article.public_reaction_count > 0 ? (
               <NextLink
-                href={articleUrl}
+                href={articleUrl!}
                 className="font-bold no-underline hover:bg-yellow-200"
               >
                 💖🔥🦄 {article.public_reaction_count} reactions
               </NextLink>
             ) : null}
             &nbsp;on{' '}
-            <NextLink href={articleUrl} className="no-underline">
+            <NextLink href={articleUrl!} className="no-underline">
               Dev.to
             </NextLink>
           </>

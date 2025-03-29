@@ -10,7 +10,9 @@ import TableWrapper from './TableWrapper'
 export const components: MDXComponents = {
   Image,
   TOCInline,
-  a: ({ href, ...props }) => <CustomLink href={href ?? `#${href}`} {...props} />,
+  a: ({ href, ...props }) => (
+    <CustomLink href={href ?? `#${href}`} {...props} />
+  ),
   pre: Pre,
   table: TableWrapper,
   BlogNewsletterForm,

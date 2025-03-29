@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from './Image';
-import Link from './Link';
+import React from 'react'
+import Image from './Image'
+import Link from './Link'
 
 const Card = ({ title, description, imgSrc, href, meta, company }) => (
   <div className="md max-w-[544px] p-4 md:w-1/2">
@@ -48,7 +48,7 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
         {href && (
           <Link
             href={href}
-            className="mb-3 text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:text-underline"
+            className="hover:text-underline mb-3 text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label={`Link to ${title}`}
           >
             Learn more &rarr;
@@ -58,17 +58,20 @@ const Card = ({ title, description, imgSrc, href, meta, company }) => (
         {meta && meta?.links?.length > 0 ? (
           <h3 className="font-medium">{meta.title}</h3>
         ) : null}
-        {meta?.links?.map((p: { title: string; href: string }, index: number) => (
-          <span key={p.title + index}>
-            <Link
-              href={p.href}
-              className="prose font-medium leading-6 text-orange-400 hover:underline hover:semibold hover:text-orange-600 dark:hover:text-orange-300"
-              aria-label={`Link to ${p.title}`}
-            >
-              {p.title}
-            </Link> {index < meta.links.length - 1 && '•'}{' '}
-          </span>
-        ))}
+        {meta?.links?.map(
+          (p: { title: string; href: string }, index: number) => (
+            <span key={p.title + index}>
+              <Link
+                href={p.href}
+                className="hover:semibold prose font-medium leading-6 text-orange-400 hover:text-orange-600 hover:underline dark:hover:text-orange-300"
+                aria-label={`Link to ${p.title}`}
+              >
+                {p.title}
+              </Link>{' '}
+              {index < meta.links.length - 1 && '•'}{' '}
+            </span>
+          )
+        )}
       </div>
     </div>
   </div>

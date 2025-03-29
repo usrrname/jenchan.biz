@@ -4,7 +4,7 @@ import Pagination, { PaginationProps } from '@/components/Pagination'
 import Tag from '@/components/Tag'
 import { shantell_sans } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json' with { type: "json" }
+import tagData from 'app/tag-data.json' with { type: 'json' }
 import type { Blog } from 'contentlayer/generated'
 import { slug } from 'github-slugger'
 import { usePathname } from 'next/navigation'
@@ -96,7 +96,7 @@ export default function ListLayoutWithTags({
                       <div className="space-y-3">
                         <div>
                           <h2
-                            className={`${shantell_sans.variable} text-2xl font-bold leading-8 tracking-tight my-4`}
+                            className={`${shantell_sans.variable} my-4 text-2xl font-bold leading-8 tracking-tight`}
                             style={{
                               fontVariationSettings: `"BNCE" 2, ""INFM" 30`,
                             }}

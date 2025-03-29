@@ -1,10 +1,23 @@
 ---
-title: "A Mid-career Retrospective of Stores for State Management" 
+title: 'A Mid-career Retrospective of Stores for State Management'
 draft: false
 summary: 'Looking back at flux-style stores for modernizing front end applications. A tale of 3 projects, at 3 different businesses.'
 date: '2024-11-24'
-tags: [redux, react, architecture, frontend, vue, angular, statemanagement, codinghorror]
-images: ['https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fwww.cbc.ca%2Fkidsnews%2Fimages%2FTHUMB_FINAL_nanalan.png']
+tags:
+  [
+    redux,
+    react,
+    architecture,
+    frontend,
+    vue,
+    angular,
+    statemanagement,
+    codinghorror,
+  ]
+images:
+  [
+    'https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fwww.cbc.ca%2Fkidsnews%2Fimages%2FTHUMB_FINAL_nanalan.png',
+  ]
 ---
 
 Working on a living product after 2 years on design systems and component libraries has inspired reflections on technical choices of startups past.
@@ -17,21 +30,28 @@ In this post, I recount some learnings from using or refusing common, "boring", 
 
 The Stack: React 14, React-Redux, Yup, Bootstrap, Express, MongoDB, Redis
 
-<div className="flex h-auto md:flex-row md:justify-evenly sm:flex-col">
-<img src="https://cdn.dribbble.com/users/775143/screenshots/6302764/dribbble_bulk_actions_4x.png?resize=1600x1200&vertical=center" className="w-[50%] h-auto" alt="Screenshot of user interface design by Niclas Ernst for Fintory" />
-<img src="https://cdn.dribbble.com/users/775143/screenshots/6576016/comparison.png" alt="Screenshot of a design comp by Niclas Ernst on fund comparison from Dribbble" className="w-[50%] h-auto" />
+<div className="flex h-auto sm:flex-col md:flex-row md:justify-evenly">
+  <img
+    src="https://cdn.dribbble.com/users/775143/screenshots/6302764/dribbble_bulk_actions_4x.png?resize=1600x1200&vertical=center"
+    className="h-auto w-[50%]"
+    alt="Screenshot of user interface design by Niclas Ernst for Fintory"
+  />
+  <img
+    src="https://cdn.dribbble.com/users/775143/screenshots/6576016/comparison.png"
+    alt="Screenshot of a design comp by Niclas Ernst on fund comparison from Dribbble"
+    className="h-auto w-[50%]"
+  />
 </div>
 
-My first encounter with sophisticated store usage was React-Redux at a B2B fintech company in 2019. We were using React 11 for dual-module application, its state all sewn together by several [`connect()`](https://react-redux.js.org/api/connect) functions.[^2] 
- 
-Redux solved the need for a view-level source of truth to organize feature-specific state, especially when different parts of the app needed to access information specific to a particular feature. 
+My first encounter with sophisticated store usage was React-Redux at a B2B fintech company in 2019. We were using React 11 for dual-module application, its state all sewn together by several [`connect()`](https://react-redux.js.org/api/connect) functions.[^2]
 
-Below is a simplistic view of feature states to enable the user to add stocks to portfolios, and contact customer service. 
+Redux solved the need for a view-level source of truth to organize feature-specific state, especially when different parts of the app needed to access information specific to a particular feature.
+
+Below is a simplistic view of feature states to enable the user to add stocks to portfolios, and contact customer service.
 
 Each feature has its own reducer, and the store combines them all.
 
 ![A diagram of a mega-store with feature-oriented reducers](/static/images/blog/fintechmegastore.png)
-
 
 ```javascript
 // store.js
@@ -47,8 +67,9 @@ const configureStore = () => {
 
   return store;
 };
-``` 
-The plans reflect these business requirements: 
+```
+
+The plans reflect these business requirements:
 
 - the ability to find and add stocks to a portfolio
 - to view and compare the progress of purchased stocks
@@ -68,15 +89,15 @@ In 2020, I landed at a health tech company whose forte was clinical data storage
 
 The app would take a combination of answers entered into an 8-part form with 120 fields to assess how soon a patient had to undergo surgery.
 
-It's not as serious as a medical device, but impactful to patient health outcomes to the extent the app decides who gets a brain scan before whom. 
+It's not as serious as a medical device, but impactful to patient health outcomes to the extent the app decides who gets a brain scan before whom.
 
 ![Angular architectural diagram of model view controller](https://ducmanhphan.github.io/img/Angular-architecture/angular-architecture.jpg)
 
-Angular’s MVC structure meant service classes performed the passing of state between views. 
+Angular’s MVC structure meant service classes performed the passing of state between views.
 
-Our form was doubly-dynamic: 
+Our form was doubly-dynamic:
 
-- fields that were displayed depended on a question-answer model, basically running through `Formbuilder` 
+- fields that were displayed depended on a question-answer model, basically running through `Formbuilder`
 - subsequent fields that were displayed were dependent on combinations of inputted values of other fields
 
 Oh yeah, stakeholders decided that each field had live, `oninput` validations that were dependent on the values of other fields.
@@ -85,7 +106,7 @@ Doesn't this sound like it's ripe for a state management solution?
 
 Well, **we didn't use one**.
 
-Instead, we used observables with RxJS to subscribe to streams of async event data, and used service classes to pass data between views. 
+Instead, we used observables with RxJS to subscribe to streams of async event data, and used service classes to pass data between views.
 
 What happens if when only use services to share state?
 
@@ -150,7 +171,7 @@ export class DynamicFormComponent implements OnInit {
     // show the errors above form fields
   }
   ngOnSubmit(){
-    // loop through all forms 
+    // loop through all forms
     // show the form level validation errors above the form
   }
   onSubmit() {
@@ -161,16 +182,17 @@ export class DynamicFormComponent implements OnInit {
   }
 }
 ```
-App architecture wise, we used some weird hybrid between modules separated by domain and angular's "shared" folder structure. 
+
+App architecture wise, we used some weird hybrid between modules separated by domain and angular's "shared" folder structure.
 
 Dynamic forms and reactive forms fulfilled the need to render different form data models, but this got tacky as soon as we needed to:
 
-  - conditionally render nested form groups or fields
-  - display previously entered information or conditionnally disable previously filled fields
-  - add another field instance to a form when it's edited or filled
-  - validate form fields based on the values of other fields
+- conditionally render nested form groups or fields
+- display previously entered information or conditionnally disable previously filled fields
+- add another field instance to a form when it's edited or filled
+- validate form fields based on the values of other fields
 
-The disaster that arose from not using a state management solution: longwinded, overly imperative ("if-abc, else if xyz, else if jkl..."), and much harder to maintain and debug code. 
+The disaster that arose from not using a state management solution: longwinded, overly imperative ("if-abc, else if xyz, else if jkl..."), and much harder to maintain and debug code.
 
 ## III. The 7 year old shopping app that was never refactored
 
@@ -182,14 +204,15 @@ In the past year, I've been working on migrating Vue 2 and VueX to Vue3 and Pini
 
 Imagine an app for boutique knick-knacks starts by hydrating a user store with all the info related to a user whenever they login.
 
-<iframe src="https://codesandbox.io/p/devbox/nuxty-2-shoes-wh7mlv?embed=1&file=%2Fstores%2FaccountStore.ts"
-    className="w-full h-[600px] border-0 border-radius-4 overflow-hidden"
-     title="nuxty-2-shoes"
-     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-     sandbox="allow-forms allow-presentation allow-same-origin allow-scripts"
-   ></iframe>
+<iframe
+  src="https://codesandbox.io/p/devbox/nuxty-2-shoes-wh7mlv?embed=1&file=%2Fstores%2FaccountStore.ts"
+  className="border-radius-4 h-[600px] w-full overflow-hidden border-0"
+  title="nuxty-2-shoes"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-presentation allow-same-origin allow-scripts"
+></iframe>
 
-At the beginning, the business only runs in Canada. It's good enough to have everything in one single store. 
+At the beginning, the business only runs in Canada. It's good enough to have everything in one single store.
 
 Later, this app decides to expand in the US and also sell American goods, and offer specific coupons and promotional discounts to American users.
 
@@ -207,22 +230,23 @@ The store is split into modules that pertain to domain features, but it has a co
 
 - Duplicated state: while the account store would be populated with user-adjacent info right after login, the order store is updated whenever it's instantiated in American users' sessions.
 
-- Missing knowledge loops: Many features of the app still rely on the legacy `order.data.items` property, but the `orderStore`'s `order.items` inventory needs to be displayed in US currency. Without cataloging and updating areas that rely on the old store, the display of the correct cart continues to falter. 
+- Missing knowledge loops: Many features of the app still rely on the legacy `order.data.items` property, but the `orderStore`'s `order.items` inventory needs to be displayed in US currency. Without cataloging and updating areas that rely on the old store, the display of the correct cart continues to falter.
 
-- Getter abuse: The `accountStore` has getters that detail trivial pieces of user state that have been tacked on over time: 
+- Getter abuse: The `accountStore` has getters that detail trivial pieces of user state that have been tacked on over time:
 
-  - `isSubscribedToNewsletter()` is already denoted by the property `user.hasSubscribed` returned from the API call. 
-  
-  - `isVegetable()` might be helpful for vegetarian users, just as  `ordersWithoutPeanuts()` would for all cart items without peanuts, and might have been a feature request quickly implemented to serve those with allergies, but not needed by all users. These two would be better off as computed properties in a `useDietaryRestrictions()` composable.
-  
+  - `isSubscribedToNewsletter()` is already denoted by the property `user.hasSubscribed` returned from the API call.
+  - `isVegetable()` might be helpful for vegetarian users, just as `ordersWithoutPeanuts()` would for all cart items without peanuts, and might have been a feature request quickly implemented to serve those with allergies, but not needed by all users. These two would be better off as computed properties in a `useDietaryRestrictions()` composable.
+
 - neither store was fully migrated to Vue 3 composition API.
 
 And so, the more features added, the busier the team gets with patching and reconciling state in both stores 😱
 
 ![An illustration of daisychain-ed monitors feeding into a laptop](https://mmdmonitors.com/wp-content/uploads/2024/08/1200x628_linkedin_Daisychain.jpg)
 
-<figcaption>Poorly architected stores can act like daisychained info flows, but not in the way that you'd want!</figcaption>
-
+<figcaption>
+  Poorly architected stores can act like daisychained info flows, but not in the
+  way that you'd want!
+</figcaption>
 
 Eventually, someone has to rip the bandaid off in order to move ahead:
 
@@ -237,11 +261,14 @@ Eventually, someone has to rip the bandaid off in order to move ahead:
 
 ### Setup drudgery and boilerplate
 
-The amount of code needed to set up a store, actions, reducers and dispatchers can be overwhelming for newcomers. 
+The amount of code needed to set up a store, actions, reducers and dispatchers can be overwhelming for newcomers.
 
 ![Diagram displaying the state management model for a Vue library](/static/images/blog/vuex-diagram.png)
 
-<figcaption>VueX itself is particularly verbose with introducing the need to commit mutations before dispatching actions.</figcaption>
+<figcaption>
+  VueX itself is particularly verbose with introducing the need to commit
+  mutations before dispatching actions.
+</figcaption>
 
 To be effective with stores, developers needed profiency with a framework's rendering mechanisms consider the tradeoff of strenuous setup and boilerplate for the benefit of shared state between views.
 
@@ -266,8 +293,8 @@ Using a store for state management is ideal when:
 - There's a need to present or update different types of data across different features of an app, or work with nested deep data structures to update the UI.
 
 If there are multiple dimensions of state to track, a store may not offer enough granularity for defining exact state transitions. It may be worth looking at implementing a state machine (some libraries include [XState](https://xstate.js.org/) or [Immer](https://immerjs.github.io/immer/))
-   
-For example, if you need interaction changes through multi-step forms, wizards or like the combinatories of form fields I previously described. 
+
+For example, if you need interaction changes through multi-step forms, wizards or like the combinatories of form fields I previously described.
 
 _Caveat: I have not had to use above libs yet._
 
@@ -292,6 +319,7 @@ Vue's `computed()`, `ref()`, and `watch()` functions, along with composables, ac
 Newer options like [signals](https://github.com/tc39/proposal-signals) in Svelte and Angular are also emerging.
 
 Frameworks aim to:
+
 - Reactively update the UI when data changes
 - Subscribe/unsubscribe to data changes
 - Manage side effects
@@ -299,12 +327,12 @@ Frameworks aim to:
 
 Where you need it, it's probably wise to choose a strategy before entropy takes hold.
 
-[^1]: The contents of this post are based on my work experiences but I've changed exact details. 
+[^1]: The contents of this post are based on my work experiences but I've changed exact details.
 
 [^2]: React's fundamental principles promoted thinking about data moving through components in a unidirectional matter, and devs could easily control rendering and interactions with methods like [`componentDidMount`](https://legacy.reactjs.org/docs/react-component.html#componentdidmount) and [`componentDidUpdate`](https://legacy.reactjs.org/docs/react-component.html#componentdidupdate).
 
 [^3]: Wassim Chegham. "Angular Universal for the Rest of Us" https://medium.com/google-developer-experts/angular-universal-for-the-rest-of-us-922ca8bac84
 
-[^4]: Dan Abramov. ["You Might Not Need Redux"](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367), Medium, Sep 19, 2016. 
+[^4]: Dan Abramov. ["You Might Not Need Redux"](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367), Medium, Sep 19, 2016.
 
 [^5]: Dylan Tientcheu. ["Do you really need VueX?"](https://blog.logrocket.com/do-you-really-need-vuex/), LogRocket, Dec 24, 2020.

@@ -1,4 +1,4 @@
-import tagData from '@/app/tag-data.json' with { type: "json" }
+import tagData from '@/app/tag-data.json' with { type: 'json' }
 import siteMetadata from '@/data/siteMetadata'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 import { genPageMetadata } from 'app/seo'

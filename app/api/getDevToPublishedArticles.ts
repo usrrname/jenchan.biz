@@ -1,4 +1,3 @@
-
 const getDevToPublishedArticles = async () => {
   'use server'
   const endpoint = `https://dev.to/api/articles/me/published`
@@ -17,6 +16,5 @@ const getDevToPublishedArticles = async () => {
       throw new Error(`Error in getDevToPublishedArticles: ${error.message}`)
     }
   }
-  
 }
 export default getDevToPublishedArticles
