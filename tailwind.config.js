@@ -1,8 +1,8 @@
 // @ts-check
-const { fontFamily } = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+import fontFamily from "tailwindcss/defaultTheme"
 
-/** @type {import("tailwindcss/types").Config } */
+import colors from "tailwindcss/colors"
+
 module.exports = {
   content: [
     './node_modules/pliny/**/*.js',
@@ -64,7 +64,7 @@ module.exports = {
         invert: {
           css: {
             a: {
-              color: theme('colors.primary.500'),
+              color: theme('colors.primary.300'),
               '&:hover': {
                 color: `${theme('colors.primary.400')} `,
               },

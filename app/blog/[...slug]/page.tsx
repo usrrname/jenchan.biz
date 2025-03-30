@@ -23,7 +23,7 @@ import {
   sortPosts,
 } from 'pliny/utils/contentlayer'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -41,13 +41,13 @@ interface BlogPostProps extends Metadata {
   next: CoreContent<Blog>
   authorDetails: CoreContent<Authors>[]
   webmentions:
-    | {
-        likes: WebMentionReaction[]
-        mentions: WebMentionReplies[]
-        replies: WebMentionReplies[]
-        reposts: WebMentionReaction[]
-      }
-    | undefined
+  | {
+    likes: WebMentionReaction[]
+    mentions: WebMentionReplies[]
+    replies: WebMentionReplies[]
+    reposts: WebMentionReaction[]
+  }
+  | undefined
   article?: DevToArticleStats
 }
 
@@ -132,6 +132,21 @@ async function generateMetadata(props: {
       next: next,
     }
   }
+
+  // Add return for devToArticle case
+  return {
+    title: post.title,
+    description: post.summary,
+    layout: post.layout || defaultLayout,
+    post: post,
+    mainContent,
+    jsonLd,
+    authorDetails,
+    prev: prev,
+    next: next,
+    article: devToArticle,
+    webmentions: undefined
+  }
 }
 
 async function generateStaticParams() {
@@ -141,7 +156,7 @@ async function generateStaticParams() {
 }
 
 export default async function Page(props: {
-  params: Promise<{ slug: string[]; page: string }>
+  params: Promise<{ slug: string[] }>
 }) {
   const metadata = await generateMetadata(await props)
   if (!metadata) {
@@ -158,8 +173,8 @@ export default async function Page(props: {
     webmentions,
   } = metadata
 
-  let articleUrl: URL | undefined = undefined
-  if (article) articleUrl = new URL(article?.url)
+  let articleUrl: string | undefined = undefined
+  if (article) articleUrl = article?.url
 
   const Layout = layouts[
     post.layout || defaultLayout
