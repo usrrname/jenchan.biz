@@ -1,0 +1,240 @@
+---
+title: 'The Thankless Complexity of Custom Form Validations'
+draft: false
+summary: 'Gripes and gotchas from building custom form validation after hundreds of hours lost to retrofitting library form components, writing and rewriting field validations exactly as clients wanted, and building accessible form field web components at enterprise.'
+series: 'the-thankless-complexity-of-custom-form-validations'
+tags: [webstandards, UX, forms, designsystems, webcomponents]
+date: '2025-03-29'
+images: ['/static/images/blog/change-my-mind.png']
+---
+
+One of the least exhilarating but common development tasks are building forms, and form validations. While important, they're often over-designed and easy to over-engineer as a result.
+
+I believe we've gone too far with trying to accomodate _all_ kinds of form validation while building reusable input fields –– especially for component libraries and design systems.
+
+## The Browser Already Handles It
+
+<figure>
+
+<img src="https://i0.wp.com/css-tricks.com/wp-content/uploads/2017/06/required-input.png"  alt="screenshot of a validation error on chrome" className="w-auto"/>
+ <figcaption className="text-left"> Default HTML5 on-submit validation in Chrome. This is what happens when the submit event is called on a form and the incorrect data or required fields are not filled as a result of the HTML [constraint validation API](https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation) calling `checkValidity()` on [ElementInternals](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals) or `form.validate()` methods.</figcaption>
+</figure>
+
+The most basic validation happens on submit, when the user hits a "submit" button associated with a form element.
+
+It's not styled nicely. It doesn't look or feel consistent look across browsers, but **IT JUST WORKS**.
+
+Form input elements have [built-in validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#using_built-in_form_validation) [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation#validation-related_attributes) for `min`, `max`,`step`, `minlength`, `maxlength` values, and regex matching on the `pattern` attribute for things like phone number format masking.
+
+If you stick to validating on submit, could very well validate a form without using Javascript![^1]
+
+The drawback: errors that show up from failed submission attempts won't disappear til the user retries submitting the form.
+
+## All the ways to validate
+
+Each type requires invoking validation on the form field at different moments of the user journey.
+
+- Validation as the user interacts with a field (`oninput`, `onchange`, `onkeypress`). Also called "**live validation**".
+
+<figure>
+  <img
+    src="https://media.nngroup.com/media/editor/2018/11/23/slack-password-validation.gif"
+    width="auto"
+    alt="Gif of Slack's implementation of live password validation. The gif shows two form fields: one is for entering a password, the other is for confirming the password. The first field shows a meter below a password field progressing from red to green as the length and content of the password fulfills requirements"
+  />
+  <figcaption>
+    Slack's implementation of live validation on a password field with a
+    strength meter under the field provides instant feedback on whether the
+    user's password fulfills password rules.
+  </figcaption>
+</figure>
+
+Validation that runs when the user pauses, or has finished typing in a field (`onkeyup` with debounce) is less common besides finding them on username and password fields. I don't think it's necessary to including such behaviour on regular input fields in component libraries.
+
+- Validation that runs **on submission** (`onsubmit`) - and should prevent any erroneous data being posted if there are errors in any form field.
+
+- Validation that shows on fields **after form submission** due to responses from the server
+
+  One would expect that post-submission, server-side errors are reflected on the form, under corresponding fields that had incorrect content.
+
+- Validation that runs **right after** the user has interacted with the field (`onblur`) - otherwise called "late validation"
+
+Unpopular opinion: I recommend sticking to this when there is a need to build ultra-fast. You will dig your own grave otherwise.
+
+Agreeing to implement live validation, if not scoped carefully, will result in hellfire from all directions since:
+
+- validation can run [prematurely and aggressively](https://baymard.com/blog/inline-form-validation#pitfall-1-premature-inline-validation), especially on fields that are required but incomplete.
+
+- you'll be playing whackamole to remove validation errors whenever they're corrected, which means detecting change `oninput` or `onkeypress` and removing the error message when the field is valid again, particularly on fields that are dependent on each other.
+
+- you end up tempted to add more feedback mechanisms like toasts to prove the form submitted
+
+## Treacherous Variants
+
+Let's look at some well-intentioned UX patterns that explode the combinatories of visual and accessiblity testing since form layouts are so varied.
+
+<figure className="flex flex-col justify-center">
+  <img
+    src="https://miro.medium.com/v2/format:webp/1*Q2ZvXIuTtJePjjAZWdSbmg.jpeg"
+    alt="screensht of "
+    className="max-w-full"
+  />
+  <figcaption>
+    Andrew Coyle, ["Forms need
+    validation"](https://coyleandrew.medium.com/forms-need-validation-2ecbccbacea1),
+    Medium, Dec 16. 2016
+  </figcaption>
+</figure>
+
+1. The option to show validation messages above, below, or adjacent to a form field
+2. Showing validation errors inside a tooltip or popover
+
+3. Showing **multiple** validation messages above, below, adjacent to any form field 😱
+
+4. The heavily debated best practice of indicating required inputs with an asterisk, OR appending "(required)" to the field label, OR only showing "(optional)" next to optional field labels.
+
+5. Showing a summary of form errors at the top or bottom of the form on-submission
+
+<figure className="flex">
+    <img src="https://www.w3.org/WAI/content-images/easy-checks/example-required-label.png" alt="Screenshot of UX convention for marking form fields as required or optional" className="max-w-full"/>
+    
+    <figcaption className="self-end text-left pl-3">
+        W3C, ["Easy Checks - A First Review of Web Accessibility"](https://www.w3.org/WAI/eval/preliminary.html), 2023
+    </figcaption>
+
+</figure>
+
+<figure className="flex">
+    <img src="https://design.mindsphere.io/patterns-chapters/form-validation/images/form-validation-style-overview-desktop.png" alt="A mobile design illustrating a summary of errors at the top of the form after submission" className="max-w-[60%]"/>
+
+<figcaption className="self-end text-left ml-3">["Form Validation"](https://design.mindsphere.io/patterns/form-validation.html), Siemens UI Design and Patterns, User Experience Toolkit</figcaption>
+</figure>
+
+## To Make a River Flow Backwards
+
+Developers easily do more absurd work to make validation possible.
+
+2 examples of how garden-variety form fields grow more complex than they should be:
+
+### Live validation, all the time.
+
+Until a year ago, developers had to deliberately prevent live validation from running on page load if it was a requirement.
+
+When the form is first rendered, the fields are empty, and immediate check on validation by browser APIs will show the `:invalid` styles on the fields with the `required` attribute set.
+
+<iframe
+  height="400"
+  className="w-full"
+  scrolling="no"
+  title="Types of validation using validation constraint, psuedo :invalid, user-invalid, :aria-invalid"
+  src="https://codepen.io/usrrname/embed/preview/VYZrMww?default-tab=html%2Cresult"
+  frameBorder="no"
+  loading="lazy"
+  allowTransparency={true}
+  allowFullScreen={true}
+></iframe>
+
+We'd have to tell the form **not** to display invalid styles, especially those with the `required` attribute set while validating empty fields on initial page load. Alternately, we might opt to prevent live validation from happening until the user interacts with a field after initial page load.
+
+Luckily, the `:user-valid` and `:user-invalid` pseudo-class CSS selectors just reached [baseline status](https://web.dev/articles/user-valid-and-user-invalid-pseudo-classes) in 2023, so we can style the form fields based on user interaction instead of [`:invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:invalid), which reflects field element's validity.
+
+### Showing **multiple** messages above and below a form field
+
+We'll just conditionally render more icon-message molecules as they arise :p
+
+<figure className="flex content-center">
+  <img
+    src="https://res.cloudinary.com/indysigner/image/fetch/f_auto,q_80/w_2000/https://archive.smashing.media/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/bc97e285-e9b4-4c78-befe-949032b8057f/password-strenght-meter-airbnb.png"
+    alt="Screenshot of a password validation scenario where vitaly.friedman@gmail.com is entered into an email form field, and an obfuscated four-character password is entered into a password field. The area below the password field shows validation requirements of the password field. The first is an error declaring the password strength is weak. The second is a success message confirming that the password can't contain the user's name or email. The third is an error stating that the password should be at least 8 characters. The fourth is a success message about the password containing a number or symbol."
+    className="max-w-[320px] text-center"
+  />
+</figure>
+
+Displaying multiple inline validations on columned form layouts with multiple fields in a row causes layout shifts and misalignment when space the element occupies dynamically changes whenever the validation message appears.
+
+![Screenshot of a Bootstrap style form with multiple columns and input errors displaying above form fields](/static/images/blog/misaligned-bootstrap-form.png)
+
+## Avoid all-in-one solutions
+
+Can you imagine a text input component that on top of its usual props, includes a littany of optional props or attributes like `validationMessagePosition`, `isContentVisible`, `showValidationInTooltip`, `validationTooltipPosition`? Yuck. (I recall this [AirBnB talk](https://www.youtube.com/embed/fHQ1WSx41CA?si=fV1r5lENFsYZv6sQ&start=1299) about how a button component festered in attempt to support all variants.)
+
+If you're working on a design system, developer adoption of form elements will require clear working examples of how inputs will interact with form elements to show validation - especially if you're supporting multiple frameworks.
+
+Before you build, clarify base cases that you're supporting with and spend time solutioning for how users can extend form elements.
+
+It may look smart to build the all-knowing form element that will alternate between displaying the correct visual features for numeric, text, currency types in a single field, and conditionally render the right input... right?
+
+**IT'S A TRAP** – even if many attributes between number and text inputs are similar.
+
+## Be Skeptical of New Wheels
+
+Sometimes people think they're being clever by designing or building the world's most usable datepicker.
+
+<img
+  src="https://img.uxcel.com/practices/separate-dropdowns-for-day-month-and-year-1641468522930/a-1697047779287-2x.jpg"
+  alt="Screenshot of custom date input with seperate fields"
+  className="max-w-[300px]"
+/>
+
+Any efforts to reinvent this pattern is signing yourself up for 4 times the work and even more errors.
+
+There's a reason why `<input type="date"/>` exists.
+
+The `value` it gathers is an ISO 8601 `"YYYY-MM-DD"` string but it comes with inherent APIs, [`valueAsNumber`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/valueAsNumber) and [`valueAsDate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/valueAsDate) that returns an easily transformable Unix epoch timestamp and Date object respectively to make date and time calculations easier.
+
+Creating multi-input datepickers from scratch sets you up for exponential efforts with testing and maintenance as you'll have to account for differences in leap years, locale, daylight savings time, and more. You'll acheive more reliable input and validation with an HTML5 native date input.
+
+![Screenshot of a man sitting at a table in a park with the banner Change my mind](/static/images/blog/use-the-platform.png)
+
+## Custom validation: the developer's dilemma
+
+Careful separation between the presentational and functional responsibilities of different input fields, building mechanisms to accept validation rules, and offering users mental models of how to achieve custom validation with abstractions is vital to developer adoption of form elements.
+
+<p className="text-lg font-semibold">
+  The best kind of validation you're going to offer is the kind that you won't
+  have to write.
+</p>
+
+Most developers who have to cram-build forms have a stack-based favorite for runtime validation. And most libraries do this with a config object or wrapping the native `ConstraintValidation` properties.
+
+- Angular's forms has the `dirty` and `touched` flags to indicate if a field has been interacted with. Inputs can extended by [`Validators`](https://angular.io/api/forms/Validators) to manage validation rules, while [`FormControl`](https://angular.io/api/forms/FormControl) tracks the validation state of the field.
+
+- For Vue or Nuxt, [Formkit](https://formkit.com/essentials/validation) offers `validation-config` props for declaring validation type on the `<form>` and `<input>` level. It accepts an object of ids and errors which can be reactively updated to include any errors that are pertinent to the form state. The `@formkit/zod` plugin allows Zod to be used for runtime validation.
+
+- [React Hook Form](https://react-hook-form.com/get-started) uses `useForm` and `useField` hooks to manage form state and validation.
+
+For cases that require showing multiple validations, publishing examples of how users can customize and extend existing components to achieve their goals while integrating with their stack's ecosystem would be a path of lesser resistance than ensuring every field packs in all possible validation scenarios.
+
+## Web components: The special snowflake
+
+Implementing [Form Associated Custom Elements](https://html.spec.whatwg.org/dev/custom-elements.html) (aka. form element web components) can be frustrating when there are no dominant patterns established on writing web components for reuse, particularly when there is a need to expose the `ValidityState` API to enable the display of multiple, conditional errors.
+
+Look at how much vanilla code you'd have to write to make an input field that shows a custom error message when a required field isn't populated!
+
+<iframe
+  height="400"
+  className="w-full"
+  scrolling="no"
+  title="Types of validation using validation constraint, psuedo :invalid, user-invalid, :aria-invalid"
+  src="https://codepen.io/usrrname/embed/JoPOBwr?default-tab=html%2Cresult"
+  frameBorder="no"
+  loading="lazy"
+  allowTransparency={true}
+  allowFullScreen={true}
+></iframe>
+
+## Make it harder for users to screw up
+
+Data entry is a means to an end: collecting data allows teams to improve the product or enable users to acheive their goals.
+
+The sooner and more validation errors you show, the more punishing it is for the user, the higher the abandonment rate. [^3]
+
+Next time you're approached to build custom form fields with validation or interactions, consider where your work fits within the org. If you're working on a design system for a product that deals with time, it might be a worthy effort to reinvent a better datepicking experience. But if you're at another run-of-the-mill startup where your work should have been done yesterday, then using tried and true component libraries will save you teeth-gnashing and heartbreak.
+
+[^1]:
+    Gerardo Rodriguez. ["Progressively Enhanced Form Validation, Part 1: HTML and CSS"](https://cloudfour.com/thinks/progressively-enhanced-form-validation-part-1-html-and-css/#how-to-avoid-invalid-styles-showing-on-page-load), CloudFour. August 7, 2023 <br/>
+    Marco Campos. ["Form validation with (almost) no JS"](https://madcampos.dev/talks/tojs-forms/). 2023
+
+[^2]: Rachel Krause. ["10 Design Guidelines for Reporting Errors in Forms"](https://www.nngroup.com/articles/errors-forms-design-guidelines/), Nielsen Norman Group, Dec. 12, 2024.
+
+[^3]: Edward Scott. ["Usability Testing of Inline Form Validation: 31% Don’t Have It, 4% Get It Wrong"](https://baymard.com/blog/inline-form-validation), Baymard Institute, Jan 9, 2024.
