@@ -52,10 +52,10 @@ const aiBots = [
 
 const aiBotsRules = aiBots.map((bot) => ({
   userAgent: bot,
-  disallow: '/',
+  disallow: '/blog',
 }))
+
 const robotsRules = [
-  ...aiBotsRules,
   {
     userAgent: '*',
     allow: '/',
