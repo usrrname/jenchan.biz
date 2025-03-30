@@ -3,11 +3,12 @@
 import Link from '@/components/Link'
 import Pagination, { PaginationProps } from '@/components/Pagination'
 import Tag from '@/components/Tag'
+import { shantell_sans } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
 import type { Blog } from 'contentlayer/generated'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { formatDate } from 'pliny/utils/formatDate'
-import React, { useState } from 'react'
+import { useState } from 'react'
 interface ListLayoutProps {
   posts: CoreContent<Blog>[]
   title: string
@@ -36,8 +37,8 @@ export default function ListLayout({
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="font-headings text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
+          <h1 className={`${shantell_sans.variable} text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100`}>
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -48,11 +49,11 @@ export default function ListLayout({
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
               />
             </label>
             <svg
-              className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute top-3 right-3 h-5 w-5 text-gray-400 dark:text-gray-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -76,19 +77,14 @@ export default function ListLayout({
                 <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                   <dl>
                     <dt className="sr-only">Published on</dt>
-                    <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                      <time dateTime={date}>
-                        {formatDate(date, siteMetadata.locale)}
-                      </time>
+                    <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                      <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                     </dd>
                   </dl>
                   <div className="space-y-3 xl:col-span-3">
                     <div>
-                      <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link
-                          href={`/${path}`}
-                          className="text-gray-900 dark:text-gray-100"
-                        >
+                      <h3 className="text-2xl leading-8 font-bold tracking-tight">
+                        <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                           {title}
                         </Link>
                       </h3>
@@ -106,12 +102,14 @@ export default function ListLayout({
           })}
         </ul>
       </div>
-      {pagination && pagination.totalPages > 1 && !searchValue && (
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-        />
-      )}
+      {
+        pagination && pagination.totalPages > 1 && !searchValue && (
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+          />
+        )
+      }
     </>
   )
 }

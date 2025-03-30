@@ -5,9 +5,9 @@ import { genPageMetadata } from 'app/seo'
 import { allBlogs } from 'contentlayer/generated'
 import { slug } from 'github-slugger'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import React from 'react'
+
+const POSTS_PER_PAGE = 5
 
 async function generateMetadata(props: {
   params: Promise<{ tag: string }>
@@ -29,10 +29,9 @@ async function generateMetadata(props: {
 export const generateStaticParams = async () => {
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
-  const paths = tagKeys.map((tag) => ({
+  return tagKeys.map((tag) => ({
     tag: encodeURI(tag),
   }))
-  return paths
 }
 
 export default async function TagPage(props: {
@@ -40,7 +39,6 @@ export default async function TagPage(props: {
 }) {
   const params = await props.params
   const tag = decodeURI(params.tag)
-  // Capitalize first letter and convert space to dash
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const filteredPosts = allCoreContent(
     sortPosts(
@@ -49,8 +47,19 @@ export default async function TagPage(props: {
       )
     )
   )
-  if (filteredPosts.length === 0) {
-    return notFound()
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
+  const initialDisplayPosts = filteredPosts.slice(0, POSTS_PER_PAGE)
+  const pagination = {
+    currentPage: 1,
+    totalPages: totalPages,
   }
-  return <ListLayout posts={filteredPosts} title={title} />
+
+  return (
+    <ListLayout
+      posts={filteredPosts}
+      initialDisplayPosts={initialDisplayPosts}
+      pagination={pagination}
+      title={title}
+    />
+  )
 }
