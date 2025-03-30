@@ -169,6 +169,7 @@ export default async function Page(props: {
 
   return (
     <>
+      <meta name="og:author" content={siteMetadata.author} />
       <meta name="og:type" content="article" />
       <meta name="og:title" content={post?.title} />
       <meta name="og:description" content={post?.summary} />
