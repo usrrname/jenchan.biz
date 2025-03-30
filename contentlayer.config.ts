@@ -61,7 +61,7 @@ const computedFields: ComputedFields = {
     resolve: (doc) => extractTocHeadings(doc.body.raw),
   },
   series: {
-    type: 'string',
+    type: "string",
     resolve: (doc) => {
       const series = doc._raw.flattenedPath.match(/blog\/series\/(.+?)\//)
       return series ? series[1] : null

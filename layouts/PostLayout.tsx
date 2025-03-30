@@ -130,9 +130,6 @@ export default async function PostLayout({
                 {children}
               </div>
               <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussOnTwitterLink} rel="nofollow" key={path}>
-                  Discuss on Twitter
-                </Link>
 
                 {devToArticle && (
                   <Link href={devToArticle} rel="nofollow" key={path}>
