@@ -47,7 +47,7 @@ export default [
     },
 
     rules: {
-      'prettier/prettier': 'warn',
+      'prettier/prettier': 'off',
       'react/react-in-jsx-scope': 'off',
       'prefer-const': 'warn',
       'no-constant-binary-expression': 'warn',

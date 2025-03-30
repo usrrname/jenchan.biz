@@ -32,7 +32,7 @@ const layouts = {
   PostBanner,
 }
 
-interface BlogPostProps {
+interface BlogPostProps extends Metadata {
   post: Blog
   layout: string
   mainContent: CoreContent<Blog>
@@ -51,11 +51,11 @@ interface BlogPostProps {
   article?: DevToArticleStats
 }
 
-// Separate metadata generation from data fetching
 export async function generateMetadata(props: {
-  params: { slug: string[] }
+  params: Promise<{ slug: string[] }>
 }): Promise<Metadata> {
-  const slug = decodeURI(props.params.slug.join('/'))
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
   const post = allBlogs.find((p) => p.slug === slug)
 
   if (!post) {
@@ -67,19 +67,16 @@ export async function generateMetadata(props: {
     const authorResults = allAuthors.find((p) => p.slug === author)
     return coreContent(authorResults as Authors)
   })
-
   const publishedAt = new Date(post.date).toISOString()
   const modifiedAt = new Date(post.lastmod || post.date).toISOString()
   const authors = authorDetails.map((author) => author.name)
-
   let imageList = [siteMetadata.socialBanner]
   if (post.images) {
     imageList = typeof post.images === 'string' ? [post.images] : post.images
   }
-
   const ogImages = imageList.map((img) => {
     return {
-      url: img.includes('http') ? img : `${siteMetadata.siteUrl}${img}`,
+      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
     }
   })
 
@@ -108,7 +105,6 @@ export async function generateMetadata(props: {
   }
 }
 
-// Separate function to get blog post data
 async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined> {
   const post = allBlogs.find((p) => p.slug === slug) as Blog
 
@@ -152,13 +148,20 @@ async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined>
   }
 }
 
-export default async function Page({ params }: {
-  params: { slug: string[] }
-}) {
-  const slug = decodeURI(params.slug.join('/'))
-  const blogData = await getBlogPostData(slug)
+export async function generateStaticParams() {
+  return allBlogs.map((p) => ({
+    slug: p.slug.split('/').map((name) => decodeURI(name)),
+  }))
+}
 
-  if (!blogData) {
+export default async function Page(props: {
+  params: Promise<{ slug: string[] }>
+}) {
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
+  const postData = await getBlogPostData(slug)
+
+  if (!postData) {
     return notFound()
   }
 
@@ -170,8 +173,8 @@ export default async function Page({ params }: {
     article,
     jsonLd,
     authorDetails,
-    webmentions,
-  } = blogData
+    webmentions
+  } = postData
 
   let articleUrl: string | undefined = undefined
   if (article) articleUrl = article?.url
@@ -238,4 +241,3 @@ export default async function Page({ params }: {
     </>
   )
 }
-
