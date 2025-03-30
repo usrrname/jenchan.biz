@@ -122,7 +122,7 @@ Until a year ago, developers had to deliberately prevent live validation from ru
 When the form is first rendered, the fields are empty, and immediate check on validation by browser APIs will show the `:invalid` styles on the fields with the `required` attribute set.
 
 <iframe
-  height="300"
+  height="400"
   className="w-full"
   scrolling="no"
   title="Types of validation using validation constraint, psuedo :invalid, user-invalid, :aria-invalid"
@@ -167,11 +167,21 @@ It may look smart to build the all-knowing form element that will alternate betw
 
 ## Be Skeptical of New Wheels
 
-If you think you're being clever by designing or building the world's best datepicker with custom fields? Think again. There's a reason why `<input type="date"/>` exists.
+Sometimes people think they're being clever by designing or building the world's most usable datepicker.
 
-The value it gathers is a `"YYYY-MM-DD"` string but `valueAsNumber` returns an easily parsable unix epoch timestamp.
+<img
+  src="https://img.uxcel.com/practices/separate-dropdowns-for-day-month-and-year-1641468522930/a-1697047779287-2x.jpg"
+  alt="Screenshot of custom date input with seperate fields"
+  className="max-w-[300px]"
+/>
 
-Any further efforts to invent this pattern leads to exponential efforts with testing and maintenance. Are you gonna go to market or what?
+Any efforts to reinvent this pattern is signing yourself up for 4 times the work and even more errors.
+
+There's a reason why `<input type="date"/>` exists.
+
+The `value` it gathers is an ISO 8601 `"YYYY-MM-DD"` string but it comes with inherent APIs, [`valueAsNumber`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/valueAsNumber) and [`valueAsDate`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/valueAsDate) that returns an easily transformable Unix epoch timestamp and Date object respectively to make date and time calculations easier.
+
+Creating multi-input datepickers from scratch sets you up for exponential efforts with testing and maintenance as you'll have to account for differences in leap years, locale, daylight savings time, and more. You'll acheive more reliable input and validation with an HTML5 native date input.
 
 ![Screenshot of a man sitting at a table in a park with the banner Change my mind](/static/images/blog/use-the-platform.png)
 
@@ -179,11 +189,14 @@ Any further efforts to invent this pattern leads to exponential efforts with tes
 
 Careful separation between the presentational and functional responsibilities of different input fields, building mechanisms to accept validation rules, and offering users mental models of how to achieve custom validation with abstractions is vital to developer adoption of form elements.
 
-The best kind of validation you're going to offer is the kind that you won't have to write.
+<p className="text-lg font-semibold">
+  The best kind of validation you're going to offer is the kind that you won't
+  have to write.
+</p>
 
-Most developers who have to cram-build forms have a stack-based favorite for runtime validation. Most libraries do this in some way with a config object or wrapping the native `ConstraintValidation` properties.
+Most developers who have to cram-build forms have a stack-based favorite for runtime validation. And most libraries do this with a config object or wrapping the native `ConstraintValidation` properties.
 
-- Angular's forms has the dirty and touched flags. uses `Validators` and `FormControl`
+- Angular's forms has the `dirty` and `touched` flags to indicate if a field has been interacted with. Inputs can extended by [`Validators`](https://angular.io/api/forms/Validators) to manage validation rules, while [`FormControl`](https://angular.io/api/forms/FormControl) tracks the validation state of the field.
 
 - For Vue or Nuxt, [Formkit](https://formkit.com/essentials/validation) offers `validation-config` props for declaring validation type on the `<form>` and `<input>` level. It accepts an object of ids and errors which can be reactively updated to include any errors that are pertinent to the form state. The `@formkit/zod` plugin allows Zod to be used for runtime validation.
 
@@ -197,20 +210,30 @@ Implementing [Form Associated Custom Elements](https://html.spec.whatwg.org/dev/
 
 Look at how much vanilla code you'd have to write to make an input field that shows a custom error message when a required field isn't populated!
 
-<iframe src="https://codepen.io/usrrname/pen/JoPOBwr"></iframe>
+<iframe
+  height="400"
+  className="w-full"
+  scrolling="no"
+  title="Types of validation using validation constraint, psuedo :invalid, user-invalid, :aria-invalid"
+  src="https://codepen.io/usrrname/embed/JoPOBwr?default-tab=html%2Cresult"
+  frameBorder="no"
+  loading="lazy"
+  allowTransparency={true}
+  allowFullScreen={true}
+></iframe>
 
 ## Make it harder for users to screw up
 
 Data entry is a means to an end: collecting data allows teams to improve the product or enable users to acheive their goals.
 
-We're challenged to imagine how users might have an easier time with data entry.
+The sooner and more validation errors you show, the more punishing it is for the user, the higher the abandonment rate. [^3]
 
-The sooner and more validation errors you show, the more punishing it is for the user, the higher the abandonment rate.
-
-As developers our everyday work should not just be to solve user problems, make their lives easier, but to right-size the solution for the problem we're trying to solve.
+Next time you're approached to build custom form fields with validation or interactions, consider where your work fits within the org. If you're working on a design system for a product that deals with time, it might be a worthy effort to reinvent a better datepicking experience. But if you're at another run-of-the-mill startup where your work should have been done yesterday, then using tried and true component libraries will save you teeth-gnashing and heartbreak.
 
 [^1]:
     Gerardo Rodriguez. ["Progressively Enhanced Form Validation, Part 1: HTML and CSS"](https://cloudfour.com/thinks/progressively-enhanced-form-validation-part-1-html-and-css/#how-to-avoid-invalid-styles-showing-on-page-load), CloudFour. August 7, 2023 <br/>
     Marco Campos. ["Form validation with (almost) no JS"](https://madcampos.dev/talks/tojs-forms/). 2023
 
 [^2]: Rachel Krause. ["10 Design Guidelines for Reporting Errors in Forms"](https://www.nngroup.com/articles/errors-forms-design-guidelines/), Nielsen Norman Group, Dec. 12, 2024.
+
+[^3]: Edward Scott. ["Usability Testing of Inline Form Validation: 31% Don’t Have It, 4% Get It Wrong"](https://baymard.com/blog/inline-form-validation), Baymard Institute, Jan 9, 2024.
