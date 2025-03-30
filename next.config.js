@@ -73,7 +73,7 @@ module.exports = () => {
     },
     experimental: {
       serverActions: {
-        allowedOrigins: ['webmention.io'],
+        allowedOrigins: ['webmention.io', 'dev.to'],
       },
     },
     images: {
@@ -104,6 +104,6 @@ module.exports = () => {
       })
 
       return config
-    },
+    }
   })
 }

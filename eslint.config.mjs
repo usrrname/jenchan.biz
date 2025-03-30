@@ -21,7 +21,6 @@ export default [
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended',
     'next',
     'next/core-web-vitals'
   ),

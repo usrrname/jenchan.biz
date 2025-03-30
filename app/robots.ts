@@ -60,6 +60,7 @@ const robotsRules = [
     userAgent: '*',
     allow: '/',
   },
+  ...aiBotsRules,
 ]
 
 export const dynamic = 'force-static'
