@@ -11,7 +11,6 @@ import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { ReactNode } from 'react'
 
-
 const discussOnDevTo = async (path) => {
   const result = await findDevToArticleByCanonicalUrl(
     `${path.split('blog/')[1]}`
@@ -44,7 +43,7 @@ export default async function PostLayout({
   const { path, date, title, tags, readingTime, toc } = content
   const basePath = path.split('/')[0]
   const devToArticle = await discussOnDevTo(path)
-  const discussOnTwitterLink = discussOnTwitter(path)
+
   return (
     <SectionContainer>
       <ScrollTopAndComment />
