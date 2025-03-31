@@ -1,5 +1,5 @@
-import React from 'react'
 import {
+  Bluesky,
   DevTo,
   Facebook,
   Github,
@@ -26,7 +26,7 @@ const components = {
   // threads: Threads,
   // instagram: Instagram,
   // medium: Medium,
-  // bluesky: Bluesky,
+  bluesky: Bluesky,
 }
 
 type SocialIconProps = {
@@ -54,7 +54,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
     >
       <span className="sr-only">{kind}</span>
       <SocialSvg
-        className={`hover:text-primary-500 dark:hover:text-primary-400 fill-current text-gray-700 dark:text-gray-200 h-${size} w-${size}`}
+        className={`hover:text-primary-500 dark:hover:text-primary-400 fill-current text-gray-700 dark:text-gray-200 rave:hover:text-primary-500 h-${size} w-${size}`}
       />
     </a>
   )

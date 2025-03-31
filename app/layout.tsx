@@ -1,7 +1,6 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
-import { inter } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
 import 'css/tailwind.css'
 import { Metadata } from 'next'
@@ -63,7 +62,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteMetadata.language}
-      className={`${inter.style.fontFamily} scroll-smooth`}
+      className="font-body scroll-smooth"
       suppressHydrationWarning
     >
       <link
@@ -121,7 +120,7 @@ export default function RootLayout({
       {googleAnalyticsId !== null && (
         <GA googleAnalyticsId={googleAnalyticsId as string} />
       )}
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
+      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white rave:bg-gradient-to-br rave:from-watermelon/10 rave:via-blueberry/10 rave:to-lime-punch/10">
         <ThemeProviders>
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>

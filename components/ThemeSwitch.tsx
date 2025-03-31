@@ -1,13 +1,12 @@
 'use client'
-
 import {
   Menu, MenuButton,
   MenuItem,
   MenuItems,
   Radio, RadioGroup, Transition
-} from '@headlessui/react'
-import { useTheme } from 'next-themes'
-import { Fragment, useEffect, useState } from 'react'
+} from '@headlessui/react';
+import { useTheme } from 'next-themes';
+import { Fragment, useEffect, useState } from 'react';
 
 const Sun = () => (
   <svg
@@ -33,6 +32,33 @@ const Moon = () => (
     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
   </svg>
 )
+
+const Rave = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    className="group:hover:text-gray-100 h-6 w-6"
+  >
+    <path
+      d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 15a7 7 0 01-7-7c0-3.87 3.13-7 7-7"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M10 2a7 7 0 017 7c0 3.87-3.13 7-7 7"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="10" cy="6" r="2" />
+    <circle cx="10" cy="14" r="2" fill="none" stroke="currentColor" />
+    <path d="M9 6.5s1 .5 2 0M9 14.5s1 .5 2 0" strokeLinecap="round" />
+  </svg>
+)
+
+
 const Monitor = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -56,14 +82,30 @@ const ThemeSwitch = () => {
   const { theme, setTheme, resolvedTheme } = useTheme()
 
   // When mounted on client, now we can show the UI
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+
+  }, [theme])
+
+  const getThemeIcon = () => {
+    if (!mounted) return <Blank />
+    switch (resolvedTheme) {
+      case 'dark':
+        return <Moon />
+      case 'rave':
+        return <Rave />
+      default:
+      case 'light':
+        return <Sun />
+    }
+  }
 
   return (
     <div className="flex items-center">
       <Menu as="div" className="relative inline-block text-left">
-        <div className="hover:text-primary-500 dark:hover:text-primary-400 flex items-center justify-center">
+        <div className="hover:text-primary-500 dark:hover:text-primary-400 rave:hover:text-primary-500 flex items-center justify-center">
           <MenuButton aria-label="Theme switcher">
-            {mounted ? resolvedTheme === 'dark' ? <Moon /> : <Sun /> : <Blank />}
+            {getThemeIcon()}
           </MenuButton>
         </div>
         <Transition
@@ -96,8 +138,7 @@ const ThemeSwitch = () => {
                   <MenuItem>
                     {({ focus }) => (
                       <button
-                        className={`${focus ? 'bg-primary-600 text-white' : ''
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${focus ? 'bg-primary-600 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <div className="mr-2">
                           <Moon />
@@ -107,12 +148,25 @@ const ThemeSwitch = () => {
                     )}
                   </MenuItem>
                 </Radio>
+                <Radio value="rave">
+                  <MenuItem>
+                    {({ focus }) => (
+                      <button
+                        className={`${focus ? 'bg-primary-600 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <div className="mr-2">
+                          <Rave />
+                        </div>
+                        Rave
+                      </button>
+                    )}
+                  </MenuItem>
+                </Radio>
                 <Radio value="system">
                   <MenuItem>
                     {({ focus }) => (
                       <button
-                        className={`${focus ? 'bg-primary-600 text-white' : ''
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${focus ? 'bg-primary-600 text-white' : ''} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <div className="mr-2">
                           <Monitor />
@@ -127,7 +181,7 @@ const ThemeSwitch = () => {
           </MenuItems>
         </Transition>
       </Menu>
-    </div >
+    </div>
   )
 }
 

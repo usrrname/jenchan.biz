@@ -1,7 +1,7 @@
 // @ts-check
-import fontFamily from "tailwindcss/defaultTheme"
+import fontFamily from "tailwindcss/defaultTheme";
 
-import colors from "tailwindcss/colors"
+import colors from "tailwindcss/colors";
 
 module.exports = {
   content: [
@@ -30,6 +30,12 @@ module.exports = {
         primary: colors.violet,
         secondary: colors.teal,
         gray: colors.gray,
+        watermelon: '#FF3366',
+        blueberry: '#4D4DFF',
+        'lime-punch': '#AAFF00',
+        'grape-soda': '#9933FF',
+        'mango-tango': '#FF9933',
+        'blue-raspberry': '#00CCFF',
       },
       zIndex: {
         60: '60',
@@ -79,5 +85,11 @@ module.exports = {
       }),
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    function({ addVariant }) {
+      addVariant('rave', '&:where(.theme-rave, .theme-rave *)');
+    }
+  ],
 }

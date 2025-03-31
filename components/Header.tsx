@@ -1,5 +1,4 @@
 'use server'
-import { shantell_sans } from '@/css/fonts'
 import headerNavLinks from '@/data/headerNavLinks'
 import siteMetadata from '@/data/siteMetadata'
 import Link from './Link'
@@ -9,7 +8,7 @@ import ThemeSwitch from './ThemeSwitch'
 
 const Header = () => {
   let headerClass =
-    'flex items-center w-full bg-white dark:bg-gray-950 justify-between py-10'
+    'flex items-center w-full bg-transparent dark:bg-gray-950 justify-between py-10'
 
   if (siteMetadata.stickyNav) {
     headerClass += ' sticky top-0 z-50'
@@ -19,7 +18,7 @@ const Header = () => {
     <header className={headerClass}>
       <Link
         href="/"
-        className={`${shantell_sans.className} hidden h-6 text-2xl font-semibold sm:block`}
+        className="font-headings rave:font-sans rave:hover:line-through hidden h-6 text-2xl font-semibold sm:block"
         style={{
           fontVariationSettings: `"BNCE" 2, ""INFM" 30`,
         }}
@@ -41,7 +40,7 @@ const Header = () => {
               <Link
                 key={link.title}
                 href={link.href}
-                className="text-md hover:decoration-animate-wave hidden py-3 font-medium text-gray-900  hover:underline hover:decoration-green-400 hover:decoration-wavy hover:underline-offset-4 dark:text-gray-100 dark:hover:decoration-cyan-400 sm:block"
+                className="text-md hover:decoration-animate-wave hidden py-3 font-medium text-gray-900  hover:underline hover:decoration-primary-400 hover:decoration-wavy hover:underline-offset-4 dark:text-gray-100 dark:hover:decoration-primary-400 sm:block rave:hover:decoration-primary-500"
               >
                 {link.title}
               </Link>
