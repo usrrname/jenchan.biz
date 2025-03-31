@@ -51,19 +51,69 @@ interface BlogPostProps extends Metadata {
   article?: DevToArticleStats
 }
 
-async function generateMetadata(props: {
+export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
-}): Promise<BlogPostProps | undefined> {
+}): Promise<Metadata> {
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
+  const post = allBlogs.find((p) => p.slug === slug)
+
+  if (!post) {
+    return {}
+  }
+
+  const authorList = post?.authors || ['default']
+  const authorDetails = authorList.map((author) => {
+    const authorResults = allAuthors.find((p) => p.slug === author)
+    return coreContent(authorResults as Authors)
+  })
+  const publishedAt = new Date(post.date).toISOString()
+  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+  const authors = authorDetails.map((author) => author.name)
+  let imageList = [siteMetadata.socialBanner]
+  if (post.images) {
+    imageList = typeof post.images === 'string' ? [post.images] : post.images
+  }
+  const ogImages = imageList.map((img) => {
+    return {
+      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+    }
+  })
+
+  return {
+    title: post.title,
+    description: post.summary,
+    authors: authors.map(author => ({ name: author })),
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      siteName: siteMetadata.title,
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      url: `${siteMetadata.siteUrl}/blog/${slug}`,
+      images: ogImages,
+      authors: authors,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: imageList,
+    },
+  }
+}
+
+async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined> {
   const post = allBlogs.find((p) => p.slug === slug) as Blog
 
-  // Filter out drafts in production
+  if (!post) {
+    return undefined
+  }
+
   const sortedCoreContents = allCoreContent(sortPosts(allBlogs))
   const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
-  if (!post || postIndex === -1) {
-    return notFound()
-  }
 
   const prev = sortedCoreContents[postIndex + 1]
   const next = sortedCoreContents[postIndex - 1]
@@ -73,83 +123,32 @@ async function generateMetadata(props: {
     const authorResults = allAuthors.find((p) => p.slug === author)
     return coreContent(authorResults as Authors)
   })
+
   const mainContent = coreContent(post)
   const jsonLd = post.structuredData
-  jsonLd['author'] = authorDetails.map((author) => {
-    return {
-      '@type': 'Person',
-      name: author.name,
-    }
-  })
+  jsonLd['author'] = authorDetails.map((author) => ({
+    '@type': 'Person',
+    name: author.name,
+  }))
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
-  if (!devToArticle) {
-    const webmentionsForPost = await getWebMentionsPerPost(post)
-    const results = parseWebMentionResults(webmentionsForPost)
+  const webmentionsForPost = !devToArticle ? await getWebMentionsPerPost(post) : undefined
+  const results = webmentionsForPost ? parseWebMentionResults(webmentionsForPost) : undefined
 
-    const publishedAt = new Date(post.date).toISOString()
-    const modifiedAt = new Date(post.lastmod || post.date).toISOString()
-    const authors = authorDetails.map((author) => author.name)
-    let imageList = [siteMetadata.socialBanner]
-    if (post.images) {
-      imageList = typeof post.images === 'string' ? [post.images] : post.images
-    }
-    const ogImages = imageList.map((img) => {
-      return {
-        url: img.includes('http') ? img : siteMetadata.siteUrl + img,
-      }
-    })
-
-    return {
-      title: post.title,
-      description: post.summary,
-      layout: post.layout || defaultLayout,
-      post: post,
-      mainContent,
-      jsonLd,
-      authorDetails,
-      openGraph: {
-        title: post.title,
-        description: post.summary,
-        siteName: siteMetadata.title,
-        locale: 'en_US',
-        type: 'article',
-        publishedTime: publishedAt,
-        modifiedTime: modifiedAt,
-        url: './',
-        images: ogImages,
-        authors: authors.length > 0 ? authors : [siteMetadata.author],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: post.title,
-        description: post.summary,
-        images: imageList,
-      },
-      webmentions: results,
-      article: devToArticle,
-      prev: prev,
-      next: next,
-    }
-  }
-
-  // Add return for devToArticle case
   return {
-    title: post.title,
-    description: post.summary,
     layout: post.layout || defaultLayout,
-    post: post,
+    post,
     mainContent,
     jsonLd,
     authorDetails,
-    prev: prev,
-    next: next,
+    webmentions: results,
     article: devToArticle,
-    webmentions: undefined
+    prev,
+    next,
   }
 }
 
-async function generateStaticParams() {
+export async function generateStaticParams() {
   return allBlogs.map((p) => ({
     slug: p.slug.split('/').map((name) => decodeURI(name)),
   }))
@@ -158,10 +157,14 @@ async function generateStaticParams() {
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>
 }) {
-  const metadata = await generateMetadata(await props)
-  if (!metadata) {
+  const params = await props.params
+  const slug = decodeURI(params.slug.join('/'))
+  const postData = await getBlogPostData(slug)
+
+  if (!postData) {
     return notFound()
   }
+
   const {
     post,
     mainContent,
@@ -170,8 +173,8 @@ export default async function Page(props: {
     article,
     jsonLd,
     authorDetails,
-    webmentions,
-  } = metadata
+    webmentions
+  } = postData
 
   let articleUrl: string | undefined = undefined
   if (article) articleUrl = article?.url
@@ -184,11 +187,6 @@ export default async function Page(props: {
 
   return (
     <>
-      <meta name="og:author" content={siteMetadata.author} />
-      <meta name="og:type" content="article" />
-      <meta name="og:title" content={post?.title} />
-      <meta name="og:description" content={post?.summary} />
-      <meta name="og:published_at" content={post?.date} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
