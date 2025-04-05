@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Dev Notes',
   author: 'Jen Chan',
   headerTitle: '🗑️ Garbage collection',
-  description: 'Technically good on paper, but reality is something else',
+  description: 'Software development and its discontents',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://www.jenchan.biz',

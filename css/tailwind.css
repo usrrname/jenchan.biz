@@ -10,7 +10,8 @@
 @theme {
   /* Font families */
   --font-headings: 'Noto Serif', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif: var(--noto-serif), 'Arial Rounded MT', sans-serif;
   --font-sans: 'Shantell Sans', ui-serif, system-ui, serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-body: var(--inter), sans-serif;
@@ -75,9 +76,6 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
-  }
   body p, .prose{
     font-family: 'Inter', sans-serif;
   }
@@ -92,14 +90,18 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  & h1, & h2, & h3, & h4, & h5, & h6, .content-header {
+    font-family: var(--noto-serif);
+    font-stretch: extra-condensed;
+  }
 }
 @layer rave {
   /* Vibe-coded Raver Theme */
   .theme-rave {
     --*: initial;
   --font-headings: 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
-  --font-serif: var(--noto-serif), 'Noto Serif', 'Arial Rounded MT', sans-serif;
-  --font-body: 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+  --font-body: 'Inter', 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT', sans-serif;
 
   /* Primary color scale */
   --color-primary-50: #FFF0F3;
@@ -126,11 +128,17 @@
   --color-secondary-900: var(--color-blueberry);
   --color-secondary-950: var(--color-blueberry);
 }
-& h1, & h2, & h3, & h4, & h5, & h6 {
-  font-family: var(--font-sans), 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
-}
+.theme-rave,
 .theme-rave .prose {
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans), 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+    text-transform: unset;
+    font-stretch: unset;
+  }
+
   font-family: var(--font-body);
+
   & a {
     color: var(--color-blue-raspberry);
     text-decoration-thickness: 2px;

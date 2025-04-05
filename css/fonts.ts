@@ -4,10 +4,10 @@ export const shantell_sans = Shantell_Sans({
   subsets: ['latin'],
   adjustFontFallback: false,
   display: 'swap',
-  style: ['normal', 'italic'],
   preload: true,
   variable: '--shantell-sans',
   axes: ['BNCE', 'INFM', 'SPAC'],
+  weight: 'variable',
 })
 
 export const inter = Inter({
@@ -19,9 +19,10 @@ export const inter = Inter({
 })
 
 export const noto_serif = Noto_Serif({
-  weight: ['400', '500', '700'],
+  weight: 'variable',
   adjustFontFallback: false,
   subsets: ['latin'],
   display: 'swap',
   variable: '--noto-serif',
+  axes: ['wdth'],
 })

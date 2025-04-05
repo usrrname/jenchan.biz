@@ -36,25 +36,21 @@ const Moon = () => (
 const Rave = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
     fill="currentColor"
-    className="group:hover:text-gray-100 h-6 w-6"
   >
+    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+    <circle cx="8" cy="15" r="2" />
+    <circle cx="16" cy="15" r="2" />
     <path
-      d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 15a7 7 0 01-7-7c0-3.87 3.13-7 7-7"
-      strokeWidth="1"
+      d="M7 9c2 2 8 2 10 0"
+      stroke="currentColor"
+      strokeWidth="2"
       strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="none"
     />
-    <path
-      d="M10 2a7 7 0 017 7c0 3.87-3.13 7-7 7"
-      strokeWidth="1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle cx="10" cy="6" r="2" />
-    <circle cx="10" cy="14" r="2" fill="none" stroke="currentColor" />
-    <path d="M9 6.5s1 .5 2 0M9 14.5s1 .5 2 0" strokeLinecap="round" />
   </svg>
 )
 
