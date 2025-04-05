@@ -1,5 +1,4 @@
 import Card from '@/components/Card'
-import { shantell_sans } from '@/css/fonts'
 import projectsData from '@/data/projectsData'
 import { genPageMetadata } from 'app/seo'
 
@@ -10,7 +9,7 @@ export default function Projects() {
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className={`${shantell_sans.variable} text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100`}>
+          <h1 className="font-headings text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
             Work
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">

@@ -108,7 +108,7 @@ export default async function PostLayout({
                       <TOCInline
                         toc={toc}
                         ulClassName="list-none list-inside"
-                        liClassName="dark:text-secondary-200 text-slate-500 hover:underline hover:decoration-underline-offset-3 hover:text-slate-600 dark:hover:text-secondary-500 mb-3"
+                        liClassName="rave:text-blueberry dark:text-secondary-500 text-secondary-500 hover:underline hover:decoration-underline-offset-3 hover:text-secondary-600 dark:hover:text-secondary-600 mb-3"
                         asDisclosure={false}
                         collapse={false}
                         fromHeading={1}

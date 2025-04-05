@@ -2,40 +2,60 @@
 @plugin "@tailwindcss/forms";
 @plugin '@tailwindcss/typography';
 @source '../node_modules/pliny';
+
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant rave (&:where(.rave, .rave *));
 
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+  --font-headings: 'Noto Serif', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-serif: var(--noto-serif), 'Arial Rounded MT', sans-serif;
+  --font-sans: 'Shantell Sans', ui-serif, system-ui, serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-body: var(--inter), sans-serif;
+ /* Base colors */
+ --color-watermelon: #FF3366; /* Primary - Sweet pink */
+ --color-blueberry: #4D4DFF; /* Complementary to watermelon */
+ --color-lime-punch: #AAFF00; /* Secondary */
+ --color-grape-soda: #9933FF; /* Complementary to lime */
+ --color-mango-tango: #FF9933; /* Accent 1 */
+ --color-blue-raspberry: #00CCFF; /* Complementary to mango */
+ /* Primary color scale */
+ --color-primary-50: #FFF0F3;
+ --color-primary-100: #FFE0E9;
+ --color-primary-200: #FFC1D4;
+ --color-primary-300: #FF94B3;
+ --color-primary-400: #FF6692;
+ --color-primary-500: var(--color-watermelon); /* Main brand color */
+ --color-primary-600: #E61A4D;
+ --color-primary-700: #CC0033;
+ --color-primary-800: #990026;
+ --color-primary-900: #66001A;
+ --color-primary-950: #33000D;
 
-  /* Colors */
-  /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
-  --color-primary-50: oklch(0.971 0.014 343.198);
-  --color-primary-100: oklch(0.948 0.028 342.258);
-  --color-primary-200: oklch(0.899 0.061 343.231);
-  --color-primary-300: oklch(0.823 0.12 346.018);
-  --color-primary-400: oklch(0.718 0.202 349.761);
-  --color-primary-500: oklch(0.656 0.241 354.308);
-  --color-primary-600: oklch(0.592 0.249 0.584);
-  --color-primary-700: oklch(0.525 0.223 3.958);
-  --color-primary-800: oklch(0.459 0.187 3.815);
-  --color-primary-900: oklch(0.408 0.153 2.432);
-  --color-primary-950: oklch(0.284 0.109 3.907);
+  --color-secondary-50: #F9F7FF;
+  --color-secondary-100: #F2F0FF;
+  --color-secondary-200: #E5E0FF;
+  --color-secondary-300: #D1C4FF;
+  --color-secondary-400: #B3A3FF;
+  --color-secondary-500: #8C7AE6;
+  --color-secondary-600: #6B5CC4;
+  --color-secondary-700: #4D3D99;
+  --color-secondary-800: #332B66;
+  --color-secondary-900: #1F1A40;
+  --color-secondary-950: #0F0D1F;
 
-  --color-gray-50: oklch(0.985 0.002 247.839);
-  --color-gray-100: oklch(0.967 0.003 264.542);
-  --color-gray-200: oklch(0.928 0.006 264.531);
-  --color-gray-300: oklch(0.872 0.01 258.338);
-  --color-gray-400: oklch(0.707 0.022 261.325);
-  --color-gray-500: oklch(0.551 0.027 264.364);
-  --color-gray-600: oklch(0.446 0.03 256.802);
-  --color-gray-700: oklch(0.373 0.034 259.733);
-  --color-gray-800: oklch(0.278 0.033 256.848);
-  --color-gray-900: oklch(0.21 0.034 264.665);
-  --color-gray-950: oklch(0.13 0.028 261.692);
-
+  /* Gray scale with rave undertones */
+  --color-gray-50: var(--color-secondary-50);
+  --color-gray-100: var(--color-secondary-100);
+  --color-gray-500: var(--color-secondary-500);
+  --color-gray-600: var(--color-secondary-600);
+  --color-gray-700: var(--color-secondary-700);
+  --color-gray-800: var(--color-secondary-800);
+  --color-gray-900: var(--color-secondary-900);
+  --color-gray-950: var(--color-secondary-950);
   /* Line heights */
   --line-height-11: 2.75rem;
   --line-height-12: 3rem;
@@ -48,14 +68,6 @@
   --z-80: 80;
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -64,7 +76,9 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-
+  body p, .prose{
+    font-family: 'Inter', sans-serif;
+  }
   a,
   button {
     outline-color: var(--color-primary-500);
@@ -76,6 +90,299 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  & h1, & h2, & h3, & h4, & h5, & h6, .content-header {
+    font-family: var(--noto-serif);
+    font-stretch: extra-condensed;
+  }
+}
+@layer rave {
+  /* Vibe-coded Raver Theme */
+  .theme-rave {
+    --*: initial;
+  --font-headings: 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+  --font-body: 'Inter', 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+
+  /* Primary color scale */
+  --color-primary-50: #FFF0F3;
+  --color-primary-100: #FFE0E9;
+  --color-primary-200: #FFC1D4;
+  --color-primary-300: #FF94B3;
+  --color-primary-400: #FF6692;
+  --color-primary-500: var(--color-watermelon); /* Main brand color */
+  --color-primary-600: #E61A4D;
+  --color-primary-700: #CC0033;
+  --color-primary-800: #990026;
+  --color-primary-900: #66001A;
+  --color-primary-950: #33000D;
+
+  --color-secondary-50: var(--color-lime-punch);
+  --color-secondary-100: var(--color-mango-tango);
+  --color-secondary-200: var(--color-blue-raspberry);
+  --color-secondary-300: var(--color-watermelon);
+  --color-secondary-400: var(--color-blue-raspberry);
+  --color-secondary-500: var(--color-lime-punch);
+  --color-secondary-600: var(--color-mango-tango);
+  --color-secondary-700: var(--color-blueberry);
+  --color-secondary-800: var(--color-blueberry);
+  --color-secondary-900: var(--color-blueberry);
+  --color-secondary-950: var(--color-blueberry);
+}
+.theme-rave,
+.theme-rave .prose {
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans), 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+    text-transform: unset;
+    font-stretch: unset;
+  }
+
+  font-family: var(--font-body);
+
+  & a {
+    color: var(--color-blue-raspberry);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    &:hover {
+      color: var(--color-watermelon);
+      text-shadow: 0 0 8px var(--color-watermelon);
+    }
+    & code {
+      color: var(--color-lime-punch);
+      background: color-mix(in srgb, var(--color-gray-900) 10%, transparent);
+    }
+  }
+
+  & :where(h1, h2) {
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--color-watermelon);
+    text-shadow: 
+      3px 3px 0 var(--color-blueberry),
+      -3px -3px 0 var(--color-blue-raspberry),
+      0 0 10px var(--color-watermelon);
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -1em -1.5em;
+      background: 
+        radial-gradient(
+          circle at 30% 20%,
+          rgba(255, 182, 193, 0.2) 0%,  /* Strawberry milk */
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 70% 60%,
+          rgba(135, 206, 250, 0.15) 0%,  /* Berry blue */
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 20% 80%,
+          rgba(255, 153, 51, 0.12) 0%,  /* Mango */
+          transparent 45%
+        ),
+        linear-gradient(
+          45deg,
+          rgba(221, 160, 221, 0.1) 0%,  /* Grape juice */
+          transparent 50%
+        ),
+        linear-gradient(
+          -60deg,
+          rgba(102, 204, 255, 0.08) 30%,  /* Blue coconut */
+          transparent 80%
+        );
+      border-radius: 1.5em;
+      filter: blur(8px);
+      z-index: -1;
+      animation: floatBackground 8s ease-in-out infinite alternate;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -0.5em -1em;
+      background: 
+        radial-gradient(
+          circle at 60% 40%,
+          rgba(255, 105, 180, 0.15) 0%,  /* Dragon fruit */
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 20% 30%,
+          rgba(173, 216, 230, 0.12) 0%,  /* Blueberry smoothie */
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 80% 70%,
+          rgba(255, 192, 203, 0.1) 0%,  /* Watermelon juice */
+          transparent 40%
+        );
+      border-radius: 1em;
+      filter: blur(4px);
+      z-index: -1;
+      animation: floatBackground 6s ease-in-out infinite alternate-reverse;
+    }
+  }
+
+  & h1 {
+    font-family: var(--font-sans);
+    font-size: 2.5em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    &::before {
+      background: 
+        radial-gradient(
+          circle at 40% 30%,
+          rgba(255, 182, 193, 0.25) 0%,  /* Stronger strawberry */
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 70% 65%,
+          rgba(135, 206, 250, 0.2) 0%,  /* Stronger blueberry */
+          transparent 45%
+        ),
+        radial-gradient(
+          circle at 25% 85%,
+          rgba(255, 218, 185, 0.18) 0%,  /* Stronger peach */
+          transparent 50%
+        );
+      animation: floatBackground 10s ease-in-out infinite alternate;
+    }
+  }
+
+  & h2 {
+    font-family: var(--font-headings);
+    font-size: 2em;
+    border-bottom: 3px solid;
+    border-image: linear-gradient(
+      90deg,
+      var(--color-watermelon),
+      var(--color-mango-tango),
+      var(--color-blue-raspberry)
+    ) 1;
+    padding-bottom: 0.25em;
+  }
+
+  & h3 {
+    font-family: var(--font-headings);
+    font-weight: 700;
+    font-size: 1.5em;
+    color: var(--color-mango-tango);
+    text-shadow: 
+      2px 2px 0 var(--color-blue-raspberry),
+      0 0 8px var(--color-mango-tango);
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -0.25em -0.5em;
+      background: 
+        radial-gradient(
+          circle at 40% 30%,
+          rgba(255, 153, 51, 0.1) 0%,  /* Mango */
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 70% 65%,
+          rgba(255, 105, 180, 0.1) 0%,  /* Dragon fruit */
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 25% 85%,
+          rgba(102, 204, 255, 0.1) 0%,  /* Blue coconut */
+          transparent 45%
+        );
+      border-radius: 0.5em;
+      filter: blur(6px);
+      z-index: -1;
+    }
+  }
+}
+
+.rave.dark .prose {
+  & a {
+    font-family: var(--font-body);
+    color: var(--color-lime-punch);
+    &:hover {
+      color: var(--color-mango-tango);
+      text-shadow: 0 0 12px var(--color-mango-tango);
+    }
+    & code {
+      color: var(--color-watermelon);
+      background: color-mix(in srgb, var(--color-gray-100) 10%, transparent);
+    }
+  }
+
+  & :where(h1, h2) {
+    color: var(--color-lime-punch);
+    text-shadow: 
+      3px 3px 0 var(--color-grape-soda),
+      -3px -3px 0 var(--color-watermelon),
+      0 0 15px var(--color-lime-punch);
+    &::before {
+      background: 
+        radial-gradient(
+          circle at 35% 25%,
+          rgba(255, 153, 204, 0.12) 0%,  /* Pink lemonade */
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 75% 55%,
+          rgba(153, 204, 255, 0.1) 0%,  /* Blue raspberry */
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 15% 75%,
+          rgba(255, 204, 153, 0.08) 0%,  /* Orange cream */
+          transparent 45%
+        );
+    }
+    &::after {
+      background: 
+        radial-gradient(
+          circle at 65% 35%,
+          rgba(204, 153, 255, 0.08) 0%,  /* Grape soda */
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 25% 45%,
+          rgba(153, 255, 204, 0.06) 0%,  /* Lime slush */
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 85% 65%,
+          rgba(255, 153, 153, 0.07) 0%,  /* Strawberry ice */
+          transparent 40%
+        );
+    }
+  }
+
+  & h3 {
+    color: var(--color-blue-raspberry);
+    text-shadow: 
+      2px 2px 0 var(--color-watermelon),
+      0 0 12px var(--color-blue-raspberry);
+  }
+}
+
+/* Animation keyframes */
+@keyframes floatBackground {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(4px, -4px) scale(1.02);
+  }
+  50% {
+    transform: translate(-3px, 3px) scale(0.98);
+  }
+  75% {
+    transform: translate(2px, -2px) scale(1.01);
+  }
+  100% {
+    transform: translate(-4px, 4px) scale(0.99);
+  }
+  } 
 }
 
 @layer utilities {
@@ -154,19 +461,6 @@ input:-webkit-autofill:focus {
     color 600000s 0s;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.font-headings {
-  font-family: var(--shantell-sans);
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-}
 
 .wavy {
   text-decoration-line: underline;

@@ -2,7 +2,6 @@
 import Link from '@/components/Link'
 import Pagination, { PaginationProps } from '@/components/Pagination'
 import Tag from '@/components/Tag'
-import { shantell_sans } from '@/css/fonts'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json' with { type: 'json' }
 import type { Blog } from 'contentlayer/generated'
@@ -35,7 +34,7 @@ export default function ListLayoutWithTags({
     <>
       <div>
         <div className="pt-6 pb-6">
-          <h1 className={`${shantell_sans.variable} text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100`}>
+          <h1 className="font-headings text-3xl tracking-tight text-gray-900 sm:hidden sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100 rave:text-lime-punch">
             {title}
           </h1>
         </div>
@@ -43,7 +42,7 @@ export default function ListLayoutWithTags({
           <div className="hidden h-full max-h-screen max-w-[280px] min-w-[280px] flex-wrap overflow-auto rounded-sm bg-gray-50 pt-5 shadow-md sm:flex dark:bg-gray-900/70 dark:shadow-gray-800/40">
             <div className="px-6 py-4">
               {pathname.startsWith('/blog') ? (
-                <h3 className={`${shantell_sans.variable} text-primary-500 font-bold uppercase`}>All Posts</h3>
+                <h3 className="font-headings text-primary-500 font-bold uppercase">All Posts</h3>
               ) : (
                 <Link
                   href={`/blog`}
@@ -57,7 +56,7 @@ export default function ListLayoutWithTags({
                   return (
                     <li key={t} className="my-3">
                       {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
-                        <h3 className="text-primary-500 inline px-3 py-2 text-sm font-bold uppercase">
+                        <h3 className="font-headings text-primary-500 inline px-3 py-2 text-sm font-bold uppercase">
                           {`${t} (${tagCounts[t]})`}
                         </h3>
                       ) : (
@@ -92,7 +91,7 @@ export default function ListLayoutWithTags({
                       </dl>
                       <div className="space-y-3">
                         <div>
-                          <h2 className={`${shantell_sans.variable} text-2xl leading-8 font-bold tracking-tight`}>
+                          <h2 className="font-headings text-2xl leading-8 font-bold tracking-tight">
                             <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
                               {title}
                             </Link>

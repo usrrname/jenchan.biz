@@ -1,7 +1,6 @@
 import tagData from '@/app/tag-data.json' assert { type: 'json' }
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
-import { shantell_sans } from '@/css/fonts'
 import { genPageMetadata } from 'app/seo'
 import { slug } from 'github-slugger'
 
@@ -19,7 +18,7 @@ export default async function Page() {
       <div className="flex flex-col items-start justify-start divide-y divide-gray-200 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0 dark:divide-gray-700">
         <div className="space-x-2 pt-6 pb-8 md:space-y-5">
           <h1
-            className={`${shantell_sans.variable} text-3xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14`}
+            className="font-headings text-3xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14"
           >
             Tags
           </h1>
