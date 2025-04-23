@@ -9,6 +9,8 @@
 !/.yarn/plugins
 !/.yarn/sdks
 .vscode/*
+.cursorrules
+.cursor/*
 data/blog/_draft/*
 # testing
 /coverage
