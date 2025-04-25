@@ -1,4 +1,10 @@
 {
+  "vibecoding": 1,
+  "ai": 2,
+  "productivity": 10,
+  "cursor": 1,
+  "agentic": 1,
+  "vibe-coding": 1,
   "webstandards": 2,
   "forms": 2,
   "designsystems": 1,
@@ -13,7 +19,6 @@
   "codinghorror": 1,
   "senior": 4,
   "career": 12,
-  "productivity": 9,
   "leadership": 1,
   "responsivedesign": 1,
   "testing": 6,
