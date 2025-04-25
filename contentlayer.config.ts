@@ -19,6 +19,7 @@ import remarkGfm from 'remark-gfm'
 import { remarkAlert } from 'remark-github-blockquote-alert'
 import remarkMath from 'remark-math'
 // Rehype packages
+import mdxMermaid from 'mdx-mermaid'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
 import prettier from 'prettier'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
@@ -29,7 +30,6 @@ import rehypePresetMinify from 'rehype-preset-minify'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
 import siteMetadata from './data/siteMetadata'
-
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -204,6 +204,7 @@ export default makeSource({
       remarkMath,
       remarkImgToJsx,
       remarkAlert,
+      [mdxMermaid, {output: 'svg'}]
     ],
     rehypePlugins: [
       rehypeSlug,
