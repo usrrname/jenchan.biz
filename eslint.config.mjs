@@ -52,6 +52,15 @@ export default [
       'prefer-const': 'warn',
       'no-constant-binary-expression': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
+      'import/no-anonymous-default-export': [
+        'error',
+        {
+          allowAnonymousClass: false,
+          allowAnonymousFunction: true,
+          allowAnonymousClassWithName: false,
+          allowAnonymousFunctionWithName: true,
+        },
+      ],
       'jsx-a11y/anchor-is-valid': [
         'error',
         {
