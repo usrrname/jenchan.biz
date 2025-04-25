@@ -52,6 +52,10 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()',
   },
+  {
+    key: 'X-Robots-Tag',
+    value: 'noai, noml, noimageai',
+  },
 ]
 
 const output = process.env.EXPORT ? 'export' : undefined
