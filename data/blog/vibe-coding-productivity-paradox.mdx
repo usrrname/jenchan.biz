@@ -4,32 +4,20 @@ draft: true
 summary: Anecdotes and reflections on vibe coding while the economy curdles.
 tags: [vibecoding, ai, productivity]
 date: 2025-04-25
-series: ["vibe-coding"]
 images: ['https://images7.memedroid.com/images/UPLOADED434/67f903f7d9bf0.webp']
 ---
 
-<blockquote className="reddit-embed-bq" data-embed-height="400">Posts from the <a href="https://www.reddit.com/r/theVibeCoding/comments/1k5r83r/my_wife_thinks_im_a_software_engineer/">thevibecoding</a> community on Reddit</blockquote>
-<script async src="https://embed.reddit.com/widgets.js" charSet="UTF-8"></script>
+Since 2023, I've struggled to effectively leverage AI to accelerate or automate my development work. This was partly due to the limited maturity and capabilities of code assistants at the time, but organizational and cultural barriers to adoption played a major role.
 
-I don't have a problem with vibe coding. Googling, copying and transforming code clips were formative to technical empowerment and experimentation as an artist. I was too cheap and broke to pay for hosting, so I learned Git and pushed to Github pages to host my portfolio site.
-
-<img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1457364208i/29437996.jpg" className="relative" width={100} height="auto" alt="Copy and Pasting from Stack Overflow" />
-
-When ChatGPT first dropped, businesspeople were eager integrate anything wrapped with AI; the part of me that retorted "If it were so easy, why don't _YOU_ do it? 😤" is now satisfied that they get to start their own FAFO development journeys.
-
-<img src="https://i.redd.it/1g8qdxaafuve1.jpeg" alt="Copy and Pasting from Stack Overflow" width={400} height="auto" />
+Adoption of AI becomes another to-do list item to find the least shitty autocompleter or rubber ducking replacement- if your work has budget in this economy. [^1]
 
 ## When AI Adoption is Desperate Goal, Not a Strategy
 
-Since 2023, I've struggled to effectively leverage AI to accelerate or automate my development work. This was partly due to the limited maturity and capabilities of code assistants at the time, but organizational and cultural barriers to adoption played a major role.
- 
 ![Image macro of a ginger cat pushing a gray cat's head into its food bowl, telling it to "Use AI"](/static/images/blog/vibe-coding-productivity-paradox/catfood-ai.png)
 
 At Company A, there was a top-down directive to "Embrace AI with urgency" and later backpeddled with disclaimers not to use ChatGPT a week later due to fears of compromising intellectual property. Copilot licenses were limited to select developers. Organizational policies made it impossible to gain access for experimentation across the company; the very system that was designed to prevent pilfering and misues of proprietary models also dampens excitement or innovation. But once they got their enterprise license with OpenAI, they took thousands of developers off core development to do a 2 day hackathon which produced many an atrocious half-baked chatbot. Oh yeah, no roadmap items were moved aside, and the coordination was the sole effort of a distinguished engineer-talk about doing more with less! I mean, they were already struggling to be agile. Hour long meetings rehashing decisions from 2 quarters ago would resurface.
 
 At Company B, the treacherous volume of legacy code and choice of atypical tech stack was probably too difficult for code assistants to make sense of running or extending. The only things it made more efficient were adding atomic functions and small components. Bake in some inertia due to access constraints, and you have the perfect storm of feet dragging between maintaining a living product and the same old headbashing to build a viable path with no known precedence, such as integrating an old system with a new one.
-
-Adoption of AI becomes another to-do list item to find the least shitty autocompleter or rubber ducking replacement- if your work has budget in this economy. [^2]
 
 ## AI Discovery Fatigue 
 
@@ -41,7 +29,7 @@ Adoption of AI becomes another to-do list item to find the least shitty autocomp
 
 </div>
 
-Not pictured: the glaring disjunctions between your KPIs and quarterly goals, amongst arms-race-style LLM releases and unsexy day-to-day software maintenance and firefighting. 
+Not pictured: Glaring disjunctions between your quarterly goals, arms-race-style LLM releases and unsexy day-to-day software maintenance. 
 
 The gap between code-slinging and industry practice is indeterminately high, in part due to the stack-based nature of hiring, but mostly the ongoing development of technical standards, and the ebb-and-flow of framework wars. 
 
@@ -57,7 +45,7 @@ If rote and basic tasks can be done fast by AI and the cost of prototyping and s
 
 The current saturation of intelligence will take significant time to be properly absorbed and integrated into workplaces.[^5] Businesses are made up of irrational, emotionally-driven humans who will need to adjust to the way AI-assisted work introduces variance in quality and security despite incredible speed.
 
-I can't make sense of how billions were poured into R&D, only to produce competing tools that largely duplicate each other's features[^3]:
+I can't make sense of how billions were poured into R&D, only to produce competing tools that largely duplicate each other's features [^3]:
 
 - Copilot forked IDEs ([Cursor](https://www.cursor.com/), [Warp](https://www.warp.dev/), [Cline](https://www.cline.dev/))
 - CLIs (in which [Github's copilot cli](https://github.com/features/copilot) is duplicated by [Claude Code](https://github.com/anthropics/anthropic-codex) and then [Codex CLI](https://github.com/openai/codex-cli))
@@ -67,23 +55,28 @@ I can't make sense of how billions were poured into R&D, only to produce competi
 
 <span className="text-xl font-bold">But where is the money?!</span> 
 
-What's the ROI?! Where is this growth in [GDP per FTE](https://www.mckinsey.com/~/media/mckinsey/business%20functions/mckinsey%20digital/our%20insights/the%20economic%20potential%20of%20generative%20ai%20the%20next%20productivity%20frontier/the-economic-potential-of-generative-ai-the-next-productivity-frontier.pdf)?
+![Persian cat meme](https://media1.tenor.com/m/mOR-MnUI3QEAAAAC/confused-white-persian-guardian.gif)
 
-SHOW ME THE MONEY!
+What's the ROI?! Where is this growth in [GDP per FTE](https://www.mckinsey.com/~/media/mckinsey/business%20functions/mckinsey%20digital/our%20insights/the%20economic%20potential%20of%20generative%20ai%20the%20next%20productivity%20frontier/the-economic-potential-of-generative-ai-the-next-productivity-frontier.pdf)? [^5]
 
-## Is natural language a good abstraction for building software?
 
+## Is natural language the right abstraction for building software?
 
 <LinkCard 
     title="@usrrname/cursorrules"
     image="https://usrrname.github.io/cursorrules/img/sara-gets-playful-with-vicodin.jpg"
-    description="A library of Cursor rules for a lean workflow" 
+    description="The article you're reading was inspired by my recent attempt to build a standard library in Cursor in order to keep up with the joneses." 
     url="https://github.com/usrrname/cursorrules" />
 
+<LinkCard 
+    title="Agentic AI Workflow Woes"
+    image=""
+    description="A deeper look at problems I had with setting up an agentic workflow in Cursor." 
+    url="https://usrrname.github.io/cursorrules" />
 
-Through Cursor rulegen and prompt-based workflows, I've noticed pretty significant shifts in my thinking. At the moment, I can't tell if I haven't adapted sufficiently or we haven't figured out the ideal way humans can interface with LLMs to be productive beyond basic, boilerplate tasks.
+Through Cursor rulegen and prompt-based workflows, I've noticed pretty significant shifts in how I think as I worked from basic rulegen to coordinating and testing workflows. At the moment, I can't tell if I haven't adapted sufficiently or we haven't figured out the ideal way humans can interface with LLMs to be productive beyond basic tasks.
 
-The mental work shifts from contemplative (re)writing of expressions for readability to consideration of clarity and succinctness of requirements around software behaviour. Perceived accuracy and quality of the  prompt output is based on how widely solved and discussed a issue is, and how popular a technology is. As early as 2022, it appeared that React components were the most satisfactorily reproduced, while it would be useless to attempt prompting the precise transformation of accessibility unit test results to XML and send it to an old endpoint (True story, it had to be done at an old job.) 
+The mental work shifts from contemplative (re)writing of expressions for readability to consideration of clarity and succinctness of requirements around software behaviour. Perceived accuracy and quality of the prompt output is based on how widely solved and discussed a issue is, and how popular a technology is. As early as 2022, it appeared that React components were the most satisfactorily reproduced, while it would be useless to attempt prompting the precise transformation of accessibility unit test results to XML and send it to an old endpoint (True story, it had to be done at an old job.) 
 
 If there is no prior art or precedence that was widely discussed for a model to be trained on, you'd have to use another way means to inject extra context into the editor, such as using an MCP server. In many ways deciding to go with a tool is akin to setting up a dev environment and figuring out how to be productive even if it's annoyingly fiddly, like webpack.
 
@@ -91,7 +84,7 @@ Tradeoffs include considering the opportunity cost of reviewing and refactoring 
 
 I haven't wrote as many blow-by-blow instructions in years. English is a verbose, illogical and insufficient proxy-language for describing and reasoning about code. 
 
-At first the impressiveness and simularity of any atomic task appears so similar in reproduction to what you've written many times before (**especially if you use React**). The fast visual and testing feedback provides a sense of confidence and speed. It becomes tempting to YOLO it. But soon you reach a critical point where the entire seam of implementation is too coupled to the use case of the initial prompt, too complex or unfeasible to refactor if you want to extend it - fueling complaints of [code slop](https://perilous.tech/2025/03/28/russian-roulette-in-reverse-vibe-coding-and-yolo-mode/) and accelerated tech debt.[^4]
+At first the impressiveness and simularity of any atomic task appears so similar in reproduction to what you've written many times before (especially if you use React**). The fast visual and testing feedback provides a sense of confidence and speed. It becomes tempting to YOLO it. But soon you reach a critical point where the entire seam of implementation is too coupled to the use case of the initial prompt, too complex or unfeasible to refactor if you want to extend it - fueling complaints of [code slop](https://perilous.tech/2025/03/28/russian-roulette-in-reverse-vibe-coding-and-yolo-mode/) and accelerated tech debt.[^4]
 
 Now going into week 3, I've become frustrated with how much intervening I have to do keep the intended output on track. The impatient and resource-conscious Millennial in me feels entitled to know the size of the context window and how many "premium model" Fast requests I have left. Unfortunately, the true cost and size of tokens per prompt is wildly inaccurate. 
 
@@ -99,29 +92,11 @@ Humans are lousy computers. We want our machines to be more like us. We also don
 
 Surviving the surreality of work where you're recruited to turn the ideas of founders into reality at any cost, means holding 2 or more contradictory agendas in your head at once, then prioritizing and reconciling them. Your perception and experience of relationships, including who cuts your paycheck, who you have backdoor meetings with, and all the fuckups you made in the past inform the choices you have while implementing.
 
+
+
 Often times, finishing and delivering a project means accepting that no one will be happy but using your experience and expertise to do the best for The Business (aka.build software that outlives your tenure and withstands the erosive effects of upgrade cycles.) 
 
 I still enjoy building things and learning new technologies. Right now, I don't believe what the world needs is more code, faster. 
-
-## Evergreen problems 
-
-1. Aligning on a shared vision of what to build and which fish to fry first
-
-2. Maintaining a shared understanding of risk and tradeoffs resulting from a history of business-driven technical decisions... if there is sufficient psychological safety to recall this.
-
-3. Defending the time value of research, training or indirect-to-revenue initiative that's essential to retaining or upskilling talent and preserving product quality
-
-4. Missing feedback loops between strategy and execution and identifying meaningful metrics of success 
-
-5. The ultimate test: self management and peer comotivation under prolonged delivery pressure or contradictory directions.
-
-You can cut as many meetings as you like. 
-
-You can remove as many people as you want.
-
-You can ship more and more code, faster.
-
-If what you build doesn't materialize into value and the market doesn't bite, it's a pointless grind. 
 
 
 [^1]: Countless developers have written about the difficulty of entering industry now that there's so many tools and abstractions to learn. <br />
@@ -133,3 +108,4 @@ Unix Digest, [We have used too many levels of abstractions and now the future lo
 
 [^4]: Azeem Azhar, ["AI Adoption Paradox"](https://www.exponentialview.co/p/ais-productivity-paradox-how-it-might), Feb 27, 2025.
 
+[^5]: McKinsey, ["The Economic Potential of Generative AI: The Next Productivity Frontier"](https://www.mckinsey.com/~/media/mckinsey/business%20functions/mckinsey%20digital/our%20insights/the%20economic%20potential%20of%20generative%20ai%20the%20next%20productivity%20frontier/the-economic-potential-of-generative-ai-the-next-productivity-frontier.pdf)
