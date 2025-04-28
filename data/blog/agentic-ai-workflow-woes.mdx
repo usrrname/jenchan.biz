@@ -1,0 +1,180 @@
+---
+title: 'Agentic AI Workflow Woes: Cursor Edition'
+draft: false
+summary: 'Expectations clash with reality while trying to turn prompts into workflows.'
+tags: [AI, cursor, vibecoding, tooling]
+images: ['https://raw.githubusercontent.com/denitdao/o-rly-collection/refs/heads/main/public/book_covers/coding-with-gpt.jpeg']
+date: 2025-04-27
+---
+
+<div className="flex flex-col sm:flex-row gap-x-2">
+
+<img src="https://raw.githubusercontent.com/denitdao/o-rly-collection/refs/heads/main/public/book_covers/coding-with-gpt.jpeg" alt="ORLY Parody book cover: Coding with GPT 7th Edition" width="400" />
+
+</div>
+
+Ubiquity has the effect of making AI-assisted devtools sound way more effective than they are. If everyone and their mom is using AI to ship faster, I too must partake!
+
+In this post, I'll be sharing some of the drudgery with vibe coding and trying to build an "agentic" workflow with Cursor.
+
+TLDR; Workflows where the LLM-assisted agent is highly possible, but require a LOT of config, oversight and tuning to keep on track. Depending which model you choose, the quality and precision of execution can vary. 
+
+## A Most Basic Time Sink
+
+Let's look at a common frustration with prompt-based programming: assuming that since a task uses popular tech and the request is pedestrian, the LLM should handle it easily. Instead, you waste time debugging and reworking the invalid output into something functional. 🤦🏻‍♀️
+ 
+The weekend vibe-coding popped off, I asked Cursor to add a 90s raver Tailwind theme this Next 15 blog. Yes, all it had to do was add a new theme next to 2 existing ones.
+
+The prompt:
+
+> Redo this theme in a 90s era raver colors that will stand out on a white or black background. 
+> Think Lisa Frank and old school Apple or Windows 95. Use tailwind 4 theme variables.
+
+![My Vibe-coded 90s raver theme](/static/images/blog/agentic-ai-workflow-woes/tailwind-vibe.png)
+
+I had no expectations and was delighted. Entering unhinged instructions and seeing what would come out reminded me of the kludging I did with Three.js and JQuery before I became a dev.
+
+![Code diff between existing tailwind.css theme and the vibe-coded one](/static/images/blog/agentic-ai-workflow-woes/css-variables.png)
+
+_Actually_, it just added extra CSS variables to `tailwind.css`, and when I tried to add it as a separate theme to the light, dark and system themes so that users could toggle between their theme of choice, this immediately fell apart. I ended up spending 2 hours on detaching and adding/editing the theme.
+
+Given the popularity of Tailwind, I _thought_ this was a solved problem.
+
+Plot Twist: Claude doesn't seem to synthesize information even if it knows to perform a web search for the latest doc. I had just upgraded this blog to Next 15 and using Tailwind 4, and the [docs](https://tailwindcss.com/docs/theme#using-a-custom-theme) didn't include strategies for supporting multiple themes. I might add that Claude Sonnet 3.5 model I was using had training cut off in April 2024, which might have played a part. [^1]
+
+## There was an attempt to build an "agentic" workflow
+
+Now and then, FOMO arises from reading the published opinions of Successful, Experienced dev veterans and Linkedin Gurus. Maybe, just maybe, I've been using code-assistants wrong? Recent shitposts by [Geoffrey Huntley](https://ghuntley.com/stdlib/) and the rather brilliant [Cursor Custom Rules Generator](https://github.com/bmadcode/cursor-custom-agents-rules-generator) by Brian Madison inspired me to give it another try.[^2]
+
+So I started making a standard library of Cursor rules with a workflow using on my $20 Pro license. I tried to adhere to building with prompts as much as possible... but inevitably ended up needing to intervene a ton.
+
+Much like building a framework or library, devs who went down this path prompt-wrote and edited for rule-generation.
+
+<div className="flex flex-col md:flex-row gap-x-2">
+    <LinkCard 
+        className="w-full sm:w-[50%]"
+        title="@usrrname/cursorrules"
+        image="https://usrrname.github.io/cursorrules/img/sara-gets-playful-with-vicodin.jpg"
+        description="A wicked npx-able lib of cursorrules with Otaku AI agents, optional lean workflow 🎀" 
+        url="https://github.com/usrrname/cursorrules" />
+
+    <LinkCard 
+        className="w-full sm:w-[50%]"
+        title="The vibe-coded landing page (๑>◡<๑)"
+        image="/static/images/blog/agentic-ai-workflow-woes/landing-page.png"
+        description="'KawaiiSamurai, turn all the AI agents into Pokemon cards!'" 
+        url="https://usrrname.github.io/cursorrules/" />
+</div>
+
+I made a CLI of it so I could bootstrap any project I'd work on.
+
+Try it out in a new project folder:
+
+```mdx
+npx @usrrname/cursorrules --flat
+```
+
+So I built myself a team of 6 agents who talk like otaku freaks, and then asked Cursor to visualize them as Pokemon cards. It did all its work within internal `<style>` and `<script>` tags on an `index.html` file, which of course grew crazy long and hard to extend. 
+
+_*tech debt intensifies*_
+
+Oh what the hell, it's _vibe coding_.
+
+I made a rule enforcing the weeby agent [communication style](https://github.com/usrrname/cursorrules/blob/main/.cursor/rules/utils/agent-communication.mdc) ♡✧˚ ༘ ⋆｡♡˚
+
+![Screenshot of cursor chat window](/static/images/blog/agentic-ai-workflow-woes/kyaa.png)
+
+I was quite pleased how well all the models reproduced this vibe. Each agent had a distinct personality and many models seemed to take that into account quite well. Claude Sonnet 3.5 probably threw the most in-character responses. ThirstySimp even deliberately derails with bikeshedding and imposter syndrome.
+
+The text was looking rather faint, so I asked it to make the text contrast ratio more accessible (4:5:1). 
+
+![Screenshot of vibe coded Pokemon cards containing AI agents](/static/images/blog/agentic-ai-workflow-woes/a11y-pokemon-cards.png)
+
+In full self-referential fashion, I tried to reproduce this vibe coding chat window, and was partly successful.
+
+![Screenshot of vibe-coded chat window displaying the prompt to SailorScrum agent](/static/images/blog/agentic-ai-workflow-woes/vibe-coding-2.png)
+
+On the workflow front, there were fast wins with getting the agent to create rules as well as [commit and push](https://github.com/usrrname/cursorrules/commit/468522d55038655a02c74431c00f6b8b3abc0403) to Github.
+
+![Screenshot of godmode AI agent](/static/images/blog/agentic-ai-workflow-woes/godmode-commit.png)
+
+Isolated, atomic parts of the [workflow](https://github.com/usrrname/cursorrules/blob/main/docs/lean-workflow.md) delivers when the agent is summoned to work on creating a user story, or to execute a task. However, agent behaviour becomes chaotic, compulsive and requires repeated intervention and refining when turned into a sequence.
+
+The desired outcome would be a controlled series of task breakdowns with many checkpoints to keep it on course, like reviewing student work that doesn't truly understand and easily flies off the rails.
+
+If there is no prior art or precedence that was widely discussed for a model to be trained on, you'd have to use another way means to inject extra context into the editor, such as using an MCP server. Integrating this experience hasn't been smooth in Cursor as it is in Claude when I tried in March.
+
+## A Workflow It Is; Productive, It Ain't
+
+Amongst the litany of issues I ran into, the following seemed the most irksome:
+
+1. Cursor isn't transparent about context window size, token usage, or the model that's "Auto-selected" in Agent Mode. [^3]
+
+![Screenshot of attempt to log Cursor context size versus the Cursor chat context size](/static/images/blog/agentic-ai-workflow-woes/cursor-context-mystery.png)
+
+    Every chat has a three-dot dropdown count, but it's unclear which model is being selected as part of ["Auto Select"](https://docs.cursor.com/features/chat/auto-select) in Agent mode.
+
+    I tried to add rule that would log the context size and number of remaining requests on the Pro subscription, but it was wildly inaccurate. Natural language rule quirk: it appears certain keywords will export read-only values when interpolated into a cursor rule, for example, `{context_size}`.[^4] 
+
+    The markdown-adjacent `.mdc` format of Cursor Rules also seems to support Javascript template literals, so this can be a confusing readability gotcha when you have rules that work like this: 
+
+    ```
+    <rule>
+    name: context-info-display
+    ...
+    actions:
+    - type: append
+        content: |
+
+        ---
+        Account Status: {getAccountInfo().account_status}  // JS template literal
+        Subscription: {getAccountInfo().subscription_type} // JS template literal
+        Usage-based Pricing: {usage_pricing_enabled}       // read-only env variable`
+        Monthly Requests: {calculateUsage().requests}/{calculateUsage().maxRequests}
+
+        Model Usage: {model_name}  // read-only env variable
+        {formatModelUsage(calculateUsage().modelUsage)} // JS template literal
+
+        Context size: ~{context_size}k tokens {context_size > 40 ? "(Large Context Mode)" : ""} // read-only 
+        Max Context Size: {context_window_size} // read-only env variable
+    ```
+
+    For more, check out my hell-raising [bug report](https://forum.cursor.com/t/unable-to-clearly-identify-session-context-size-per-request/84183) on the Cursor Forum 
+
+2. Any automated sequence of actions requires checkpoints and refinement of prompt rules to keep agent behaviour on track.
+
+    It's unclear whether the time investment is worth it, especially if the thing you're working on involves uncharted territory. I found myself constantly going back to update rules in workflow files or finding missed steps.
+
+    For example, at the start of a technical spike the agent checked out a branch, and started writing example code, but none of the dependencies supporting the proof of concept had been installed yet.
+
+3. If you're not familiar with the stack you're prompting it to build, it will be hard to tell whether the architecture created is sound or totally puff. 
+
+4. YOLO-ing the whole thing is not really an option. 
+
+   Agents are prone to "overdo" tasks that are poorly defined. You may fine an excess of story and task `.md` files being produced, or templates that contain way too much generalized agile project buzzwords (For example, a "knowledge handoff" through producing documentation is not important when you are only working with agents). 
+   
+   The initial iteration of a single task might look good enough at first, so it's tempting to approve and let the agent do the work, but indiscriminate approval tends to result in outcomes and code bloat that veer off course, real fast. And then it would be much easier for you to just hand code it. 
+
+
+## Conclusion
+
+![Screenshot of Twitter user @joshycodes repeatedly asking Cursor to do something that it claims to do, but doesn't do](https://i.redd.it/l61y61w2mxve1.jpeg)
+
+I don't think workflows are ready for primetime yet... or perhaps Cursor's not the best tool for it. Maybe a different code editing tool will overtake it next month.[^5]
+
+While AI coding assistants like Cursor show promise, the reality of building an "agentic" workflow with Cursor requires significant investment in configuration, oversight and prompt engineering. The time spent crafting, testing and refining agent rules may outweigh the productivity gains, especially for novel or complex development tasks.
+
+For now, I'm comfortable with using this project as a config palette of scaffolding, code standards and formatting opinions for bootstrapping projects instead of a workflow automator.
+
+
+[^1]: Anthropic, ["How up-to-date is Claude's training data?"](https://support.anthropic.com/en/articles/8114494-how-up-to-date-is-claude-s-training-data), 2025.
+
+[^2]: Geoffrey Huntley, ["You are using Cursor AI incorrectly..."](https://ghuntley.com/stdlib/), Feb. 8, 2025.
+
+[^3]: Cursor Forum. ["How to: Show current context size"](https://forum.cursor.com/t/how-to-show-current-context-size/46618), Jan. 31, 2025.
+
+[^4]: Cursor Forum. ["How to: Show current context size"](https://forum.cursor.com/t/how-to-show-current-context-size/46618/9?u=usrrname), Feb. 1, 2025.
+
+[^5]: Reddit. ["Cursor Agentic AI Endgame"](https://www.reddit.com/r/cursor/comments/1jekcie/agentic_ai_endgame/) 
+
+

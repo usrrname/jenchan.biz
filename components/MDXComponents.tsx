@@ -18,5 +18,5 @@ export const components: MDXComponents = {
   table: TableWrapper,
   LinkCard,
   BlogNewsletterForm,
-  Mermaid,
+  mermaid: Mermaid,
 }
