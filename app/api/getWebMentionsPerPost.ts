@@ -18,10 +18,10 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
 
   if (!links.length) return
 
-  let mentions: WebMentionReplies[] = []
+  const mentions: WebMentionReplies[] = []
   let replies: WebMentionReplies[] = []
-  let likes: WebMentionReaction[] = []
-  let reposts: WebMentionReaction[] = []
+  const likes: WebMentionReaction[] = []
+  const reposts: WebMentionReaction[] = []
 
   links.forEach((mention) => {
     const { data, activity } = mention

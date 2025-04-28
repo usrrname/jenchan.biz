@@ -1,5 +1,4 @@
 import React from 'react';
-
 interface LinkCardProps {
     author?: string;
     title: string;
@@ -19,7 +18,7 @@ const LinkCard: React.FC<LinkCardProps> = ({
 }) => {
     return (
         <a href={url} target="_blank" rel="noopener noreferrer" className="inline-block rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200 ease-in-out !text-decoration-none">
-            <img src={image} alt={`OpenGraph image for ${title}`} className="w-full h-48 object-cover !m-0" loading="lazy" />
+            {image && <img src={image} className="w-full h-48 object-cover !m-0" loading="lazy" alt={`${title}`} />}
             <div className="p-4">
                 <p className="text-lg font-semibold">{title}</p>
                 {author && (
