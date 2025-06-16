@@ -15,6 +15,11 @@ export const contributionsData: Project[] = [
         href: 'https://github.com/calcom/cal.com/pull/21065',
     },
     {
+      title: 'devcycle/devcycle-docs',
+      description: '',
+      href: 'https://github.com/DevCycleHQ/devcycle-docs/pulls?q=is%3Apr+author%3Ausrrname+is%3Aclosed',
+    },
+    {
         title: 'rangle/radius',
         description: '',
         organization: 'rangle',
