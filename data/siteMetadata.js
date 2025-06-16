@@ -16,7 +16,7 @@ const siteMetadata = {
   devto: 'https://dev.to/jenc',
   // facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com/in/jennifer7chan',
+  linkedin: 'https://www.linkedin.com/in/okjen',
   // threads: 'https://www.threads.net',
   // instagram: 'https://www.instagram.com',
   // medium: 'https://medium.com',

@@ -4,7 +4,7 @@ import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({ title: 'Work' })
 
-export default function Projects() {
+export default function Work() {
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -13,7 +13,7 @@ export default function Projects() {
             Work
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            Stuff I worked on that's now on the internet.
+            Stuff I worked on occupationally that's now on the internet.
             <br />
           </p>
         </div>
