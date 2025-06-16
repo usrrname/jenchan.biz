@@ -20,7 +20,7 @@ export default async function Projects() {
                         <br />
                     </p>
                 </div>
-                <div className="container py-12 px-4 flex flex-col gap-4 sm:flex-row">
+                <div className="container py-12 flex flex-col gap-6 sm:flex-row justify-between">
                     <div className="flex flex-col border-gray-200 dark:border-gray-700 pb-4 gap-4">
                         <p className="text-lg leading-7 text-neutral-500 dark:text-gray-400">
                             Maintaining
