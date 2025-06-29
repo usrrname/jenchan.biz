@@ -1,0 +1,18 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: yarn install
+      - name: Build
+        run: yarn run pages:build
+      - name: Deploy
+        run: yarn run deploy

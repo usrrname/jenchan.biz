@@ -12,7 +12,12 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 })
 
-export default [
+// @ts-check
+
+/**
+ * @type {import('eslint').Linter.Config[]}
+ */
+const config = [
   {
     ignores: [],
   },
@@ -69,3 +74,5 @@ export default [
     },
   },
 ]
+
+export default config

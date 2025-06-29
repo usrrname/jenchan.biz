@@ -75,8 +75,9 @@ const computedFields: ComputedFields = {
  */
 async function createTagCount(allBlogs) {
   const tagCount: Record<string, number> = {}
-  allBlogs.forEach((file) => {
-    if (file.tags && (!isProduction || file.draft !== true)) {
+  allBlogs.forEach((file: { tags: string[]; draft: boolean }) => {
+    if (file.draft) return
+    if (file.tags && (!isProduction || !file.draft)) {
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
         if (formattedTag in tagCount) {
@@ -87,7 +88,9 @@ async function createTagCount(allBlogs) {
       })
     }
   })
-  const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), { parser: 'json' })
+  const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), {
+    parser: 'json',
+  })
   writeFileSync('./app/tag-data.json', formatted)
 }
 
@@ -204,7 +207,7 @@ export default makeSource({
       remarkMath,
       remarkImgToJsx,
       remarkAlert,
-      [mdxMermaid, {output: 'svg'}]
+      [mdxMermaid, { output: 'svg' }],
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -226,6 +229,7 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
+    'use cache'
     const { allBlogs, allGlossaryDefinitions } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)

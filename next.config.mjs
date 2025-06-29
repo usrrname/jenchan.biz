@@ -1,10 +1,16 @@
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
 import { withContentlayer } from 'next-contentlayer2'
 
+// @ts-check
+
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
+withContentlayer.enabled = true
+withContentlayer.configPath = './contentlayer.config.ts'
+
 if (process.env.NODE_ENV === 'development') {
   await setupDevPlatform()
 }
+
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
   default-src 'self';
@@ -64,10 +70,9 @@ const basePath = process.env.BASE_PATH || undefined
 const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 
 /**
- * @type {import('next/dist/next-server/server/config').NextConfig}
+ * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-  plugins: [withContentlayer, withBundleAnalyzer],
   output,
   basePath,
   reactStrictMode: true,
@@ -77,7 +82,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['webmention.io', 'dev.to'],
+      allowedOrigins: ['webmention.io', 'dev.to', 'github.com'],
     },
   },
   images: {
@@ -101,11 +106,34 @@ const nextConfig = {
       },
     ]
   },
-  webpack: (config, options) => {
+  /**
+   * @param {NextJsWebpackConfig} config
+   * @param options
+   * @returns {NextJsWebpackConfig}
+   */
+  webpack: (config, context) => {
+    config.plugins.push(withContentlayer)
+
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     })
+
+    // More specific warning suppression
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      // Suppress contentlayer2 webpack warnings
+      (warning) => {
+        return (
+          warning.module &&
+          warning.module.resource &&
+          warning.module.resource.includes('@contentlayer2/core') &&
+          warning.message &&
+          warning.message.includes('Parsing of') &&
+          warning.message.includes('for build dependencies failed')
+        )
+      },
+    ]
 
     return config
   },
