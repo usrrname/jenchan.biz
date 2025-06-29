@@ -7,8 +7,12 @@ export default {
     node: true,
     es6: true,
   },
-  plugins: ['@typescript-eslint'],
-  extends: ['eslint:recommended', 'plugin:jsx-a11y/recommended'],
+  plugins: ['@typescript-eslint', 'eslint-plugin-next-on-pages'],
+  extends: [
+    'eslint:recommended',
+    'plugin:jsx-a11y/recommended',
+    'eslint-plugin-next-on-pages/recommended',
+  ],
   parserOptions: {
     project: true,
     tsconfigRootDir: __dirname,
