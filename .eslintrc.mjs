@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   root: true,
   parser: '@typescript-eslint/parser',
   env: {
@@ -8,10 +8,7 @@ module.exports = {
     es6: true,
   },
   plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:jsx-a11y/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:jsx-a11y/recommended'],
   parserOptions: {
     project: true,
     tsconfigRootDir: __dirname,

@@ -1,9 +1,10 @@
-const { withContentlayer } = require('next-contentlayer2')
+import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
+import { withContentlayer } from 'next-contentlayer2'
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
-
+const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
+if (process.env.NODE_ENV === 'development') {
+  await setupDevPlatform()
+}
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
   default-src 'self';
@@ -65,49 +66,49 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
-module.exports = () => {
-  const plugins = [withContentlayer, withBundleAnalyzer]
-  return plugins.reduce((acc, next) => next(acc), {
-    output,
-    basePath,
-    reactStrictMode: true,
-    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-    eslint: {
-      dirs: ['app', 'components', 'layouts', 'scripts'],
+const nextConfig = {
+  plugins: [withContentlayer, withBundleAnalyzer],
+  output,
+  basePath,
+  reactStrictMode: true,
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  eslint: {
+    dirs: ['app', 'components', 'layouts', 'scripts'],
+  },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['webmention.io', 'dev.to'],
     },
-    experimental: {
-      serverActions: {
-        allowedOrigins: ['webmention.io', 'dev.to'],
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
       },
-    },
-    images: {
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'picsum.photos',
-        },
-        {
-          protocol: 'https',
-          hostname: 'webmention.io',
-        },
-      ],
-      unoptimized,
-    },
-    // async headers() {
-    //   return [
-    //     {
-    //       source: '/(.*)',
-    //       headers: securityHeaders,
-    //     },
-    //   ]
-    // },
-    webpack: (config, options) => {
-      config.module.rules.push({
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      })
+      {
+        protocol: 'https',
+        hostname: 'webmention.io',
+      },
+    ],
+    unoptimized,
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders,
+      },
+    ]
+  },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    })
 
-      return config
-    }
-  })
+    return config
+  },
 }
+
+export default nextConfig

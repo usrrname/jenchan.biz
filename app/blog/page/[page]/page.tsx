@@ -3,6 +3,8 @@ import { allBlogs } from 'contentlayer/generated'
 import { notFound } from 'next/navigation'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 
+export const runtime = 'edge'
+
 const POSTS_PER_PAGE = 5
 
 async function generateStaticParams() {
