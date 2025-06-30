@@ -11,15 +11,31 @@ jobs:
     permissions:
       contents: read
       deployments: write
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NODE_ENV: preview
+      CLOUDFLARE_PAGES: true
+
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+      # ⚡️ Restore Yarn cache (our composite action)
+      - name: Restore Yarn cache
+        id: yarn-cache # gives us outputs.cache-hit
+        uses: ./.github/actions/restore-yarn-cache
+
       - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
           yarn install
           # Install OS build dependencies
           sudo apt-get update
           sudo apt-get install -y build-essential python3 g++ make
-
       - name: Build
         run: yarn run pages:build
       - name: Deploy
