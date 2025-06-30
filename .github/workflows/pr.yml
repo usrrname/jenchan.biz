@@ -27,7 +27,7 @@ jobs:
       # ⚡️ Restore Yarn cache (our composite action)
       - name: Restore Yarn cache
         id: yarn-cache # gives us outputs.cache-hit
-        uses: ./.github/actions/restore-cache
+        uses: ./.github/actions/restore-yarn-cache
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
