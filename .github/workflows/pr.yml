@@ -20,6 +20,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
       # ⚡️ Restore Yarn cache (our composite action)
       - name: Restore Yarn cache
         id: yarn-cache # gives us outputs.cache-hit
