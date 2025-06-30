@@ -14,8 +14,11 @@ outputs:
 
 runs:
   using: composite
+
   steps:
     - name: Locate Yarn cache dir
+      env:
+        YARN_CACHE_DIR: ${{ runner.workspace }}/node_modules/.cache/yarn
       id: yarn-dir
       shell: bash
       run: echo "YARN_CACHE_DIR=$(yarn cache dir)" >> "$GITHUB_ENV"
