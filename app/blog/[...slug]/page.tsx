@@ -41,13 +41,13 @@ interface BlogPostProps extends Metadata {
   next: CoreContent<Blog>
   authorDetails: CoreContent<Authors>[]
   webmentions:
-  | {
-    likes: WebMentionReaction[]
-    mentions: WebMentionReplies[]
-    replies: WebMentionReplies[]
-    reposts: WebMentionReaction[]
-  }
-  | undefined
+    | {
+        likes: WebMentionReaction[]
+        mentions: WebMentionReplies[]
+        replies: WebMentionReplies[]
+        reposts: WebMentionReaction[]
+      }
+    | undefined
   article?: DevToArticleStats
 }
 
@@ -83,7 +83,7 @@ export async function generateMetadata(props: {
   return {
     title: post.title,
     description: post.summary,
-    authors: authors.map(author => ({ name: author })),
+    authors: authors.map((author) => ({ name: author })),
     openGraph: {
       title: post.title,
       description: post.summary,
@@ -105,7 +105,9 @@ export async function generateMetadata(props: {
   }
 }
 
-async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined> {
+async function getBlogPostData(
+  slug: string
+): Promise<BlogPostProps | undefined> {
   const post = allBlogs.find((p) => p.slug === slug) as Blog
 
   if (!post) {
@@ -132,8 +134,12 @@ async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined>
   }))
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
-  const webmentionsForPost = !devToArticle ? await getWebMentionsPerPost(post) : undefined
-  const results = webmentionsForPost ? parseWebMentionResults(webmentionsForPost) : undefined
+  const webmentionsForPost = !devToArticle
+    ? await getWebMentionsPerPost(post)
+    : undefined
+  const results = webmentionsForPost
+    ? parseWebMentionResults(webmentionsForPost)
+    : undefined
 
   return {
     layout: post.layout || defaultLayout,
@@ -149,10 +155,14 @@ async function getBlogPostData(slug: string): Promise<BlogPostProps | undefined>
 }
 
 export async function generateStaticParams() {
-  return allBlogs.map((p) => ({
-    slug: p.slug.split('/').map((name) => decodeURI(name)),
+  const posts = allBlogs.map((post) => ({
+    slug: post._raw.flattenedPath.split('/'),
   }))
+
+  return posts
 }
+
+export const revalidate = 3600 // 1 hour
 
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>
@@ -173,7 +183,7 @@ export default async function Page(props: {
     article,
     jsonLd,
     authorDetails,
-    webmentions
+    webmentions,
   } = postData
 
   let articleUrl: string | undefined = undefined
@@ -210,7 +220,7 @@ export default async function Page(props: {
               <>
                 <NextLink
                   href={articleUrl!}
-                  className="font-bold no-underline hover:bg-yellow-200 "
+                  className="font-bold no-underline hover:bg-yellow-200"
                 >
                   📝 {article.comments_count} comments
                 </NextLink>
