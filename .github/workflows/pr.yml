@@ -6,13 +6,29 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: yarn install
+        run: |
+          yarn install
+          # Install OS build dependencies
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3 g++ make
+
       - name: Build
         run: yarn run pages:build
       - name: Deploy
-        run: yarn run deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          packageManager: yarn
+          command: pages deploy --project-name=jenchan-biz --branch=${{ github.ref_name }}
+      - name: Print deployment-url
+        run: echo ${{ steps.deploy.outputs.deployment-url }}
