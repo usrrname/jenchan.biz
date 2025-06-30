@@ -74,6 +74,7 @@ export const ossData: Project[] = [
 ]
 
 export async function getGithubData(data: Project[]) {
+  'use server'
   // Filter only projects with a GitHub href
   const githubProjects = data.filter((p) =>
     p.href?.startsWith('https://github.com/')
