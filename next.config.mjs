@@ -1,11 +1,14 @@
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
-import { withContentlayer } from 'next-contentlayer2'
+import { createContentlayerPlugin } from 'next-contentlayer2'
 
 // @ts-check
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
-withContentlayer.enabled = true
-withContentlayer.configPath = './contentlayer.config.ts'
+
+// Use createContentlayerPlugin instead of withContentlayer
+const withContentlayer = createContentlayerPlugin({
+  configPath: './contentlayer.config.ts',
+})
 
 if (process.env.NODE_ENV === 'development') {
   await setupDevPlatform()
@@ -112,17 +115,14 @@ const nextConfig = {
    * @returns {NextJsWebpackConfig}
    */
   webpack: (config, context) => {
-    config.plugins.push(withContentlayer)
-
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     })
 
-    // More specific warning suppression
+    // Suppress contentlayer2 webpack warnings
     config.ignoreWarnings = [
       ...(config.ignoreWarnings || []),
-      // Suppress contentlayer2 webpack warnings
       (warning) => {
         return (
           warning.module &&
@@ -139,4 +139,5 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+// Export the config wrapped with contentlayer
+export default withContentlayer(nextConfig)
