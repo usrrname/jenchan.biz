@@ -9,7 +9,7 @@ async function findDevToArticleByCanonicalUrl(
   try {
     const data = await getDevToPublishedArticles()
 
-    data.find((article) => {
+    data?.find((article) => {
       if (article.canonical_url.includes(slug)) {
         collection.add({
           id: article.id,
