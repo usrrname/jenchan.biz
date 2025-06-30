@@ -1,0 +1,30 @@
+name: Restore Yarn cache
+description: Restores Yarn v1–v4 cache and exposes cache-hit output.
+
+inputs:
+  cache-key:
+    description: Key to use for the cache
+    required: false
+    default: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+outputs:
+  cache-hit:
+    description: 'true/false – whether the cache was found'
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Locate Yarn cache dir
+      id: yarn-dir
+      shell: bash
+      run: echo "YARN_CACHE_DIR=$(yarn cache dir)" >> "$GITHUB_ENV"
+
+    - name: Restore Yarn cache
+      id: restore
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.YARN_CACHE_DIR }}
+        key: ${{ inputs.cache-key }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
