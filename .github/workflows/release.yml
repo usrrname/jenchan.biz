@@ -20,7 +20,8 @@ jobs:
         run: |
           yarn install
           # Install OS build dependencies
-          sudo apt-get update && sudo apt-get install -y python3 make g++
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3 g++ make
 
       - name: Build
         run: yarn run pages:build
