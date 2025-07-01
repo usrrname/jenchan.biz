@@ -19,7 +19,15 @@ const compat = new FlatCompat({
  */
 const config = [
   {
-    ignores: [],
+    ignores: [
+      'node_modules',
+      'dist',
+      '.next',
+      'build',
+      'public',
+      'wrangler.toml',
+      'wrangler.jsonc',
+    ],
   },
   js.configs.recommended,
   ...compat.extends(
