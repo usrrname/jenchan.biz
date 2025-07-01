@@ -20,6 +20,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NEXT_GOOGLE_ANALYTICS_ID: ${{ secrets.NEXT_GOOGLE_ANALYTICS_ID }}
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
