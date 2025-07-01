@@ -8,7 +8,7 @@ async function findDevToArticleByCanonicalUrl(
   const collection = new Set()
   try {
     const data = await getDevToPublishedArticles()
-    if (!data || !Array.isArray(data)) return
+    if (!data || !Array.isArray(data)) return undefined
     data.find((article) => {
       if (article.canonical_url.includes(slug)) {
         collection.add({
@@ -23,11 +23,9 @@ async function findDevToArticleByCanonicalUrl(
     })
     return [...collection][0] as DevToArticleStats
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(
-        `Error in findDevToArticleByCanonicalUrl: ${error.message}`
-      )
-    }
+    console.error('🚨 Dev.to API error:', error)
+    // Return undefined instead of throwing - this allows the build to continue
+    return undefined
   }
 }
 
