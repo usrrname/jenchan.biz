@@ -191,11 +191,14 @@ export default async function Page(props: {
 
   const { likes, mentions, replies, reposts } = webmentions || {}
 
+  // Safely handle jsonLd
+  const safeJsonLd = jsonLd ? JSON.stringify(jsonLd) : '{}'
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd }}
       />
       <Layout
         content={mainContent}
