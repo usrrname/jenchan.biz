@@ -23,8 +23,6 @@ import {
   sortPosts,
 } from 'pliny/utils/contentlayer'
 
-export const dynamic = 'force-static'
-
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,
