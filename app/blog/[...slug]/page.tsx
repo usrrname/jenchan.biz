@@ -155,11 +155,9 @@ async function getBlogPostData(
 }
 
 export async function generateStaticParams() {
-  const posts = allBlogs.map((post) => ({
-    slug: post._raw.flattenedPath.split('/'),
+  return allBlogs.map((p) => ({
+    slug: p.slug.split('/').map((name) => decodeURI(name)),
   }))
-
-  return posts
 }
 
 export const revalidate = 3600 // 1 hour
