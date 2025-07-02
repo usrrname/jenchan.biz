@@ -3,7 +3,7 @@ const config = {
   singleQuote: true,
   tabWidth: 2,
   useTabs: false,
-  trailingComma: 'es5',
+  trailingComma: 'none',
   bracketSpacing: true,
   plugins: ['prettier-plugin-tailwindcss'],
   exclude: [
@@ -13,8 +13,8 @@ const config = {
     'build',
     'public',
     'wrangler.toml',
-    'wrangler.jsonc',
-  ],
+    'wrangler.jsonc'
+  ]
 }
 
 export default config

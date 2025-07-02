@@ -1,5 +1,4 @@
 import NextLink from 'next/link'
-import React from 'react'
 type MentionsProps = {
   title: string
   data: WebMentionReplies[] | WebMentionReaction[]
@@ -46,8 +45,12 @@ const WebMentions = ({ title, data }: MentionsProps) => {
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     <time dateTime={child?.published_ts} />
                   </span>
-                  <div className="prose max-w-full italic text-gray-500 dark:text-gray-400">
-                    <div dangerouslySetInnerHTML={child?.content}></div>
+                  <div className="prose max-w-full text-gray-500 italic dark:text-gray-400">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: child?.content
+                      }}
+                    ></div>
                   </div>
                 </div>
               )}

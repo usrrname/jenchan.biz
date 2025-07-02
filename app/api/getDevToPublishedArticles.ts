@@ -8,8 +8,11 @@ const getDevToPublishedArticles = async () => {
   try {
     const res = await fetch(endpoint, {
       headers: headers,
-      cache: 'force-cache',
+      cache: 'force-cache'
     })
+    if (res.status !== 200) {
+      console.error('🚨 Dev.to API error:', res.status, res.statusText)
+    }
     return res.json()
   } catch (error) {
     if (error instanceof Error) {
