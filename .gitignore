@@ -14,7 +14,7 @@
 data/blog/_draft/*
 # testing
 /coverage
-.vscode/*
+/.vscode/*
 # next.js
 /.next/
 /out/
