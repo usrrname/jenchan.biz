@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
+import WebVitals from '@/components/WebVitals'
 import siteMetadata from '@/data/siteMetadata'
 import 'css/tailwind.css'
 import { Metadata } from 'next'
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
   title: {
     default: siteMetadata.title,
-    template: `%s | ${siteMetadata.title}`,
+    template: `%s | ${siteMetadata.title}`
   },
   description: siteMetadata.description,
   openGraph: {
@@ -25,13 +26,13 @@ export const metadata: Metadata = {
     siteName: siteMetadata.title,
     images: [siteMetadata.socialBanner],
     locale: 'en_US',
-    type: 'website',
+    type: 'website'
   },
   alternates: {
     canonical: './',
     types: {
-      'application/rss+xml': `${siteMetadata.siteUrl}/feed.xml`,
-    },
+      'application/rss+xml': `${siteMetadata.siteUrl}/feed.xml`
+    }
   },
   robots: {
     index: true,
@@ -41,18 +42,18 @@ export const metadata: Metadata = {
       follow: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+      'max-snippet': -1
+    }
   },
   twitter: {
     title: siteMetadata.title,
     card: 'summary_large_image',
-    images: [siteMetadata.socialBanner],
-  },
+    images: [siteMetadata.socialBanner]
+  }
 }
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
@@ -120,7 +121,8 @@ export default function RootLayout({
       {googleAnalyticsId !== null && (
         <GA googleAnalyticsId={googleAnalyticsId as string} />
       )}
-      <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white rave:bg-gradient-to-br rave:from-watermelon/10 rave:via-blueberry/10 rave:to-lime-punch/10">
+      <WebVitals />
+      <body className="rave:bg-gradient-to-br rave:from-watermelon/10 rave:via-blueberry/10 rave:to-lime-punch/10 bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
         <ThemeProviders>
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
