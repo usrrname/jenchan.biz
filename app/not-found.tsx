@@ -1,5 +1,6 @@
 import Link from '@/components/Link'
-import React from 'react'
+
+export const runtime = 'edge'
 
 export default function NotFound() {
   return (

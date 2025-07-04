@@ -1,0 +1,179 @@
+---
+title: 'Block AI Crawlers, Save Tears: Ditching Vercel for Cloudflare Pages'
+draft: false
+summary: Give your Next.js deploy the glowup it deserves. (◕‿◕✿)
+tags: [vercel, nextjs, ai, cloudflare, self-hosting]
+date: '2025-07-01'
+---
+
+Cloudflare recently announced [their decision](https://blog.cloudflare.com/block-ai-bots/) to block AI crawlers for customers who host with them and offer [pay-per-crawl in private beta](https://blog.cloudflare.com/introducing-pay-per-crawl/), which is quite exciting given the declining usability and relevance of Google search.
+
+As a small gesture of meaningless resistance under political and economic despair, I'm migrating my Next.js blog from Vercel to Cloudflare Pages.
+
+I want my blog to be discovered and read by **humans**!
+
+In principle, listing bots you want to disallow from crawling your site in a [robots.txt](https://www.robotstxt.org/) is a first line of defense, but [many crawlers don't adhere to it](https://www.reuters.com/technology/artificial-intelligence/multiple-ai-companies-bypassing-web-standard-scrape-publisher-sites-licensing-2024-06-21/).[^1] Last year, Perplexity was found to be using crawlers that spoof the user agent, such that their bots appear to be human browsing the site.[^2]
+
+Even on a free plan with workers or pages, Cloudflare has multiple features that make it easy to block and monitor AI crawlers:
+
+- the option to [auto-generate](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/) a `robots.txt` file that covers the popular AI bots
+- a dashboard that allows you to monitor AI crawler requests, and block them
+
+- an [AI audit](https://developers.cloudflare.com/ai-audit/) feature (currently in beta) that allows you to manage and monitor AI crawlers, and register verified bots.
+
+![screenshot of Cloudflare AI Audit Crawlers Dashboard ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit-bot.png)
+
+![screenshot of Cloudflare AI Audit Metrics ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit.png)
+
+It's been 2 days. Interesting to see what hits.
+
+## Just what is it about Next.js that makes it so special?
+
+Next.js is intoxicating. I was hooked on it up to version 12. At the time, no other meta-framework provided the control it did for being able to alternate between static site generation, server-side rendering and client-side rendering all within the same application. It was (and still is), quite easy to keep up with. (...Until they started confusing the newcomers and experienced folks alike with the [pages router](https://nextjs.org/docs/pages/getting-started/project-structure) and [app router](https://nextjs.org/docs/app) ... _shakes fist_)
+
+<img
+  alt="Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work withuse Next.js? What a luxury!'"
+  src="https://imgflip.com/i/9z7j7p"
+/>
+
+Like Heroku, Vercel -previously [`now`](https://vercel.com/blog/zeit-is-now-vercel)- was a gateway platform for getting into CI/CD. Both Next and Vercel built a wonderful reputation in the community for Scandinavian web design, comprehensive documentation and basically, the ability to go to market without worrying about infrastructure.
+
+It also happens get more expensive as you scale, especially if you want your site highly available in different regions and have high traffic.[^3]
+
+Check out these Reddit threads 🍿
+
+- `r/nextjs` ["Vercel pricing 20m requests/month"](https://www.reddit.com/r/nextjs/comments/1ak8kab/vercel_pricing_20m_requestsmonth/)
+- `r/devops` ["Why use Vercel when you can go direct AWS ? especially for small projects"](https://www.reddit.com/r/devops/comments/1450000/why_use_vercel_when_you_can_go_direct_aws/?rdt=36229)
+- `r/nextjs` ["Vercel pro pricing is fubar"](https://www.reddit.com/r/nextjs/comments/1aiicc4/vercel_pro_pricing_is_fubar/)
+- `r/nextjs` ["When does Vercel become expensive?"](https://www.reddit.com/r/nextjs/comments/1fo5etb/when_does_vercel_become_expensive/)
+
+I've heard of the proverbial hell with deploying Next.js outside Vercel. As a result, [OpenNext](https://opennext.js.org/) was started as a vendor-backed community project to adapt Next.js to Cloudflare, AWS and Netlify. I had to try it for myself.
+
+I wanted to see how easy it would be to deploy my _mostly_ static Next.js blog off Vercel, and I wasn't entirely disappointed – if you're patient with getting past the [phantom build errors](https://jenchan.biz/glossary#:~:text=Phantom%20failures%20of%20CI), [prerendering issues](https://github.com/vercel/next.js/issues/53220) and remembering which [Node.js APIs are supported by Cloudflare](https://developers.cloudflare.com/workers/runtime-apis/nodejs/#supported-nodejs-apis).[^4]
+
+## Gotchas
+
+I followed this guide for [deploying an existing Next.js site to Cloudflare Pages](https://developers.cloudflare.com/pages/framework-guides/nextjs/ssr/get-started/#existing-apps), but also found certain oddities that made this take 6 hours to get to a manual deploy from CLI, and another 6 to automate on Github Actions. And yes, I was troubleshooting with AI.
+
+### Bring your own domain
+
+You can set up your worker to proxy requests to Vercel's IP addresses, but if you intend to use Cloudflare for edge computing, analytics or monitoring, then you might get the most benefit out of transferring your DNS to Cloudflare.
+I got mine for $15 CAD/year. Goodbye Dreamhost 😤!
+
+### Update your Content Security Policy
+
+You'll need to update your Content Security Policy to allow Cloudflare to run analytics and track real user data.
+
+### Prevent linters from corrupting your `wrangler.jsonc` with a dangling comma
+
+_cough_, prettier, _cough_
+
+Something in my boilerplate repo was causing the linter to add a dangling comma before the closing bracket of my `wrangler.jsonc` config file.
+
+Your build will fail when it reaches Cloudflare if you have a dangling comma.
+
+### Route-based rendering adjustments
+
+If you have any server functions or SSR-ed pages, routes that use these functions must target the edge runtime with:
+
+```js
+export const runtime = 'edge'
+```
+
+### Build Time Noise
+
+Every half year or so I have to maintain this Next.js blog and I'll find some new build error after pulling upstream from the template repo. I don't know if it's because I'm using a template repo with a lot of dependencies, or if modern front end frameworks are less stable than a Jekyll site might be.
+
+[Prerendering errors](https://nextjs.org/docs/messages/prerender-error) may happen on views containing server components or dynamic routes that are statically generated but rely on server functions to populate data that would appear on the page.
+
+```js
+19:34:24.622	⚡️ Invalid prerender config for /blog/[...slug]
+19:34:24.622	⚡️ Invalid prerender config for /blog/[...slug].rsc
+19:34:24.690	⚡️ Invalid prerender config for /tags/[tag]/page/[page]
+19:34:24.691	⚡️ Invalid prerender config for /tags/[tag]/page/[page].rsc
+19:34:24.691	⚡️ Invalid prerender config for /tags/[tag]
+19:34:24.691	⚡️ Invalid prerender config for /tags/[tag].rsc
+```
+
+This was ultimately benign but annoying.
+
+### ESM conversion
+
+I had to update my eslint, tailwind, and prettier config and `package.json` type property to support ESM `imports` and default exports. Then I updated `next.config.js` to `next.config.mjs` and use ESM named imports instead of CommonJS' `require`.
+
+If your Next plugins haven't been imported as ESModules, you'll have to convert them to ESM. Unlike the commonJS version of next.config.js, there is no `module.exports.plugins` property, and you have to use the plugin as if it's a higher-order function taking the config object as an argument.
+
+Before
+
+```js
+const withContentlayer = require('next-contentlayer2')
+
+module.exports = withContentlayer({
+  plugins: [withContentlayer, withBundleAnalyzer]
+})
+```
+
+After
+
+```js
+import { createContentlayerPlugin } from 'next-contentlayer2'
+
+// Use createContentlayerPlugin instead of withContentlayer
+const withContentlayer = createContentlayerPlugin({
+  configPath: './contentlayer.config.ts',
+})
+
+const config = {...}
+withContentlayer(config)
+```
+
+### Webpack Noise
+
+```js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Parsing of /Users/jenc/code/tailwind-nextjs-starter-blog/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js for build dependencies failed at 'import(URL.pathToFileURL(filePathJoin(generatedPkgPath, 'generated', 'index.mjs')).href)'.
+<w> Build dependencies behind this expression are ignored and might cause incorrect cache invalidation.
+```
+
+It appears to be benign.
+
+### Add Cloudflare as a Github Actions App
+
+This allows you to enable automatic Worker builds by pushing to main and building on the Cloudflare side.
+
+The Github Actions app, "Cloudflare Workers and Pages" can be installed with the environment variable `CLOUDFLARE_API_TOKEN` (https://github.com/settings/installations).
+
+I had set up Github Actions to build and deploy the static site to Cloudflare Pages, then found that the automatic builds on Cloudflare's side did a faster build and less error-prone server side calls than my Github Actions workflow.
+
+### Self-hosting Next.js full stack apps will require more legwork
+
+If you're deploying a full stack app instead of a completely static site, **DON'T** use `@cloudflare/next-on-pages`. Use [@opennextjs/cloudflare](https://www.npmjs.com/package/@opennextjs/cloudflare) instead.
+
+> The Workers runtime supports a broad set of Node.js APIs — but the Next.js Edge Runtime code intentionally constrains this [↗](https://nextjs.org/docs/app/api-reference/edge#reference). As a result, only the following Node.js APIs will work in your Next.js app:
+>
+> - buffer
+> - events
+> - assert
+> - util
+> - async_hooks
+
+Maybe I'll try this Next (ha ha).
+
+## Conclusion
+
+Moving from Vercel to Cloudflare Pages was a petty decision driven by both cost considerations and the need to protect my content from AI crawlers. While the migration required some technical adjustments and CI start-stop reruns, the benefits of doing so for a commercial project would be substantial.
+
+### Virtue Signal 🎀
+
+I wasn't paid by Vercel or Cloudflare to write this. I am however, looking for a new role.
+
+[^1]: "Several AI companies are bypassing web standards to scrape publisher sites, licensing content and paying for access to news sites, according to a Reuters investigation." - [Reuters](https://www.reuters.com/technology/artificial-intelligence/multiple-ai-companies-bypassing-web-standard-scrape-publisher-sites-licensing-2024-06-21/), Jun 21, 2024.
+
+[^2]: Dhruv Bansal. ["Perplexity is a Bullshit Machine"](https://www.wired.com/story/perplexity-is-a-bullshit-machine/), Wired, Jun 19, 2024.
+
+[^3]: Sushrit P K. ["How, When, and Why you should switch from Vercel to a different Hosting Provider (Especially for Next.js)"](https://medium.com/@sushrit.pk21/how-when-and-why-you-should-switch-from-vercel-to-a-different-hosting-provider-especially-for-8ba25e439788), Feb 2022.
+
+[^4]: Cloudflare. "Node.js compatibility: [Supported Node.js APIs](https://developers.cloudflare.com/workers/runtime-apis/nodejs/#supported-nodejs-apis)", Apr 7, 2025.
+
+[^5]:
+    Brandon Bayer. ["Secret Knowledge to Self-Host Next.js"](https://www.flightcontrol.dev/blog/secret-knowledge-to-self-host-nextjs), [FlightControl](https://www.flightcontrol.dev/), 2024. <br/>
+    "The Cost Structure of Using Serverless Functions on Vercel" [Indie Starter](https://indie-starter.dev/blog/the-cost-structure-of-using-serverless-functions-on-vercel), Oct 8,2024.
