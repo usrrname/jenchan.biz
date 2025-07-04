@@ -34,7 +34,7 @@ It's been 2 days. Interesting to see what hits.
 
 Next.js is intoxicating. I was hooked on it up to version 12. At the time, no other meta-framework provided the control it did for being able to alternate between static site generation, server-side rendering and client-side rendering all within the same application. It was (and still is), quite easy to keep up with. (...Until they started confusing the newcomers and experienced folks alike with the [pages router](https://nextjs.org/docs/pages/getting-started/project-structure) and [app router](https://nextjs.org/docs/app) ... _shakes fist_)
 
-![Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work with Next.js? What a luxury!'](/static/images/blog/blocking-ai-crawlers/spongebob-nextjs.png)
+![Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work with Next.js? What a luxury!'](/static/images/blog/blocking-ai-crawlers/spongebob-next.png)
 
 Like Heroku, Vercel -previously [`now`](https://vercel.com/blog/zeit-is-now-vercel)- was a gateway platform for getting into CI/CD. Both Next and Vercel built a wonderful reputation in the community for Scandinavian web design, comprehensive documentation and basically, the ability to go to market without worrying about infrastructure.
 
@@ -130,7 +130,7 @@ withContentlayer(config)
 
 ### Add Cloudflare's Github App **Integration**
 
-The Github app, "Cloudflare Workers and Pages" can be installed (https://github.com/apps/cloudflare-workers-and-pages) to enable automatic builds after pushing to main.
+The Github app, ["Cloudflare Workers and Pages"](https://github.com/apps/cloudflare-workers-and-pages) can be installed to enable automatic builds after pushing to main.
 
 I had initially set up Github Actions Workflow with the `CLOUDFLARE_API_TOKEN` environment variable to build the project, then deploy the static site on Cloudflare. I found that the automatic builds on Cloudflare's side was much faster, while server side calls were [429-ing](https://en.wikipedia.org/wiki/HTTP_429) on my [Github Actions workflow](https://github.com/usrrname/jenchan.biz/actions/runs/16077774615/job/45376766250).
 
