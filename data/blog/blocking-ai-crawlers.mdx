@@ -1,11 +1,13 @@
 ---
 title: 'Block AI Crawlers, Save Tears: Ditching Vercel for Cloudflare Pages'
 draft: false
-summary: Give your Next.js deploy the glowup it deserves. (◕‿◕✿)
+summary: Or how I gave my Next.js deploy the glowup it deserves. (◕‿◕✿)
 tags: [vercel, nextjs, ai, cloudflare, self-hosting]
-images: ['/static/images/blog/block-ai-crawlers/card-captor-sakura.jpg']
+images: ['/static/images/blog/block-ai-crawlers/card_captor_sakura.jpg']
 date: '2025-07-03'
 ---
+
+Have you tried self-hosting with Next.js? What was your experience like?
 
 Cloudflare recently announced [their decision](https://blog.cloudflare.com/block-ai-bots/) to block AI crawlers for customers who host with them and offer [pay-per-crawl in private beta](https://blog.cloudflare.com/introducing-pay-per-crawl/), which is quite exciting given the declining usability and relevance of Google search.
 
@@ -34,7 +36,7 @@ Next.js is intoxicating. I was hooked on it up to version 12. At the time, no ot
 
 <img
   alt="Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work withuse Next.js? What a luxury!'"
-  src="https://imgflip.com/i/9z7j7p"
+  src="/static/images/blog/block-ai-crawlers/spongebob-nextjs.png"
 />
 
 Like Heroku, Vercel -previously [`now`](https://vercel.com/blog/zeit-is-now-vercel)- was a gateway platform for getting into CI/CD. Both Next and Vercel built a wonderful reputation in the community for Scandinavian web design, comprehensive documentation and basically, the ability to go to market without worrying about infrastructure.
@@ -129,15 +131,6 @@ const config = {...}
 withContentlayer(config)
 ```
 
-### Webpack Noise
-
-```js
-<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Parsing of /Users/jenc/code/tailwind-nextjs-starter-blog/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js for build dependencies failed at 'import(URL.pathToFileURL(filePathJoin(generatedPkgPath, 'generated', 'index.mjs')).href)'.
-<w> Build dependencies behind this expression are ignored and might cause incorrect cache invalidation.
-```
-
-It appears to be benign.
-
 ### Add Cloudflare as a Github Actions App
 
 This allows you to enable automatic Worker builds by pushing to main and building on the Cloudflare side.
@@ -162,11 +155,13 @@ Maybe I'll try this Next (ha ha).
 
 ## Conclusion
 
-Moving from Vercel to Cloudflare Pages was a petty decision driven by the need to scratch a CI itch in the dead heat of nuclear AI summer. While the migration required some technical adjustments and CI start-stop reruns, the benefits of doing so for a commercial project could be substantial for static content sites.
+Moving from Vercel to Cloudflare Pages was a petty decision driven by the need to scratch a CI itch in the dead heat of nuclear AI summer.
 
-It's not impossible to deploy Next.js off Vercel, but it would take longer than usual due to Cloudflare's and Vercel's limited support for Node.js APIs.
+It's not impossible to deploy Next.js off Vercel, but it does take longer than usual due to Cloudflare's and Vercel's limited support for Node.js APIs.
 
-We will need to make deliberate choices about where and how our applications are hosted to avoid vendor lock-in, overextending our own budgets to play with cool tools out of the fomo, and to avoid data leakage.
+As the ecosystem of tools and platforms become increasingly subscription-driven and stack-based, developers and businesses alike will need to make deliberate choices to avoid vendor lock-in and bot-proof their intellectual property.
+
+I could see challenges with applying this to a larger fullstack enterprise project where multiple services and edge-related features would need to be migrated or rewritten and re-configured on Cloudflare, but where you have an able developer, the cost savings could be substantial.
 
 ### Virtue Signal 🎀
 
@@ -180,6 +175,8 @@ I wasn't paid by Vercel or Cloudflare to write this. I am however, looking for a
 
 [^4]: Cloudflare. "Node.js compatibility: [Supported Node.js APIs](https://developers.cloudflare.com/workers/runtime-apis/nodejs/#supported-nodejs-apis)", Apr 7, 2025.
 
-[^5]:
-    Brandon Bayer. ["Secret Knowledge to Self-Host Next.js"](https://www.flightcontrol.dev/blog/secret-knowledge-to-self-host-nextjs), [FlightControl](https://www.flightcontrol.dev/), 2024. <br/>
-    "The Cost Structure of Using Serverless Functions on Vercel" [Indie Starter](https://indie-starter.dev/blog/the-cost-structure-of-using-serverless-functions-on-vercel), Oct 8,2024.
+## Related Reading
+
+Brandon Bayer. ["Secret Knowledge to Self-Host Next.js"](https://www.flightcontrol.dev/blog/secret-knowledge-to-self-host-nextjs), [FlightControl](https://www.flightcontrol.dev/), 2024.
+
+Indie Starter.["The Cost Structure of Using Serverless Functions on Vercel"](https://indie-starter.dev/blog/the-cost-structure-of-using-serverless-functions-on-vercel), Oct 8,2024.
