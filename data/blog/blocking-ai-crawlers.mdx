@@ -3,7 +3,8 @@ title: 'Block AI Crawlers, Save Tears: Ditching Vercel for Cloudflare Pages'
 draft: false
 summary: Give your Next.js deploy the glowup it deserves. (◕‿◕✿)
 tags: [vercel, nextjs, ai, cloudflare, self-hosting]
-date: '2025-07-01'
+images: ['/static/images/blog/block-ai-crawlers/card-captor-sakura.jpg']
+date: '2025-07-03'
 ---
 
 Cloudflare recently announced [their decision](https://blog.cloudflare.com/block-ai-bots/) to block AI crawlers for customers who host with them and offer [pay-per-crawl in private beta](https://blog.cloudflare.com/introducing-pay-per-crawl/), which is quite exciting given the declining usability and relevance of Google search.
@@ -19,15 +20,15 @@ Even on a free plan with workers or pages, Cloudflare has multiple features that
 - the option to [auto-generate](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/) a `robots.txt` file that covers the popular AI bots
 - a dashboard that allows you to monitor AI crawler requests, and block them
 
-- an [AI audit](https://developers.cloudflare.com/ai-audit/) feature (currently in beta) that allows you to manage and monitor AI crawlers, and register verified bots.
-
 ![screenshot of Cloudflare AI Audit Crawlers Dashboard ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit-bot.png)
+
+- an [AI audit](https://developers.cloudflare.com/ai-audit/) feature (currently in beta) that allows you to manage and monitor AI crawlers, and register verified bots.
 
 ![screenshot of Cloudflare AI Audit Metrics ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit.png)
 
 It's been 2 days. Interesting to see what hits.
 
-## Just what is it about Next.js that makes it so special?
+## Next.js is fun and sexy when you work with boring technologies
 
 Next.js is intoxicating. I was hooked on it up to version 12. At the time, no other meta-framework provided the control it did for being able to alternate between static site generation, server-side rendering and client-side rendering all within the same application. It was (and still is), quite easy to keep up with. (...Until they started confusing the newcomers and experienced folks alike with the [pages router](https://nextjs.org/docs/pages/getting-started/project-structure) and [app router](https://nextjs.org/docs/app) ... _shakes fist_)
 
@@ -47,7 +48,7 @@ Check out these Reddit threads 🍿
 - `r/nextjs` ["Vercel pro pricing is fubar"](https://www.reddit.com/r/nextjs/comments/1aiicc4/vercel_pro_pricing_is_fubar/)
 - `r/nextjs` ["When does Vercel become expensive?"](https://www.reddit.com/r/nextjs/comments/1fo5etb/when_does_vercel_become_expensive/)
 
-I've heard of the proverbial hell with deploying Next.js outside Vercel. As a result, [OpenNext](https://opennext.js.org/) was started as a vendor-backed community project to adapt Next.js to Cloudflare, AWS and Netlify. I had to try it for myself.
+I heard about the proverbial hell with deploying Next.js outside Vercel. As a result, [OpenNext](https://opennext.js.org/) was started as a vendor-backed community project to adapt Next.js to Cloudflare, AWS and Netlify. I had to try it for myself.
 
 I wanted to see how easy it would be to deploy my _mostly_ static Next.js blog off Vercel, and I wasn't entirely disappointed – if you're patient with getting past the [phantom build errors](https://jenchan.biz/glossary#:~:text=Phantom%20failures%20of%20CI), [prerendering issues](https://github.com/vercel/next.js/issues/53220) and remembering which [Node.js APIs are supported by Cloudflare](https://developers.cloudflare.com/workers/runtime-apis/nodejs/#supported-nodejs-apis).[^4]
 
@@ -57,7 +58,8 @@ I followed this guide for [deploying an existing Next.js site to Cloudflare Page
 
 ### Bring your own domain
 
-You can set up your worker to proxy requests to Vercel's IP addresses, but if you intend to use Cloudflare for edge computing, analytics or monitoring, then you might get the most benefit out of transferring your DNS to Cloudflare.
+For a while, I had set up my DNS to proxy requests to Vercel's IP addresses. (See Issue[#7739](https://github.com/vercel/vercel/discussions/7739)) But if you intend to use Cloudflare for edge computing, analytics or monitoring, then you might get the most benefit out of transferring your DNS to Cloudflare.
+
 I got mine for $15 CAD/year. Goodbye Dreamhost 😤!
 
 ### Update your Content Security Policy
@@ -142,7 +144,7 @@ This allows you to enable automatic Worker builds by pushing to main and buildin
 
 The Github Actions app, "Cloudflare Workers and Pages" can be installed with the environment variable `CLOUDFLARE_API_TOKEN` (https://github.com/settings/installations).
 
-I had set up Github Actions to build and deploy the static site to Cloudflare Pages, then found that the automatic builds on Cloudflare's side did a faster build and less error-prone server side calls than my Github Actions workflow.
+I had initially set up Github Actions to build and deploy the static site to Cloudflare Pages, then found that the automatic builds on Cloudflare's side did a much faster build, while server side calls were 429-ing on my Github Actions workflow.
 
 ### Self-hosting Next.js full stack apps will require more legwork
 
@@ -160,11 +162,15 @@ Maybe I'll try this Next (ha ha).
 
 ## Conclusion
 
-Moving from Vercel to Cloudflare Pages was a petty decision driven by both cost considerations and the need to protect my content from AI crawlers. While the migration required some technical adjustments and CI start-stop reruns, the benefits of doing so for a commercial project would be substantial.
+Moving from Vercel to Cloudflare Pages was a petty decision driven by the need to scratch a CI itch in the dead heat of nuclear AI summer. While the migration required some technical adjustments and CI start-stop reruns, the benefits of doing so for a commercial project could be substantial for static content sites.
+
+It's not impossible to deploy Next.js off Vercel, but it would take longer than usual due to Cloudflare's and Vercel's limited support for Node.js APIs.
+
+We will need to make deliberate choices about where and how our applications are hosted to avoid vendor lock-in, overextending our own budgets to play with cool tools out of the fomo, and to avoid data leakage.
 
 ### Virtue Signal 🎀
 
-I wasn't paid by Vercel or Cloudflare to write this. I am however, looking for a new role.
+I wasn't paid by Vercel or Cloudflare to write this. I am however, looking for a new role where I can dabble with this kind of stuff (◕‿◕✿)
 
 [^1]: "Several AI companies are bypassing web standards to scrape publisher sites, licensing content and paying for access to news sites, according to a Reuters investigation." - [Reuters](https://www.reuters.com/technology/artificial-intelligence/multiple-ai-companies-bypassing-web-standard-scrape-publisher-sites-licensing-2024-06-21/), Jun 21, 2024.
 

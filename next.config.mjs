@@ -7,7 +7,7 @@ const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
 
 // Use createContentlayerPlugin instead of withContentlayer
 const withContentlayer = createContentlayerPlugin({
-  configPath: './contentlayer.config.ts',
+  configPath: './contentlayer.config.ts'
 })
 
 if (process.env.NODE_ENV === 'development') {
@@ -30,42 +30,42 @@ const securityHeaders = [
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
   {
     key: 'Content-Security-Policy',
-    value: ContentSecurityPolicy.replace(/\n/g, ''),
+    value: ContentSecurityPolicy.replace(/\n/g, '')
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
   {
     key: 'Referrer-Policy',
-    value: 'strict-origin-when-cross-origin',
+    value: 'strict-origin-when-cross-origin'
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
   {
     key: 'X-Frame-Options',
-    value: 'DENY',
+    value: 'DENY'
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
   {
     key: 'X-Content-Type-Options',
-    value: 'nosniff',
+    value: 'nosniff'
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
   {
     key: 'X-DNS-Prefetch-Control',
-    value: 'on',
+    value: 'on'
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
   {
     key: 'Strict-Transport-Security',
-    value: 'max-age=31536000; includeSubDomains',
+    value: 'max-age=31536000; includeSubDomains'
   },
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Feature-Policy
   {
     key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=()',
+    value: 'camera=(), microphone=(), geolocation=()'
   },
   {
     key: 'X-Robots-Tag',
-    value: 'noai, noml, noimageai',
-  },
+    value: 'noai, noml, noimageai'
+  }
 ]
 
 const output = process.env.EXPORT ? 'export' : undefined
@@ -81,32 +81,40 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   eslint: {
-    dirs: ['app', 'components', 'layouts', 'scripts'],
+    dirs: ['app', 'components', 'layouts', 'scripts']
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['webmention.io', 'dev.to', 'github.com'],
-    },
+      allowedOrigins: ['webmention.io', 'dev.to', 'github.com']
+    }
   },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'picsum.photos',
+        hostname: 'picsum.photos'
       },
       {
         protocol: 'https',
-        hostname: 'webmention.io',
+        hostname: 'webmention.io'
       },
+      {
+        protocol: 'https',
+        hostname: '*.imgflip.com'
+      },
+      {
+        protocol: 'https',
+        hostname: '*.cloudflare.com'
+      }
     ],
-    unoptimized,
+    unoptimized
   },
   async headers() {
     return [
       {
         source: '/(.*)',
-        headers: securityHeaders,
-      },
+        headers: securityHeaders
+      }
     ]
   },
   /**
@@ -117,7 +125,7 @@ const nextConfig = {
   webpack: (config, context) => {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      use: ['@svgr/webpack']
     })
 
     // Suppress contentlayer2 webpack warnings
@@ -132,11 +140,11 @@ const nextConfig = {
           warning.message.includes('Parsing of') &&
           warning.message.includes('for build dependencies failed')
         )
-      },
+      }
     ]
 
     return config
-  },
+  }
 }
 
 // Export the config wrapped with contentlayer
