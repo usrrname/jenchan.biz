@@ -3,7 +3,7 @@ title: 'Block AI Crawlers, Save Tears: Ditching Vercel for Cloudflare Pages'
 draft: false
 summary: Or how I gave my Next.js deploy the glowup it deserves. (◕‿◕✿)
 tags: [vercel, nextjs, ai, cloudflare, self-hosting]
-images: ['/static/images/blog/block-ai-crawlers/card_captor_sakura.jpg']
+images: ['/static/images/blog/blocking-ai-crawlers/card_captor_sakura.jpg']
 date: '2025-07-03'
 ---
 
@@ -22,11 +22,11 @@ Even on a free plan with workers or pages, Cloudflare has multiple features that
 - the option to [auto-generate](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/) a `robots.txt` file that covers the popular AI bots
 - a dashboard that allows you to monitor AI crawler requests, and block them
 
-![screenshot of Cloudflare AI Audit Crawlers Dashboard ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit-bot.png)
+![screenshot of Cloudflare AI Audit Crawlers Dashboard ](/static/images/blog/blocking-ai-crawlers/cloudflare-ai-audit-bot.png)
 
 - an [AI audit](https://developers.cloudflare.com/ai-audit/) feature (currently in beta) that allows you to manage and monitor AI crawlers, and register verified bots.
 
-![screenshot of Cloudflare AI Audit Metrics ](/static/images/blog/block-ai-crawlers/cloudflare-ai-audit.png)
+![screenshot of Cloudflare AI Audit Metrics ](/static/images/blog/blocking-ai-crawlers/cloudflare-ai-audit.png)
 
 It's been 2 days. Interesting to see what hits.
 
@@ -34,7 +34,7 @@ It's been 2 days. Interesting to see what hits.
 
 Next.js is intoxicating. I was hooked on it up to version 12. At the time, no other meta-framework provided the control it did for being able to alternate between static site generation, server-side rendering and client-side rendering all within the same application. It was (and still is), quite easy to keep up with. (...Until they started confusing the newcomers and experienced folks alike with the [pages router](https://nextjs.org/docs/pages/getting-started/project-structure) and [app router](https://nextjs.org/docs/app) ... _shakes fist_)
 
-![Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work with Next.js? What a luxury!'](/static/images/blog/block-ai-crawlers/spongebob-nextjs.png)
+![Spongebob laughing meme with capitalized bold font on top of collage of laughing spongebobs. The text reads 'You work with Next.js? What a luxury!'](/static/images/blog/blocking-ai-crawlers/spongebob-nextjs.png)
 
 Like Heroku, Vercel -previously [`now`](https://vercel.com/blog/zeit-is-now-vercel)- was a gateway platform for getting into CI/CD. Both Next and Vercel built a wonderful reputation in the community for Scandinavian web design, comprehensive documentation and basically, the ability to go to market without worrying about infrastructure.
 
@@ -128,13 +128,11 @@ const config = {...}
 withContentlayer(config)
 ```
 
-### Add Cloudflare as a Github Actions App
+### Add Cloudflare's Github App **Integration**
 
-This allows you to enable automatic Worker builds by pushing to main and building on the Cloudflare side.
+The Github app, "Cloudflare Workers and Pages" can be installed (https://github.com/apps/cloudflare-workers-and-pages) to enable automatic builds after pushing to main.
 
-The Github Actions app, "Cloudflare Workers and Pages" can be installed with the environment variable `CLOUDFLARE_API_TOKEN` (https://github.com/settings/installations).
-
-I had initially set up Github Actions Workflow to build the project, then deploy the static site on Cloudflare, but found that the automatic builds on Cloudflare's was much faster, while server side calls were [429-ing](https://en.wikipedia.org/wiki/HTTP_429) on my [Github Actions workflow](https://github.com/usrrname/jenchan.biz/actions/runs/16077774615/job/45376766250).
+I had initially set up Github Actions Workflow with the `CLOUDFLARE_API_TOKEN` environment variable to build the project, then deploy the static site on Cloudflare. I found that the automatic builds on Cloudflare's side was much faster, while server side calls were [429-ing](https://en.wikipedia.org/wiki/HTTP_429) on my [Github Actions workflow](https://github.com/usrrname/jenchan.biz/actions/runs/16077774615/job/45376766250).
 
 ### Self-hosting Next.js full stack apps will require more legwork
 
