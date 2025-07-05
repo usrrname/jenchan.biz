@@ -1,5 +1,5 @@
 {
-  "beginner": 11,
+  "beginner": 12,
   "career": 12,
   "redux": 1,
   "react": 5,
@@ -10,7 +10,6 @@
   "statemanagement": 1,
   "codinghorror": 1,
   "testing": 6,
-  "beginners": 1,
   "webdev": 4,
   "javascript": 4,
   "productivity": 9,
