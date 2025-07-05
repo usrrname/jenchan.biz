@@ -6,7 +6,7 @@ const siteMetadata = {
   description: 'Software development and its discontents',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://www.jenchan.biz',
+  siteUrl: 'https://jenchan.biz',
   siteRepo: 'https://github.com/usrrname/jenchan.biz',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.svg`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
@@ -45,8 +45,8 @@ const siteMetadata = {
     //   posthogProjectApiKey: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
     // },
     googleAnalytics: {
-      googleAnalyticsId: process.env.NEXT_GOOGLE_ANALYTICS_ID, // e.g. G-XXXXXXX
-    },
+      googleAnalyticsId: process.env.NEXT_GOOGLE_ANALYTICS_ID // e.g. G-XXXXXXX
+    }
   },
   // newsletter: {
   //   // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
@@ -88,8 +88,8 @@ const siteMetadata = {
   search: {
     provider: 'kbar', // kbar or algolia
     kbarConfig: {
-      searchDocumentsPath: `${process.env.BASE_PATH || ''}/search.json`, // path to load documents to search
-    },
+      searchDocumentsPath: `${process.env.BASE_PATH || ''}/search.json` // path to load documents to search
+    }
     // provider: 'algolia',
     // algoliaConfig: {
     //   // The application ID provided by Algolia
@@ -98,7 +98,7 @@ const siteMetadata = {
     //   apiKey: '599cec31baffa4868cae4e79f180729b',
     //   indexName: 'docsearch',
     // },
-  },
+  }
 }
 
 export default siteMetadata
