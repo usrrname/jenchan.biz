@@ -1,3 +1,4 @@
+import CreativeCommonsNC from '@/components/CreativeCommonsNC'
 import Image from '@/components/Image'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -22,7 +23,7 @@ const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
   year: 'numeric',
   month: 'long',
-  day: 'numeric',
+  day: 'numeric'
 }
 
 interface LayoutProps {
@@ -38,7 +39,7 @@ export default async function PostLayout({
   authorDetails,
   next,
   prev,
-  children,
+  children
 }: LayoutProps) {
   const { path, date, title, tags, readingTime, toc } = content
   const basePath = path.split('/')[0]
@@ -68,7 +69,7 @@ export default async function PostLayout({
                 </dl>
                 <dl>
                   <dt className="sr-only">Reading Time</dt>
-                  <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                  <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
                     {readingTime.text}
                   </dd>
                 </dl>
@@ -81,7 +82,10 @@ export default async function PostLayout({
               <dd>
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
                   {authorDetails.map((author) => (
-                    <li className="flex items-center space-x-2" key={author.name}>
+                    <li
+                      className="flex items-center space-x-2"
+                      key={author.name}
+                    >
                       {author.avatar && (
                         <Image
                           src={author.avatar}
@@ -102,7 +106,7 @@ export default async function PostLayout({
                   {toc && (
                     <li>
                       <span className="sr-only">Table of Contents</span>
-                      <h3 className="mb-3 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                      <h3 className="mb-3 text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                         Contents
                       </h3>
                       <TOCInline
@@ -119,11 +123,11 @@ export default async function PostLayout({
                 </ul>
               </dd>
             </dl>
-            <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-              <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">
+            <div className="divide-y divide-gray-200 xl:col-span-3 xl:row-span-2 xl:pb-0 dark:divide-gray-700">
+              <div className="prose dark:prose-invert max-w-none pt-10 pb-8">
                 {children}
               </div>
-              <div className="pb-6 pt-6 text-sm text-gray-700 dark:text-gray-300">
+              <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                 {devToArticle && (
                   <Link href={devToArticle} rel="nofollow" key={path}>
                     Discuss on Dev.to
@@ -149,30 +153,27 @@ export default async function PostLayout({
                   <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
                     {prev && prev.path && (
                       <div>
-                        <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                           &larr; Previous
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
                           <Link href={`/${prev.path}`}>{prev.title}</Link>
                         </div>
                       </div>
-                    )
-                    }
-                    {
-                      next && next.path && (
-                        <div>
-                          <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            Next &rarr;
-                          </h2>
-                          <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                            <Link href={`/${next.path}`}>{next.title}</Link>
-                          </div>
+                    )}
+                    {next && next.path && (
+                      <div>
+                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                          Next &rarr;
+                        </h2>
+                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                          <Link href={`/${next.path}`}>{next.title}</Link>
                         </div>
-                      )
-                    }
-                  </div >
+                      </div>
+                    )}
+                  </div>
                 )}
-              </div >
+              </div>
               <div className="pt-4 xl:pt-8">
                 <Link
                   href={`/${basePath}`}
@@ -182,10 +183,11 @@ export default async function PostLayout({
                   &larr; Back to the blog
                 </Link>
               </div>
-            </footer >
-          </div >
-        </div >
-      </article >
-    </SectionContainer >
+              <CreativeCommonsNC />
+            </footer>
+          </div>
+        </div>
+      </article>
+    </SectionContainer>
   )
 }
