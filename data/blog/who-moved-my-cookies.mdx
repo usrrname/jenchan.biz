@@ -1,0 +1,96 @@
+---
+title: Who Moved My Cookies? Of Cookies On Subdomains
+date: 2025-07-09
+draft: false
+summary: The story of how 3 developers blew 45 minutes investigating where a cookie mysteriously wasn't.
+tags: [cookies, debugging, codinghorror, HTTP]
+images:
+  [
+    '/images/blog/who-moved-my-cookies/maze-game-kids-cute-groovy-cookie-with-pieces-chocolate-looking-way-gift-box_563230-596.jpg'
+  ]
+---
+
+Yes, it's 2025, we had the internet and the encyclopedic knowledge of LLMs at our fingertips, and we were still blocked for 45 minutes.
+
+<img
+  src="/static/images/blog/who-moved-my-cookies/maze-game-kids-cute-groovy-cookie-with-pieces-chocolate-looking-way-gift-box_563230-596.jpg"
+  alt="Maze game for kids cute groovy cookie with pieces of chocolate looking for a way to the gift box "
+  width="420"
+  height="420"
+/>
+
+["Maze game for kids cute groovy cookie with pieces of chocolate looking for a way to the gift box"](https://www.freepik.com/premium-vector/maze-game-kids-cute-groovy-cookie-with-pieces-chocolate-looking-way-gift-box_55883162.htm) by [Maria Kololeva](https://www.freepik.com/author/mariabullfinch).
+
+## The Problem
+
+Imagine, it's possible for a gaming platform to have all of these namespaces:
+
+- `addictinggames.com`
+- `fun.addictinggames.com`
+- `cool.addictinggames.com`
+
+And other mirror domains could also receive its traffic in the event some of them got blocked by parental controls or libraries, or some no-fun workplaces want to prevent people from playing fun games:
+
+- `addictinggames.wtf`
+- `addictinggames.lol`
+- `evenmoreaddictinggames.com`
+- `playaddicting.fun`
+
+Such a system was set up so that if Johnny was logged in at `addictinggames.com` but his mom decided to block access to the site, he'd would be able to use `addictinggamesmirror.com` to redirect his session to `addictinggames.wtf` and continue playing there. ✌
+
+So, we were going to launch a web 3 game at a subdomain, `even.more.addictinggames.com`... with the intention that sessions could be persisted to `even.more.addictinggames.wtf`, `even.more.additinggames.lol`, so on and so forth.
+
+How hard could it be?
+
+It was impossible.
+
+We had previously used subdomains and mirror domains to persist user sessions for authenticating users.
+
+The cookie was just proof that the user was still authenticated -amongst other things- after a redirect.
+
+While all other areas of the platform showed that a user who had logged in and went back to the view was still authenticated, the proxied request returned nothing.
+
+## What we tried
+
+We of course did the usual cookie clearing, logging out and logging in and checking the dev tools.
+
+We checked that there wasn't anything on the client side that was setting or eliminating the cookie –an anti-pattern anyway.
+
+Since the cookie was HTTP-Only, there wouldn't have been any way for the client to access it.
+
+We checked that the cookie was being set on the server side.
+
+We compared headers from the proxied request and the original request.
+
+We tried desperately to specify the destination domain for `Set-Cookie` to be `*.addictinggames.com` or `even.more.addictinggames.com`.
+
+Our manager pointed us to the MDN docs on [cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
+
+As it turns out:
+
+> If the Set-Cookie header does not specify a Domain attribute, the cookies are available on the server that sets it but not on its subdomains. Therefore, specifying Domain is less restrictive than omitting it. Note that a server can only set the Domain attribute to its own domain or a parent domain, not to a subdomain or some other domain.
+> So, for example, a server with domain `foo.example.com` could set the attribute to `example.com` or `foo.example.com`, but not `bar.foo.example.com` or `elsewhere.com` (the cookies would still be sent to subdomains such as `bar.foo.example.com` though).
+
+See [RFC 6265 Section 4.1.2.3](https://datatracker.ietf.org/doc/html/rfc6265#section-4.1.2.3) on "HTTP State Management Mechanism".
+
+## One does not simply set a cookie on a subdomain
+
+✅ We could expect that a server that responds with the `Set-Cookie` header and no `Domain` specified, would only set the cookie to the host server of the document, but not at subdomains.
+
+✅ We could expect that a server responding with the `Set-Cookie` header and `Domain` specified to `addictinggames.com`, would allow `addictinggames.com` and subdomains like `fun.addictinggames.com` to receive the cookie.
+
+✅ We can also use the `Set-Cookie` header to set a `Domain` attribute to `fun.addictinggames.com` and expect the cookie to be set when visiting `fun.addictinggames.com`.
+
+❌ We can't use the `Set-Cookie` header to set a `Domain` attribute to `even.more.addictinggames.com` or `even.more.addictinggames.wtf`.
+
+So it follows that it would be another magnitude of problematic to expect such a cookie to persist on an external mirror subdomain like `even.more.addictinggames.wtf`.
+
+## The Solution
+
+Sometimes web APIs defy logic.
+
+Don't try to set cookies on a subdomain-of-a-subdomain. Just stick with one level or the parent domain.
+
+Instead of dark-launching on `even.more.addictinggames.com`, we went with `more.addictinggames.com`.
+
+Ta-da!
