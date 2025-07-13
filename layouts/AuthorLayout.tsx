@@ -1,6 +1,7 @@
 import Image from '@/components/Image'
 import SocialIcon from '@/components/social-icons'
 import type { Authors } from 'contentlayer/generated'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -36,15 +37,16 @@ export default function AuthorLayout({ children, content }: Props) {
         <div className="items-start space-y-2 xl:grid xl:grid-cols-3 xl:space-y-0 xl:gap-x-8">
           <div className="flex flex-col items-center space-x-2 pt-8">
             <span className="h-card">
-              <a className="u-url" rel="me" href="/"></a>
               {avatar && (
-                <Image
-                  src={avatar}
-                  alt="avatar"
-                  width={192}
-                  height={192}
-                  className="u-photo h-48 w-48 rounded"
-                />
+                <Link className="u-url" rel="me" href="/">
+                  <Image
+                    src={avatar}
+                    alt="avatar"
+                    width={192}
+                    height={192}
+                    className="u-photo h-48 w-48 rounded"
+                  />
+                </Link>
               )}
             </span>
 
