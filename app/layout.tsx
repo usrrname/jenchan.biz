@@ -94,19 +94,16 @@ export default function RootLayout({
       />
       <link
         rel="webmention"
-        href="https://webmention.io/www.jenchan.biz/webmention"
+        href="https://webmention.io/jenchan.biz/webmention"
       />
-      <link
-        rel="pingback"
-        href="https://webmention.io/www.jenchan.biz/xmlrpc"
-      />
+      <link rel="pingback" href="https://webmention.io/jenchan.biz/xmlrpc" />
       <link
         rel="alternate"
         type="application/rss+xml"
         href={`${basePath}/feed.xml`}
       />
-
       <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="fediverse:creator" content="@jenc@mstdn.party" />
       <meta
         name="theme-color"
         media="(prefers-color-scheme: light)"
