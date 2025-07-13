@@ -124,7 +124,9 @@ export default function RootLayout({
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
-              <main className="mb-auto">{children}</main>
+              <main className="mb-auto" role="main">
+                {children}
+              </main>
             </SearchProvider>
             <Footer />
           </SectionContainer>

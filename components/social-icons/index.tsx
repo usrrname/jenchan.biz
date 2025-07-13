@@ -9,7 +9,7 @@ import {
   Rss,
   Twitter,
   X,
-  Youtube,
+  Youtube
 } from './icons'
 
 const components = {
@@ -26,7 +26,7 @@ const components = {
   // threads: Threads,
   // instagram: Instagram,
   // medium: Medium,
-  bluesky: Bluesky,
+  bluesky: Bluesky
 }
 
 type SocialIconProps = {
@@ -43,18 +43,20 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
   )
     return null
 
+  const isFediverse = kind === 'mastodon' || kind === 'bluesky'
+
   const SocialSvg = components[kind]
 
   return (
     <a
       className="text-sm text-gray-500 transition hover:text-gray-600"
       target="_blank"
-      rel="noopener noreferrer"
+      rel={isFediverse ? 'me' : 'noopener noreferrer'}
       href={href}
     >
       <span className="sr-only">{kind}</span>
       <SocialSvg
-        className={`hover:text-primary-500 dark:hover:text-primary-400 fill-current text-gray-700 dark:text-gray-200 rave:hover:text-primary-500 h-${size} w-${size}`}
+        className={`hover:text-primary-500 dark:hover:text-primary-400 rave:hover:text-primary-500 fill-current text-gray-700 dark:text-gray-200 h-${size} w-${size}`}
       />
     </a>
   )

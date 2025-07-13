@@ -3,18 +3,36 @@ type MentionsProps = {
   title: string
   data: WebMentionReplies[] | WebMentionReaction[]
 }
+
 const WebMentions = ({ title, data }: MentionsProps) => {
+  const isReply = title === 'Replies'
+  const isMention = title === 'Mentions'
+  const isLike = title === 'Likes'
+  const isRepost = title === 'Reposts'
+
+  const computedClass = isReply
+    ? `in-reply-to`
+    : isRepost
+      ? `repost-of`
+      : isLike
+        ? `like-of`
+        : ''
+
   return (
     <>
       <section className="w-auto">
         {data?.map((child, index) => (
           <>
             {/* Likes and Reposts */}
-            <div className="flex h-16 flex-row items-center gap-2">
+            <div className={computedClass}>
               <span className="text-left font-bold">{title}</span>
 
               <div className="space-x-2">
-                <NextLink href={child?.url} target="_blank">
+                <NextLink
+                  href={child?.url}
+                  target="_blank"
+                  className="h-card u-url"
+                >
                   <img
                     src={child?.author?.photo}
                     alt={child?.author?.name}
@@ -26,9 +44,13 @@ const WebMentions = ({ title, data }: MentionsProps) => {
             {/* // Replies and Mentions */}
             <div className="flex flex-col space-y-2">
               {(title === 'Replies' || 'Mentions') && child?.published && (
-                <div className="flex flex-row">
+                <div className="h-cite flex flex-row">
                   <div className="items-center space-x-2">
-                    <NextLink href={child?.url} target="_blank">
+                    <NextLink
+                      href={child?.url}
+                      target="_blank"
+                      className="h-card u-url"
+                    >
                       <img
                         src={child?.author?.photo}
                         alt={child?.author?.name}
@@ -37,15 +59,15 @@ const WebMentions = ({ title, data }: MentionsProps) => {
                     </NextLink>
                   </div>
                   <NextLink
-                    className="text-sm text-gray-500 dark:text-gray-400"
+                    className="p-author h-card text-sm text-gray-500 dark:text-gray-400"
                     href={child?.author.url}
                   >
                     {child?.author.name}
                   </NextLink>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="dt-published text-sm text-gray-500 dark:text-gray-400">
                     <time dateTime={child?.published_ts} />
                   </span>
-                  <div className="prose max-w-full text-gray-500 italic dark:text-gray-400">
+                  <div className="prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
                     <div
                       dangerouslySetInnerHTML={{
                         __html: child?.content
