@@ -98,6 +98,7 @@ export default function RootLayout({
       />
       <link rel="pingback" href="https://webmention.io/jenchan.biz/xmlrpc" />
       <link
+        className="h-feed"
         rel="alternate"
         type="application/rss+xml"
         href={`${basePath}/feed.xml`}
