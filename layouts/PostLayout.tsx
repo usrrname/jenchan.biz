@@ -77,11 +77,23 @@ export default async function PostLayout({
               </div>
             </div>
             <a
+              href="https://brid.gy/publish/bluesky"
+              className="u-bridgy hidden"
+            >
+              bridgy
+            </a>
+            <a
+              href="https://brid.gy/publish/mastodon"
+              className="u-bridgy hidden"
+            >
+              bridgy
+            </a>
+            <a
               className="u-bridgy-fed"
-              href="https://fed.brid.gy/"
+              href="https://fed.brid.gy"
               hidden={true}
             >
-              Bridgy
+              fed.brid.gy
             </a>
           </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0 dark:divide-gray-700">
