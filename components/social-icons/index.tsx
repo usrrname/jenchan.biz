@@ -44,6 +44,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
     return null
 
   const isFediverse = kind === 'mastodon' || kind === 'bluesky'
+  const isGithub = kind === 'github'
 
   const SocialSvg = components[kind]
 
@@ -51,7 +52,7 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
     <a
       className="text-sm text-gray-500 transition hover:text-gray-600"
       target="_blank"
-      rel={isFediverse ? 'me' : 'noopener noreferrer'}
+      rel={isFediverse || isGithub ? 'me' : 'noopener noreferrer'}
       href={href}
     >
       <span className="sr-only">{kind}</span>
