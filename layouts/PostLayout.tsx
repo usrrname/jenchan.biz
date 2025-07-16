@@ -100,7 +100,7 @@ export default async function PostLayout({
             <dl className="pt-6 pb-10 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
               <dt className="sr-only">Author</dt>
               <dd>
-                <ul className="p-author h-cardflex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
+                <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
                   {authorDetails.map((author) => (
                     <li
                       className="flex items-center space-x-2"
@@ -118,7 +118,13 @@ export default async function PostLayout({
                       <dl className="text-sm leading-5 font-medium whitespace-nowrap">
                         <dt className="sr-only">Name</dt>
                         <dd className="text-gray-900 dark:text-gray-100">
-                          {author.name}
+                          <a
+                            href="https://jenchan.biz/"
+                            className="h-card p-author"
+                            rel="me"
+                          >
+                            {author.name}
+                          </a>
                         </dd>
                       </dl>
                     </li>
