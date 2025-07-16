@@ -1,6 +1,23 @@
 {
+  "main": ".open-next/worker.js",
   "name": "jenchan-biz",
-  "compatibility_date": "2024-09-23",
+  "compatibility_date": "2025-03-25",
   "compatibility_flags": ["nodejs_compat"],
-  "pages_build_output_dir": ".vercel/output/static"
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "main"
+    }
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // R2 incremental cache
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "jen-bucket"
+    }
+  ]
 }

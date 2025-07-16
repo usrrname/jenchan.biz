@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "next dev",
-    "dev": "cross-env INIT_CWD=$PWD next dev",
+    "dev": "cross-env INIT_CWD=$PWD yarn wrangler dev",
     "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
@@ -15,9 +15,9 @@
     "pages:preview": "EXPORT=true yarn pages:build && wrangler pages dev",
     "pages:deploy": "EXPORT=true yarn pages:build && wrangler pages deploy",
     "worker:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "worker:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "worker:upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "worker:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",

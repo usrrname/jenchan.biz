@@ -1,6 +1,6 @@
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import { createContentlayerPlugin } from 'next-contentlayer2'
-
+initOpenNextCloudflareForDev()
 // @ts-check
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
@@ -11,7 +11,7 @@ const withContentlayer = createContentlayerPlugin({
 })
 
 if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform()
+  await initOpenNextCloudflareForDev()
 }
 
 // You might need to insert additional domains in script-src if you are using external services

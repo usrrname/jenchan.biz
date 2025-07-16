@@ -54,3 +54,5 @@ yarn-error.log*
 *.pem
 *.key
 .dev.vars
+.open-next/
+.wrangler/
