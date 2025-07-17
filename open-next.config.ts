@@ -8,5 +8,6 @@ export default defineCloudflareConfig({
     incrementalCache: {
       enabled: true
     }
-  }
+  },
+  packager: 'yarn'
 })
