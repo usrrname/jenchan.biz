@@ -1,7 +1,5 @@
 import Link from '@/components/Link'
 
-export const runtime = 'edge'
-
 export default function NotFound() {
   return (
     <div className="flex flex-col items-start justify-start md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6">

@@ -53,3 +53,6 @@ yarn-error.log*
 .dev.vars
 *.pem
 *.key
+.dev.vars
+.open-next/
+.wrangler/

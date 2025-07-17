@@ -7,7 +7,7 @@ async function getWebMentionsPerPost(post: Blog) {
   const res = await fetch(
     `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
     {
-      next: { revalidate: 3600 * 24 }, // revalidate once a day
+      next: { revalidate: 3600 * 24 } // revalidate once a day
     }
   )
   return res.json()
@@ -16,14 +16,14 @@ async function getWebMentionsPerPost(post: Blog) {
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   const { links } = results
 
-  if (!links.length) return
+  if (!links?.length) return
 
   const mentions: WebMentionReplies[] = []
   let replies: WebMentionReplies[] = []
   const likes: WebMentionReaction[] = []
   const reposts: WebMentionReaction[] = []
 
-  links.forEach((mention) => {
+  links?.forEach((mention) => {
     const { data, activity } = mention
     let { author, content, url, published, published_ts } = data
     const { name } = author
@@ -35,13 +35,13 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
       case 'bookmark':
         likes.push({
           author,
-          url,
+          url
         })
         break
       case 'repost':
         reposts.push({
           url,
-          author,
+          author
         })
         break
       case 'reply':
@@ -53,7 +53,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
           content,
           url,
           published,
-          published_ts,
+          published_ts
         })
         break
       case 'mention':
@@ -62,7 +62,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
           content,
           url,
           published,
-          published_ts,
+          published_ts
         })
         break
     }
