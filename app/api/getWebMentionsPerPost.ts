@@ -10,6 +10,7 @@ export default async function getWebMentionsPerPost(
   })
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get(`webmentions-${post.slug}`)
+  console.log('cachedData', cachedData?.text())
   if (!cachedData) {
     const url = siteMetadata.siteUrl
     const res = await env.WORKER_SELF_REFERENCE?.fetch(
@@ -20,6 +21,7 @@ export default async function getWebMentionsPerPost(
     )
     if (!res?.ok) throw new Error('Failed to fetch')
     const data = await res?.json()
+    console.log('data', data)
     await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
     return data as unknown as WebMentionPostResponse
   }
