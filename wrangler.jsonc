@@ -23,5 +23,10 @@
       "bucket_name": "jen-bucket",
       "preview_bucket_name": "jen-preview-bucket"
     }
-  ]
+  ],
+  "env": {
+    "preview": {
+      "NEXT_INC_CACHE_R2_BUCKET": "jen-preview-bucket"
+    }
+  }
 }
