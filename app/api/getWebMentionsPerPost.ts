@@ -21,7 +21,7 @@ export default async function getWebMentionsPerPost(
     if (!res?.ok) throw new Error('Failed to fetch')
     const data = await res?.json()
     await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
-    return data
+    return data as unknown as WebMentionPostResponse
   }
   return cachedData as unknown as WebMentionPostResponse
 }
