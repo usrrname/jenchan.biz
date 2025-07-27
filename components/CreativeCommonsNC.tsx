@@ -1,3 +1,4 @@
+import Image from 'next/image'
 const CreativeCommonsNC = () => {
   return (
     <div className="mt-6 justify-center gap-x-2 text-left text-sm">
@@ -7,17 +8,17 @@ const CreativeCommonsNC = () => {
         className="flex items-center"
       >
         <span className="text-primary-500">CC BY-NC 4.0</span>
-        <img
+        <Image
           src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
           alt=""
           style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
         />
-        <img
+        <Image
           src="https://mirrors.creativecommons.org/presskit/icons/by.svg"
           alt=""
           style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
         />
-        <img
+        <Image
           src="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
           alt=""
           style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
