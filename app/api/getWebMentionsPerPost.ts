@@ -1,16 +1,29 @@
 import { Blog } from '.contentlayer/generated/types'
 import siteMetadata from '@/data/siteMetadata'
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 
-async function getWebMentionsPerPost(post: Blog) {
-  'use server'
-  const url = siteMetadata.siteUrl
-  const res = await fetch(
-    `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
-    {
-      next: { revalidate: 3600 * 24 } // revalidate once a day
-    }
-  )
-  return res.json()
+export default async function getWebMentionsPerPost(
+  post: Blog
+): Promise<WebMentionPostResponse> {
+  const { env } = await getCloudflareContext({
+    async: true
+  })
+  const cache = env.NEXT_INC_CACHE_R2_BUCKET
+  const cachedData = await cache?.get(`webmentions-${post.slug}`)
+  if (!cachedData) {
+    const url = siteMetadata.siteUrl
+    const res = await env.WORKER_SELF_REFERENCE?.fetch(
+      `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
+      {
+        next: { revalidate: 3600 * 24 } // revalidate once a day
+      }
+    )
+    if (!res?.ok) throw new Error('Failed to fetch')
+    const data = await res?.json()
+    await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
+    return data
+  }
+  return cachedData as unknown as WebMentionPostResponse
 }
 
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {
@@ -25,7 +38,8 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
 
   links?.forEach((mention) => {
     const { data, activity } = mention
-    let { author, content, url, published, published_ts } = data
+    const { author, url, published, published_ts } = data
+    let { content } = data
     const { name } = author
     // Ignore webmentions and promo from myself
     if (name === 'Jen Chan') return
@@ -76,5 +90,3 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
 
   return { likes, mentions, replies, reposts }
 }
-
-export default getWebMentionsPerPost
