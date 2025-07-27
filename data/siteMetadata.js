@@ -20,7 +20,7 @@ const siteMetadata = {
   // threads: 'https://www.threads.net',
   // instagram: 'https://www.instagram.com',
   // medium: 'https://medium.com',
-  bluesky: 'https://bsky.app/profile/422jen.bsky.social',
+  bluesky: 'https://bsky.app/profile/jenchan.biz',
   locale: 'en-US',
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
