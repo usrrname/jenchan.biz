@@ -6,7 +6,7 @@ import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
 import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import getWebMentionsPerPost, {
-  parseWebMentionResults,
+  parseWebMentionResults
 } from 'app/api/getWebMentionsPerPost'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
@@ -20,14 +20,14 @@ import {
   CoreContent,
   allCoreContent,
   coreContent,
-  sortPosts,
+  sortPosts
 } from 'pliny/utils/contentlayer'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
   PostSimple,
   PostLayout,
-  PostBanner,
+  PostBanner
 }
 
 interface BlogPostProps extends Metadata {
@@ -74,7 +74,7 @@ export async function generateMetadata(props: {
   }
   const ogImages = imageList.map((img) => {
     return {
-      url: img.includes('http') ? img : siteMetadata.siteUrl + img,
+      url: img.includes('http') ? img : siteMetadata.siteUrl + img
     }
   })
 
@@ -92,14 +92,14 @@ export async function generateMetadata(props: {
       modifiedTime: modifiedAt,
       url: `${siteMetadata.siteUrl}/blog/${slug}`,
       images: ogImages,
-      authors: authors,
+      authors: authors
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.summary,
-      images: imageList,
-    },
+      images: imageList
+    }
   }
 }
 
@@ -128,7 +128,7 @@ async function getBlogPostData(
   const jsonLd = post.structuredData
   jsonLd['author'] = authorDetails.map((author) => ({
     '@type': 'Person',
-    name: author.name,
+    name: author.name
   }))
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
@@ -148,13 +148,13 @@ async function getBlogPostData(
     webmentions: results,
     article: devToArticle,
     prev,
-    next,
+    next
   }
 }
 
 export async function generateStaticParams() {
   return allBlogs.map((p) => ({
-    slug: p.slug.split('/').map((name) => decodeURI(name)),
+    slug: p.slug.split('/').map((name) => decodeURI(name))
   }))
 }
 
@@ -179,7 +179,7 @@ export default async function Page(props: {
     article,
     jsonLd,
     authorDetails,
-    webmentions,
+    webmentions
   } = postData
 
   let articleUrl: string | undefined = undefined
@@ -228,12 +228,12 @@ export default async function Page(props: {
             ) : (
               void 0
             )}
-            {article.public_reaction_count > 0 ? (
+            {article.public_reactions_count > 0 ? (
               <NextLink
                 href={articleUrl!}
                 className="font-bold no-underline hover:bg-yellow-200"
               >
-                💖🔥🦄 {article.public_reaction_count} reactions
+                💖🔥🦄 {article.public_reactions_count} reactions
               </NextLink>
             ) : null}
             &nbsp;on{' '}

@@ -9,15 +9,15 @@ async function findDevToArticleByCanonicalUrl(
   try {
     const data = await getDevToPublishedArticles()
     if (!data || !Array.isArray(data)) return undefined
-    data.find((article) => {
-      if (article.canonical_url.includes(slug)) {
+    data.find((article: DevToArticle) => {
+      if (article.canonical_url?.includes(slug)) {
         collection.add({
           id: article.id,
           path: article.path,
           url: article.url,
-          positive_reaction_count: article.positive_reaction_count,
+          positive_reaction_count: article.positive_reactions_count,
           public_reaction_count: article.public_reactions_count,
-          comments_count: article.comments_count,
+          comments_count: article.comments_count
         })
       }
     })
