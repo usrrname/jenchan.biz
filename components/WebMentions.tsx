@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import NextLink from 'next/link'
 type MentionsProps = {
   title: string
@@ -33,7 +34,7 @@ const WebMentions = ({ title, data }: MentionsProps) => {
                   target="_blank"
                   className="h-card u-url"
                 >
-                  <img
+                  <Image
                     src={child?.author?.photo}
                     alt={child?.author?.name}
                     className="h-12 w-12 rounded-full"
@@ -51,7 +52,7 @@ const WebMentions = ({ title, data }: MentionsProps) => {
                       target="_blank"
                       className="h-card u-url"
                     >
-                      <img
+                      <Image
                         src={child?.author?.photo}
                         alt={child?.author?.name}
                         className="h-12 w-12 rounded-full"

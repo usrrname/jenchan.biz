@@ -1,5 +1,5 @@
 type WebMentionPostResponse = {
-  links: WebMentionPost[]
+  links?: WebMentionPost[]
 }
 
 type WebMentionPost = {

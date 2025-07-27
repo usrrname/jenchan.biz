@@ -1,0 +1,3 @@
+/.well-known/atproto-did https://fed.brid.gy/.well-known/atproto-did 301
+/.well-known/host-meta https://fed.brid.gy/.well-known/host-meta 301
+/.well-known/webfinger https://fed.brid.gy/.well-known/webfinger 301

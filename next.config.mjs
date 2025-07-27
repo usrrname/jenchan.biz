@@ -1,7 +1,9 @@
-import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
+import {
+  getDeploymentId,
+  initOpenNextCloudflareForDev
+} from '@opennextjs/cloudflare'
 import { createContentlayerPlugin } from 'next-contentlayer2'
-
-// @ts-check
+initOpenNextCloudflareForDev()
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
 
@@ -11,7 +13,7 @@ const withContentlayer = createContentlayerPlugin({
 })
 
 if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform()
+  await initOpenNextCloudflareForDev()
 }
 
 // You might need to insert additional domains in script-src if you are using external services
@@ -68,7 +70,7 @@ const securityHeaders = [
   }
 ]
 
-const output = process.env.EXPORT ? 'export' : undefined
+const output = process.env.EXPORT ? 'export' : 'standalone'
 const basePath = process.env.BASE_PATH || undefined
 const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 
@@ -78,6 +80,7 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 const nextConfig = {
   output,
   basePath,
+  deploymentId: getDeploymentId(),
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   eslint: {

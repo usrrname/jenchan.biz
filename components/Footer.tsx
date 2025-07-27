@@ -12,6 +12,7 @@ export default function Footer() {
           <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size={6} />
           <SocialIcon kind="mastodon" href={siteMetadata.mastodon} size={6} />
           <SocialIcon kind="devto" href={siteMetadata.devto} size={6} />
+          <SocialIcon kind="bluesky" href={siteMetadata.bluesky} size={6} />
         </div>
       </div>
     </footer>
