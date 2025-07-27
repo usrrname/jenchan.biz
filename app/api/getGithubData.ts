@@ -1,3 +1,4 @@
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 import dotenv from 'dotenv'
 type Project = {
   title: string
@@ -75,51 +76,58 @@ export const ossData: Project[] = [
 ]
 
 export async function getGithubData(data: Project[]) {
-  'use server'
-  // Filter only projects with a GitHub href
-  const githubProjects = data.filter((p) =>
-    p.href?.startsWith('https://github.com/')
-  )
+  const { env } = await getCloudflareContext({
+    async: true
+  })
+  const cache = env.NEXT_INC_CACHE_R2_BUCKET
+  const cachedData = await cache?.get('getGithubData')
+  if (!cachedData) {
+    // Filter only projects with a GitHub href
+    const githubProjects = data.filter((p) =>
+      p.href?.startsWith('https://github.com/')
+    )
 
-  // Map to fetch star counts
-  const results = await Promise.all(
-    githubProjects.map(async (project) => {
-      try {
-        // Extract owner/repo from URL
-        const match = project.href!.match(/github\.com\/([^/]+)\/([^/]+)/)
-        if (!match) return { ...project, stars: null }
-        const [, owner, repo] = match
+    // Map to fetch star counts
+    const results = await Promise.all(
+      githubProjects.map(async (project) => {
+        try {
+          // Extract owner/repo from URL
+          const match = project.href!.match(/github\.com\/([^/]+)\/([^/]+)/)
+          if (!match) return { ...project, stars: null }
+          const [, owner, repo] = match
 
-        // Fetch repo data from GitHub API
-        const res = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}`,
-          {
-            headers: {
-              Accept: 'application/vnd.github.v3+json',
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
-            },
-            next: { revalidate: 3600 } // cache for 1 hour
+          // Fetch repo data from GitHub API
+          const res = await env.WORKER_SELF_REFERENCE?.fetch(
+            `https://api.github.com/repos/${owner}/${repo}`,
+            {
+              headers: {
+                Accept: 'application/vnd.github.v3+json',
+                Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
+              },
+              next: { revalidate: 3600 } // cache for 1 hour
+            }
+          )
+
+          if (!res?.ok) throw new Error('Failed to fetch')
+          const data = await res?.json()
+          return {
+            ...project,
+            // @ts-ignore
+            description: data?.description || '',
+            // @ts-ignore
+            stars: data?.stargazers_count || 0,
+            // @ts-ignore
+            forks: data?.forks_count || 0,
+            // @ts-ignore
+            watchers: data?.watchers_count || 0
           }
-        )
-
-        if (!res.ok) throw new Error('Failed to fetch')
-        const data = await res.json()
-        return {
-          ...project,
-          // @ts-ignore
-          description: data?.description || '',
-          // @ts-ignore
-          stars: data?.stargazers_count || 0,
-          // @ts-ignore
-          forks: data?.forks_count || 0,
-          // @ts-ignore
-          watchers: data?.watchers_count || 0
+        } catch {
+          return { ...project, stars: null }
         }
-      } catch {
-        return { ...project, stars: null }
-      }
-    })
-  )
-
-  return [...results]
+      })
+    )
+    await cache?.put('getGithubData', JSON.stringify(results))
+    return [...results]
+  }
+  return cachedData as unknown as Project[]
 }
