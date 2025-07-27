@@ -103,9 +103,7 @@ export async function getGithubData(data: Project[]) {
         )
 
         if (!res.ok) throw new Error('Failed to fetch')
-        console.log(`res:`, res)
         const data = await res.json()
-        console.log(`data:`, data)
         return {
           ...project,
           // @ts-ignore
