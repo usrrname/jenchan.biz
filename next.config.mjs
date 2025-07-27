@@ -1,7 +1,9 @@
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
+import {
+  getDeploymentId,
+  initOpenNextCloudflareForDev
+} from '@opennextjs/cloudflare'
 import { createContentlayerPlugin } from 'next-contentlayer2'
 initOpenNextCloudflareForDev()
-// @ts-check
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
 
@@ -78,6 +80,7 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 const nextConfig = {
   output,
   basePath,
+  deploymentId: getDeploymentId(),
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   eslint: {
