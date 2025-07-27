@@ -56,3 +56,4 @@ yarn-error.log*
 .dev.vars
 .open-next/
 .wrangler/
+tag-data.json
