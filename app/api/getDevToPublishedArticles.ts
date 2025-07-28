@@ -22,10 +22,7 @@ const getDevToPublishedArticles = async () => {
   try {
     const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
       headers: headers,
-      cache: 'force-cache',
-      next: {
-        revalidate: 3600 // stale after 1 hour
-      }
+      cache: 'force-cache'
     })
     if (res?.status !== 200) {
       console.error('🚨 Dev.to API error:', res?.status, res?.statusText)

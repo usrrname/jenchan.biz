@@ -14,10 +14,7 @@ export default async function getWebMentionsPerPost(
   if (!cachedData) {
     const url = siteMetadata.siteUrl
     const res = await env.WORKER_SELF_REFERENCE?.fetch(
-      `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`,
-      {
-        next: { revalidate: 3600 * 24 } // revalidate once a day
-      }
+      `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`
     )
     if (!res?.ok) throw new Error('Failed to fetch')
     const data = await res?.json()

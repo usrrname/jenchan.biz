@@ -104,11 +104,8 @@ export default async function getGithubData(
           {
             headers: {
               Accept: 'application/vnd.github.v3+json',
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
-            },
-            next: {
-              revalidate: 3600, // cache for 1 hour
-              tags: ['github-data']
+              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+              cache: 'force-cache'
             }
           }
         )
