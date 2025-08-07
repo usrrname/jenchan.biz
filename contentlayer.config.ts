@@ -1,7 +1,7 @@
 import {
   ComputedFields,
   defineDocumentType,
-  makeSource,
+  makeSource
 } from 'contentlayer2/source-files'
 import { writeFileSync } from 'fs'
 import { slug } from 'github-slugger'
@@ -13,7 +13,7 @@ import {
   extractTocHeadings,
   remarkCodeTitles,
   remarkExtractFrontmatter,
-  remarkImgToJsx,
+  remarkImgToJsx
 } from 'pliny/mdx-plugins/index.js'
 import remarkGfm from 'remark-gfm'
 import { remarkAlert } from 'remark-github-blockquote-alert'
@@ -47,27 +47,27 @@ const computedFields: ComputedFields = {
   readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
   slug: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
+    resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, '')
   },
   path: {
     type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath,
+    resolve: (doc) => doc._raw.flattenedPath
   },
   filePath: {
     type: 'string',
-    resolve: (doc) => doc._raw.sourceFilePath,
+    resolve: (doc) => doc._raw.sourceFilePath
   },
   toc: {
     type: 'json',
-    resolve: (doc) => extractTocHeadings(doc.body.raw),
+    resolve: (doc) => extractTocHeadings(doc.body.raw)
   },
   series: {
     type: 'string',
     resolve: (doc) => {
       const series = doc._raw.flattenedPath.match(/blog\/series\/(.+?)\//)
       return series ? series[1] : null
-    },
-  },
+    }
+  }
 }
 
 /**
@@ -89,7 +89,7 @@ async function createTagCount(allBlogs) {
     }
   })
   const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), {
-    parser: 'json',
+    parser: 'json'
   })
   writeFileSync('./app/tag-data.json', formatted)
 }
@@ -120,7 +120,7 @@ export const GlossaryDefinition = defineDocumentType(() => ({
     summary: { type: 'string' },
     images: { type: 'json' },
     layout: { type: 'string' },
-    canonicalUrl: { type: 'string' },
+    canonicalUrl: { type: 'string' }
   },
   computedFields: {
     ...computedFields,
@@ -134,10 +134,10 @@ export const GlossaryDefinition = defineDocumentType(() => ({
         dateModified: doc.lastmod || doc.date,
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
-      }),
-    },
-  },
+        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`
+      })
+    }
+  }
 }))
 
 export const Blog = defineDocumentType(() => ({
@@ -156,7 +156,7 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
-    series: { type: 'string' },
+    series: { type: 'string' }
   },
   computedFields: {
     ...computedFields,
@@ -170,10 +170,10 @@ export const Blog = defineDocumentType(() => ({
         dateModified: doc.lastmod || doc?.date,
         description: doc.summary,
         image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
-      }),
-    },
-  },
+        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`
+      })
+    }
+  }
 }))
 
 export const Authors = defineDocumentType(() => ({
@@ -190,9 +190,9 @@ export const Authors = defineDocumentType(() => ({
     bluesky: { type: 'string' },
     linkedin: { type: 'string' },
     github: { type: 'string' },
-    layout: { type: 'string' },
+    layout: { type: 'string' }
   },
-  computedFields,
+  computedFields
 }))
 
 export default makeSource({
@@ -207,7 +207,7 @@ export default makeSource({
       remarkMath,
       remarkImgToJsx,
       remarkAlert,
-      [mdxMermaid, { output: 'svg' }],
+      [mdxMermaid, { output: 'svg' }]
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -216,23 +216,22 @@ export default makeSource({
         {
           behavior: 'prepend',
           headingProperties: {
-            className: ['content-header'],
+            className: ['content-header']
           },
-          content: icon,
-        },
+          content: icon
+        }
       ],
       rehypeKatex,
       rehypeKatexNoTranslate,
       [rehypeCitation, { path: path.join(root, 'data') }],
       [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
-      rehypePresetMinify,
-    ],
+      rehypePresetMinify
+    ]
   },
   onSuccess: async (importData) => {
     'use cache'
-    const { allBlogs, allGlossaryDefinitions } = await importData()
+    const { allBlogs } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
-    createSearchIndex(allGlossaryDefinitions)
-  },
+  }
 })
