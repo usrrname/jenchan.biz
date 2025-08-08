@@ -57,3 +57,4 @@ yarn-error.log*
 .open-next/
 .wrangler/
 tag-data.json
+_draft
