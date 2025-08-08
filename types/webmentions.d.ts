@@ -3,6 +3,7 @@ type WebMentionPostResponse = {
 }
 
 type WebMentionPost = {
+  id: string
   data: WebMentionPostData
   activity: {
     type: 'like' | 'repost' | 'mention' | 'reply' | 'link' | 'bookmark'
@@ -41,4 +42,6 @@ interface WebMentionReplies {
 interface WebMentionReaction {
   author: WebMentionCommentAuthor
   url: URL
+  published?: WebMentionPostData['published']
+  published_ts?: WebMentionPostData['published_ts']
 }

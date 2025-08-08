@@ -41,7 +41,7 @@ export default async function PostLayout({
   prev,
   children
 }: LayoutProps) {
-  const { path, date, title, tags, readingTime, toc, summary } = content
+  const { path, date, title, tags, readingTime, toc, summary, slug } = content
   const basePath = path.split('/')[0]
   const devToArticle = await discussOnDevTo(path)
 
@@ -56,6 +56,7 @@ export default async function PostLayout({
                 <PageTitle>{title}</PageTitle>
               </div>
               <div className="p-summary hidden">{summary}</div>
+              <div className="u-url u-uid hidden">{`${siteMetadata.siteUrl}/blog/${slug}`}</div>
               <div className="flex justify-between">
                 <dl>
                   <dt className="sr-only">Published on</dt>
@@ -103,7 +104,7 @@ export default async function PostLayout({
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0">
                   {authorDetails.map((author) => (
                     <li
-                      className="flex items-center space-x-2"
+                      className="u-author h-card flex items-center space-x-2"
                       key={author.name}
                     >
                       {author.avatar && (
@@ -173,7 +174,7 @@ export default async function PostLayout({
                     <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
                       Tags
                     </h2>
-                    <div className="p-category flex flex-wrap">
+                    <div className="flex flex-wrap">
                       {tags.map((tag) => (
                         <Tag key={tag} text={tag} />
                       ))}

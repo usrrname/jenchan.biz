@@ -1,11 +1,14 @@
 import Image from 'next/image'
 import NextLink from 'next/link'
+import Comment from './Comment'
 type MentionsProps = {
   title: string
   data: WebMentionReplies[] | WebMentionReaction[]
+  /** URL of original post - for replies */
+  url?: string
 }
 
-const WebMentions = ({ title, data }: MentionsProps) => {
+const WebMentions = ({ title, data, url }: MentionsProps) => {
   const isReply = title === 'Replies'
   const isMention = title === 'Mentions'
   const isLike = title === 'Likes'
@@ -45,37 +48,11 @@ const WebMentions = ({ title, data }: MentionsProps) => {
             {/* // Replies and Mentions */}
             <div className="flex flex-col space-y-2">
               {(title === 'Replies' || 'Mentions') && child?.published && (
-                <div className="h-cite flex flex-row">
-                  <div className="items-center space-x-2">
-                    <NextLink
-                      href={child?.url}
-                      target="_blank"
-                      className="h-card u-url"
-                    >
-                      <Image
-                        src={child?.author?.photo}
-                        alt={child?.author?.name}
-                        className="h-12 w-12 rounded-full"
-                      />
-                    </NextLink>
-                  </div>
-                  <NextLink
-                    className="p-author h-card text-sm text-gray-500 dark:text-gray-400"
-                    href={child?.author.url}
-                  >
-                    {child?.author.name}
-                  </NextLink>
-                  <span className="dt-published text-sm text-gray-500 dark:text-gray-400">
-                    <time dateTime={child?.published_ts} />
-                  </span>
-                  <div className="prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: child?.content
-                      }}
-                    ></div>
-                  </div>
-                </div>
+                <Comment
+                  child={child}
+                  url={url}
+                  type={title === 'Replies' ? 'reply' : 'mention'}
+                />
               )}
             </div>
           </>

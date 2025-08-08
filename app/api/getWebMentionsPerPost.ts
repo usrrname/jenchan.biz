@@ -1,6 +1,8 @@
 import { Blog } from '.contentlayer/generated/types'
 import siteMetadata from '@/data/siteMetadata'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export default async function getWebMentionsPerPost(
   post: Blog
@@ -8,26 +10,41 @@ export default async function getWebMentionsPerPost(
   const { env } = await getCloudflareContext({
     async: true
   })
+
+  if (!env.NEXT_INC_CACHE_R2_BUCKET) {
+    console.warn('⚠️ R2 bucket not available, skipping cache')
+    return { links: [] }
+  }
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get(`webmentions-${post.slug}`)
-  console.log('cachedData', cachedData?.text())
-  if (!cachedData) {
-    const url = siteMetadata.siteUrl
-    const res = await env.WORKER_SELF_REFERENCE?.fetch(
-      `https://webmention.io/api/mentions?per-page=200&target=${url}/blog/${post.slug}`
-    )
-    if (!res?.ok) throw new Error('Failed to fetch')
-    const data = await res?.json()
-    console.log('data', data)
-    await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
-    return data as unknown as WebMentionPostResponse
+  if (cachedData) {
+    console.info('🔍 cached webmentions found')
+    const jsonData = await cachedData.json()
+    return jsonData as unknown as WebMentionPostResponse
   }
-  return cachedData as unknown as WebMentionPostResponse
+  const url = siteMetadata.siteUrl
+  const target = `${url}/blog/${post.slug}`
+
+  const res = await env.WORKER_SELF_REFERENCE?.fetch(
+    `https://webmention.io/api/mentions?target=${target}&token=${process.env.NEXT_WEBMENTION_TOKEN}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (!res?.ok) throw new Error('Failed to fetch')
+  const data = await res?.json()
+  console.log('data', data)
+  await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
+  return data as unknown as WebMentionPostResponse
 }
 
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   const { links } = results
-
+  console.log('links', links)
   if (!links?.length) return
 
   const mentions: WebMentionReplies[] = []

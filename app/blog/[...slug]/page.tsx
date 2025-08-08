@@ -215,7 +215,7 @@ export default async function Page(props: {
         <hr className="my-4" />
         {article && (
           <>
-            {article.comments_count > 0 ? (
+            {article.comments_count && article.comments_count > 0 && (
               <>
                 <NextLink
                   href={articleUrl!}
@@ -225,19 +225,25 @@ export default async function Page(props: {
                 </NextLink>
                 {`  •  `}
               </>
-            ) : (
-              void 0
             )}
-            {article.public_reactions_count > 0 ? (
-              <NextLink
-                href={articleUrl!}
-                className="font-bold no-underline hover:bg-yellow-200"
-              >
-                💖🔥🦄 {article.public_reactions_count} reactions
-              </NextLink>
-            ) : null}
+            {article.public_reactions_count &&
+              article.public_reactions_count > 0 && (
+                <NextLink
+                  href={articleUrl!}
+                  className="font-bold no-underline hover:bg-yellow-200"
+                >
+                  💖🔥🦄 {article.public_reactions_count}{' '}
+                  {article.public_reactions_count === 1
+                    ? 'reaction'
+                    : 'reactions'}
+                </NextLink>
+              )}
             &nbsp;on{' '}
-            <NextLink href={articleUrl!} className="no-underline">
+            <NextLink
+              href={articleUrl!}
+              className="no-underline"
+              data-webmention-target={`${siteMetadata.siteUrl}/blog/${post.slug}`}
+            >
               Dev.to
             </NextLink>
           </>
