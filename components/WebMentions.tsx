@@ -47,11 +47,11 @@ const WebMentions = ({ title, data, url }: MentionsProps) => {
             </div>
             {/* // Replies and Mentions */}
             <div className="flex flex-col space-y-2">
-              {(title === 'Replies' || 'Mentions') && child?.published && (
+              {(isReply || isMention) && child?.published && (
                 <Comment
                   child={child}
                   url={url}
-                  type={title === 'Replies' ? 'reply' : 'mention'}
+                  type={isReply ? 'reply' : 'mention'}
                 />
               )}
             </div>
