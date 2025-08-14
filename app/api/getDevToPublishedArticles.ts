@@ -1,10 +1,12 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+// @ts-ignore
+import type { Cloudflare } from '../../types/cloudflare-env'
 
 const getDevToPublishedArticles = async () => {
   'use server'
-  const { env } = await getCloudflareContext({
+  const env = (await getCloudflareContext({
     async: true
-  })
+  })) as unknown as Cloudflare.Env
 
   if (!env.NEXT_INC_CACHE_R2_BUCKET) {
     console.warn('⚠️ R2 bucket not available, skipping cache')
@@ -21,13 +23,13 @@ const getDevToPublishedArticles = async () => {
   if (!cachedData) {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', `${process.env.NEXT_DEVTO_API_KEY}`)
+    headers.append('api-key', `${env.NEXT_DEVTO_API_KEY as string}`)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
 
     try {
       const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
         headers: headers,
-        cache: 'force-cache'
+        cache: 'no-store'
       })
 
       if (res?.status !== 200) {

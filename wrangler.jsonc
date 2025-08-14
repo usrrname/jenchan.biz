@@ -3,6 +3,9 @@
   "name": "jenchan-biz",
   "compatibility_date": "2025-03-25",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "vars": {
+    "NEXT_DEVTO_API_KEY": "NuSF8PLwnzhRxX9YzCSEJRBM"
+  },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",

@@ -23,7 +23,8 @@
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
       "contentlayer/generated": ["./.contentlayer/generated"],
-      "pliny/*": ["node_modules/pliny/*"]
+      "pliny/*": ["node_modules/pliny/*"],
+      "types/*": ["types/*"]
     },
     "plugins": [
       {
