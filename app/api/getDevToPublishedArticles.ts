@@ -16,8 +16,8 @@ const getDevToPublishedArticles = async () => {
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
-    console.info('🔍 cached Dev.to articles found')
     const jsonData = await cachedData.text()
+    console.log(`🔍 cached Dev.to articles found:`, jsonData)
     return JSON.parse(jsonData) as unknown as DevToArticle[]
   }
   if (!cachedData) {
@@ -29,7 +29,7 @@ const getDevToPublishedArticles = async () => {
     try {
       const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
         headers: headers,
-        cache: 'no-store'
+        cache: 'force-cache'
       })
 
       if (res?.status !== 200) {

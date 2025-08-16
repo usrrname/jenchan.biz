@@ -189,7 +189,7 @@ export default async function Page(props: {
     post.layout || defaultLayout
   ] as React.ComponentType<any>
 
-  const { likes, mentions, replies, reposts } = webmentions || {}
+  const { likes, mentions, replies, reposts, links } = webmentions || {}
 
   // Safely handle jsonLd
   const safeJsonLd = jsonLd ? JSON.stringify(jsonLd) : '{}'
@@ -248,14 +248,21 @@ export default async function Page(props: {
             </NextLink>
           </>
         )}
-        {likes && <WebMentions data={likes} title="Likes" type="like" />}
-        {reposts && (
+        {likes && likes.length > 0 && (
+          <WebMentions data={likes} title="Likes" type="like" />
+        )}
+        {links && links.length > 0 && (
+          <WebMentions data={links} title="Links" type="link" />
+        )}
+        {reposts && reposts.length > 0 && (
           <WebMentions data={reposts} title="Reposts" type="repost" />
         )}
-        {mentions && (
+        {mentions && mentions.length > 0 && (
           <WebMentions data={mentions} title="Mentions" type="mention" />
         )}
-        {replies && <WebMentions data={replies} title="Replies" type="reply" />}
+        {replies && replies.length > 0 && (
+          <WebMentions data={replies} title="Replies" type="reply" />
+        )}
       </Layout>
     </>
   )
