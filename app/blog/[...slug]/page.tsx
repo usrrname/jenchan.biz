@@ -248,10 +248,14 @@ export default async function Page(props: {
             </NextLink>
           </>
         )}
-        {likes && <WebMentions data={likes} title="Likes" />}
-        {reposts && <WebMentions data={reposts} title="Reposts" />}
-        {mentions && <WebMentions data={mentions} title="Mentions" />}
-        {replies && <WebMentions data={replies} title="Replies" />}
+        {likes && <WebMentions data={likes} title="Likes" type="like" />}
+        {reposts && (
+          <WebMentions data={reposts} title="Reposts" type="repost" />
+        )}
+        {mentions && (
+          <WebMentions data={mentions} title="Mentions" type="mention" />
+        )}
+        {replies && <WebMentions data={replies} title="Replies" type="reply" />}
       </Layout>
     </>
   )

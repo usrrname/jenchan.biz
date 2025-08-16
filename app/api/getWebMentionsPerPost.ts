@@ -69,15 +69,25 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         })
         break
       case 'repost':
+        if (!content) content = `<a href="${url}" class="repost-of">${url}</a>`
         reposts.push({
           url,
           author
         })
         break
       case 'reply':
+        if (!content)
+          content = `<a href="${url}" class="in-reply-to">${url}</a>`
+        replies.push({
+          author,
+          content,
+          url,
+          published,
+          published_ts
+        })
+        break
       case 'link':
-        if (!content) content = `<a href="${url}">${url}</a>`
-
+        if (!content) content = `<a href="${url}" class="link-of">${url}</a>`
         replies.push({
           author,
           content,
@@ -87,6 +97,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         })
         break
       case 'mention':
+        if (!content) content = `<a href="${url}" class="mention-of">${url}</a>`
         mentions.push({
           author,
           content,
@@ -104,5 +115,5 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     )
   }
 
-  return { likes, mentions, replies, reposts }
+  return { likes, mentions, replies, reposts, links }
 }
