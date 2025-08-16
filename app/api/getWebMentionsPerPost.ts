@@ -37,14 +37,13 @@ export default async function getWebMentionsPerPost(
 
   if (!res?.ok) throw new Error('Failed to fetch')
   const data = await res?.json()
-  console.log('data', data)
   await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data))
   return data as unknown as WebMentionPostResponse
 }
 
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   const { links } = results
-  console.log('links', links)
+
   if (!links?.length) return
 
   const mentions: WebMentionReplies[] = []
@@ -77,17 +76,8 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         break
       case 'reply':
         if (!content)
-          content = `<a href="${url}" class="in-reply-to">${url}</a>`
-        replies.push({
-          author,
-          content,
-          url,
-          published,
-          published_ts
-        })
-        break
-      case 'link':
-        if (!content) content = `<a href="${url}" class="link-of">${url}</a>`
+          content = `<a href="${url}" class="${activity.type}-of">${url}</a>`
+
         replies.push({
           author,
           content,
@@ -97,7 +87,9 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         })
         break
       case 'mention':
-        if (!content) content = `<a href="${url}" class="mention-of">${url}</a>`
+      case 'link':
+        if (!content)
+          content = `<a href="${url}" class="${activity.type}-of">${url}</a>`
         mentions.push({
           author,
           content,
@@ -115,5 +107,5 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     )
   }
 
-  return { likes, mentions, replies, reposts, links }
+  return { likes, mentions, replies, reposts }
 }
