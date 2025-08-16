@@ -99,7 +99,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'webmention.io'
+        hostname: '*.webmention.io'
       },
       {
         protocol: 'https',
@@ -108,6 +108,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.cloudflare.com'
+      },
+      {
+        protocol: 'https',
+        hostname: '*.mstdn.party'
       }
     ],
     unoptimized
