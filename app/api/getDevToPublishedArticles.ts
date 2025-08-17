@@ -4,6 +4,7 @@ import type { Cloudflare } from '../../types/cloudflare-env'
 
 const getDevToPublishedArticles = async () => {
   'use server'
+
   const env = (await getCloudflareContext({
     async: true
   })) as unknown as Cloudflare.Env
@@ -13,7 +14,7 @@ const getDevToPublishedArticles = async () => {
     return []
   }
 
-  const cache = env.NEXT_INC_CACHE_R2_BUCKET
+  const cache = await env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
     const jsonData = await cachedData.json()
@@ -36,6 +37,7 @@ const getDevToPublishedArticles = async () => {
         console.error('🚨 Dev.to API error:', res?.status, res?.statusText)
       }
       const data = await res?.json()
+      console.log('🔍 data', data)
       await cache?.put('devto-articles', JSON.stringify(data), {
         httpMetadata: {
           cacheExpiry: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days
