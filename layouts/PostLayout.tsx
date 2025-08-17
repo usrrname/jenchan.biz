@@ -154,8 +154,9 @@ export default async function PostLayout({
               <div className="prose dark:prose-invert e-content max-w-none pt-10 pb-8">
                 {children}
               </div>
-              <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
-                {devToArticle && (
+
+              {devToArticle && (
+                <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                   <Link
                     href={devToArticle}
                     rel="nofollow"
@@ -164,8 +165,8 @@ export default async function PostLayout({
                   >
                     Discuss on Dev.to
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
             </div>
             <footer>
               <div className="divide-gray-200 text-sm leading-5 font-medium xl:col-start-1 xl:row-start-2 xl:divide-y dark:divide-gray-700">

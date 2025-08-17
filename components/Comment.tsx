@@ -32,7 +32,7 @@ const Comment = ({ child, type }: CommentProps) => {
         </span>
       )}
       {/* @ts-ignore */}
-      {type === 'reply' && child?.content && (
+      {(type === 'reply' || type === 'mention') && child?.content && (
         <div className="prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
           <div
             dangerouslySetInnerHTML={{

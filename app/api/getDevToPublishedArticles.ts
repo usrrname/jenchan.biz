@@ -16,9 +16,9 @@ const getDevToPublishedArticles = async () => {
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
-    const jsonData = await cachedData.text()
+    const jsonData = await cachedData.json()
     console.log(`🔍 cached Dev.to articles found:`, jsonData)
-    return JSON.parse(jsonData) as unknown as DevToArticle[]
+    return jsonData as unknown as DevToArticle[]
   }
   if (!cachedData) {
     const endpoint = `https://dev.to/api/articles/me/published`

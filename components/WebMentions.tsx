@@ -18,11 +18,11 @@ const WebMentionAvatarRow = ({
 }) => {
   return (
     <>
-      <div className="flex flex-row">
+      <div className="flex flex-row items-start space-x-2">
         {data?.map((child, index) => (
           <span key={index}>
             {/* Likes and Reposts */}
-            <div className={`space-x-2 ${className}`}>
+            <div className={`${className}`}>
               <NextLink
                 href={child?.url}
                 target="_blank"
@@ -62,7 +62,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
   return (
     <>
       <section className="w-auto">
-        <p className="text-left font-bold">{title}</p>
+        <p className="my-0 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
         {(isLike || isRepost) && (
           <WebMentionAvatarRow data={data} className={computedClass} />
@@ -70,10 +70,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
 
         {/* // Replies and Mentions */}
         {data?.map((child, index) => (
-          <div
-            key={index}
-            className={`flex flex-col space-y-2 ${computedClass}`}
-          >
+          <div key={index} className={`flex flex-col ${computedClass}`}>
             {(isReply || isMention) && child?.published && (
               <Comment
                 child={child}
