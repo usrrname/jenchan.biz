@@ -20,21 +20,18 @@ const WebMentionAvatarRow = ({
     <>
       <div className="flex flex-row items-start space-x-2">
         {data?.map((child, index) => (
-          <span key={index}>
-            {/* Likes and Reposts */}
-            <div className={`${className}`}>
-              <NextLink
-                href={child?.url}
-                target="_blank"
-                className="h-card u-url"
-              >
-                <Image
-                  src={child?.author?.photo}
-                  alt={child?.author?.name}
-                  className="h-12 w-12 rounded-full"
-                />
-              </NextLink>
-            </div>
+          <span className={`${className} my-0`} key={index}>
+            <NextLink
+              href={child?.url}
+              target="_blank"
+              className="h-card u-url"
+            >
+              <Image
+                src={child?.author?.photo}
+                alt={child?.author?.name}
+                className="h-12 w-12 rounded-full"
+              />
+            </NextLink>
           </span>
         ))}
       </div>
@@ -62,7 +59,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
   return (
     <>
       <section className="w-auto">
-        <p className="my-0 text-left font-bold">{title}</p>
+        <p className="!my-0 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
         {(isLike || isRepost) && (
           <WebMentionAvatarRow data={data} className={computedClass} />
