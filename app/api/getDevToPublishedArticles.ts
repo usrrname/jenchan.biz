@@ -9,11 +9,6 @@ const getDevToPublishedArticles = async () => {
     async: true
   })) as unknown as Cloudflare.Env
 
-  if (!env.NEXT_INC_CACHE_R2_BUCKET) {
-    console.warn('⚠️ R2 bucket not available, skipping cache')
-    return []
-  }
-
   const cache = await env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
