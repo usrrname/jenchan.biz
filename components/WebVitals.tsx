@@ -5,7 +5,7 @@ type ReportWebVitalsCallback = Parameters<typeof useReportWebVitals>[0]
 
 const logWebVitals: ReportWebVitalsCallback = (metric) => {
   const body = JSON.stringify(metric)
-  const url = `https://www.google-analytics.com/collect?v=2&t=event&tid=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}&cid=555&en=page_view&ds=web&dp=/${window.location.pathname}&dt=${window.document.title}&uip=${window.location.hostname}`
+  const url = `https://www.google-analytics.com/collect?v=2&t=event&tid=${process.env.NEXT_GOOGLE_ANALYTICS_ID}&cid=555&en=page_view&ds=web&dp=/${window.location.pathname}&dt=${window.document.title}&uip=${window.location.hostname}`
 
   // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
   if (navigator.sendBeacon) {
