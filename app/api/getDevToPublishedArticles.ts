@@ -27,10 +27,7 @@ const getDevToPublishedArticles = async () => {
 
     try {
       const res = await context.env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
-        headers: {
-          'api-key': context.env.NEXT_DEVTO_API_KEY,
-          accept: 'application/vnd.forem.api-v1+json'
-        }
+        headers
       })
 
       if (res?.status !== 200) {
