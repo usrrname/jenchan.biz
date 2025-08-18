@@ -1,9 +1,12 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 // @ts-ignore
+import type { Cloudflare } from '../../types/cloudflare-env'
 
 const getArticleById = async (id: number) => {
   'use server'
-  const context = await getCloudflareContext({ async: true })
+  const context = (await getCloudflareContext({
+    async: true
+  })) as unknown as Cloudflare.Env
   const endpoint = `https://dev.to/api/articles/${id}`
   const headers = new Headers()
   headers.append('api-key', `${context.env?.NEXT_DEVTO_API_KEY as string}`)

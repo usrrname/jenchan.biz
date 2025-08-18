@@ -23,6 +23,8 @@ const getDevToPublishedArticles = async () => {
     return jsonData as unknown as DevToArticle[]
   }
   if (!cachedData) {
+    console.info(`no cached Dev.to articles found, fetching...`)
+
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
     headers.append('api-key', context.env.NEXT_DEVTO_API_KEY)
@@ -37,7 +39,7 @@ const getDevToPublishedArticles = async () => {
         console.error('🚨 Dev.to API error:', res?.status, res?.statusText)
         return
       }
-      const data = await res?.json()
+      const data = res.json()
       console.log('🔍 response data', data)
       // don't store any errors
       if (res.error) return
