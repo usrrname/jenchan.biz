@@ -16,8 +16,8 @@ async function findDevToArticleByCanonicalUrl(
           id: article.id,
           path: article.path,
           url: article.url,
-          positive_reaction_count: article.positive_reactions_count,
-          public_reaction_count: article.public_reactions_count,
+          positive_reactions_count: article.positive_reactions_count,
+          public_reactions_count: article.public_reactions_count,
           comments_count: article.comments_count
         })
       }
