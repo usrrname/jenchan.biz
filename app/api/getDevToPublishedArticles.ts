@@ -16,6 +16,10 @@ const getDevToPublishedArticles = async () => {
   })) as unknown as CloudflareEnv
 
   const cache = await env.NEXT_INC_CACHE_R2_BUCKET
+  if (cache.get('incremental-cache/devto-articles') !== null) {
+    console.log(`R2 cache exists`)
+    return
+  }
 
   try {
     const endpoint = `https://dev.to/api/articles/me/published`
@@ -34,7 +38,6 @@ const getDevToPublishedArticles = async () => {
       return console.error('🚨 Dev.to API error:', res?.status, res?.statusText)
     }
     const data = await res.json()
-    console.log('🔍 response data', data)
 
     // Early return: don't store any errors
     if (data.error || res.error) return
