@@ -1,6 +1,6 @@
-import { getCloudflareContext } from '@opennextjs/cloudflare'
-import dotenv from 'dotenv' // @ts-ignore
-import type { CloudflareEnv } from '../../types/cloudflare-env'
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import dotenv from 'dotenv'; // @ts-ignore
+import type { CloudflareEnv } from '../../types/cloudflare-env';
 dotenv.config()
 
 /**
@@ -16,9 +16,10 @@ const getDevToPublishedArticles = async () => {
   })) as unknown as CloudflareEnv
 
   const cache = await env.NEXT_INC_CACHE_R2_BUCKET
-  if (cache.get('incremental-cache/devto-articles') !== null) {
-    console.log(`R2 cache exists`)
-    return
+  const cachedResults = await cache.get('incremental-cache/devto-articles')
+  if (cachedResults !== null) {
+    console.log(`[getDevToPublishedArticles]: R2 cache exists`)
+    return cachedResults as R2ObjectBody
   }
 
   try {
