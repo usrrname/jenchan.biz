@@ -1,13 +1,13 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 // @ts-ignore
-import type { Cloudflare } from '../../types/cloudflare-env'
+import type { CloudflareEnv } from '../../types/cloudflare-env'
 
 const getDevToPublishedArticles = async () => {
   'use server'
 
   const context = (await getCloudflareContext({
     async: true
-  })) as unknown as Cloudflare.Env
+  })) as unknown as CloudflareEnv
 
   const cache = await context.env.NEXT_INC_CACHE_R2_BUCKET
 
@@ -16,7 +16,10 @@ const getDevToPublishedArticles = async () => {
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
     const jsonData = await cachedData.json()
-    console.info(`🔍 cached Dev.to articles found:`, jsonData)
+    console.info(
+      `🔍 getDevToPublishedArticles: cached Dev.to articles found:`,
+      jsonData
+    )
     if (jsonData.error) {
       cache.delete('devto-articles')
     }
