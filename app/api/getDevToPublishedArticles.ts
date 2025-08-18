@@ -18,7 +18,8 @@ const getDevToPublishedArticles = async () => {
     headers.append('accept', 'application/vnd.forem.api-v1+json')
 
     const res = await context.env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
-      headers
+      headers,
+      method: 'GET'
     })
 
     if (res?.status !== 200) {
@@ -26,9 +27,11 @@ const getDevToPublishedArticles = async () => {
       return
     }
     const data = await res.json()
+
+    // Early return: don't store any errors
+    if (data.error || res.error) return
+
     console.log('🔍 response data', data)
-    // don't store any errors
-    if (res.error) return
 
     await cache?.put('incremental-cache/devto-articles', JSON.stringify(data), {
       httpMetadata: {
