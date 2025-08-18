@@ -10,7 +10,7 @@ async function publishArticle(article: Blog) {
     env: Cloudflare.Env
   }
   const { env } = context as unknown as Cloudflare.Env
-  console.log(env)
+
   const headers = new Headers()
   headers.append('api-key', `${env.NEXT_DEVTO_API_KEY}`)
   headers.append('content-type', 'application/json')

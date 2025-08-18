@@ -5,27 +5,32 @@ import type { Cloudflare } from '../../types/cloudflare-env'
 const getDevToPublishedArticles = async () => {
   'use server'
 
-  const env = (await getCloudflareContext({
+  const context = (await getCloudflareContext({
     async: true
   })) as unknown as Cloudflare.Env
 
-  const cache = await env.NEXT_INC_CACHE_R2_BUCKET
+  const cache = await context.env.NEXT_INC_CACHE_R2_BUCKET
+
+  if (cache) console.log(`cache exists for R2`)
 
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
     const jsonData = await cachedData.json()
-    console.log(`🔍 cached Dev.to articles found:`, jsonData)
+    console.info(`🔍 cached Dev.to articles found:`, jsonData)
     return jsonData as unknown as DevToArticle[]
   }
   if (!cachedData) {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', env.NEXT_DEVTO_API_KEY)
+    headers.append('api-key', context.env.NEXT_DEVTO_API_KEY)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
 
     try {
-      const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
-        headers: headers
+      const res = await context.env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
+        headers: {
+          'api-key': context.env.NEXT_DEVTO_API_KEY,
+          accept: 'application/vnd.forem.api-v1+json'
+        }
       })
 
       if (res?.status !== 200) {

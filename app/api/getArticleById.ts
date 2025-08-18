@@ -13,7 +13,7 @@ const getArticleById = async (id: number) => {
   headers.append('api-key', `${env.NEXT_DEVTO_API_KEY as string}`)
   headers.append('accept', 'application/vnd.forem.api-v1+json')
   try {
-    const res = await fetch(endpoint, {
+    const res = await env.WORKER_SELF_REFERENCE.fetch(endpoint, {
       headers: headers,
       cache: 'force-cache'
     })
