@@ -29,6 +29,7 @@ import rehypeKatexNoTranslate from 'rehype-katex-notranslate'
 import rehypePresetMinify from 'rehype-preset-minify'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
+import getDevToPublishedArticles from './app/api/getDevToPublishedArticles'
 import siteMetadata from './data/siteMetadata'
 const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -233,5 +234,6 @@ export default makeSource({
     const { allBlogs } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
+    await getDevToPublishedArticles()
   }
 })

@@ -1,15 +1,24 @@
-import getDevToPublishedArticles from './getDevToPublishedArticles'
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 async function findDevToArticleByCanonicalUrl(
   slug: string
 ): Promise<DevToArticleStats | undefined> {
   'use server'
 
+  const context = await getCloudflareContext({
+    async: true
+  })
   const collection = new Set()
   try {
-    const data = await getDevToPublishedArticles()
-    console.log('findArticleByCanonicalUrl:', data)
-    if (!data || !Array.isArray(data)) return undefined
+    const R2Cache = context.env.NEXT_INC_CACHE_R2_BUCKET
+    const cachedResults = await R2Cache?.get('incremental-cache/devto-articles')
+    const data: DevToArticle[] | undefined = await cachedResults?.json()
+
+    if (!data) {
+      console.info('No published devto articles found in R2 cache :(')
+      return
+    }
+
     data.find((article: DevToArticle) => {
       if (article.canonical_url?.includes(slug)) {
         collection.add({
@@ -24,7 +33,10 @@ async function findDevToArticleByCanonicalUrl(
     })
     return [...collection][0] as DevToArticleStats
   } catch (error) {
-    console.error(`Dev.to API error: unable to find article for ${slug}`, error)
+    console.error(
+      `findDevToArticleByCanonicalUrl: unable to find article for ${slug}`,
+      error
+    )
     // Return undefined instead of throwing - this allows the build to continue
     return undefined
   }
