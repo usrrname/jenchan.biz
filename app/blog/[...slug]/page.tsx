@@ -132,9 +132,7 @@ async function getBlogPostData(
   }))
 
   const devToArticle = await findDevToArticleByCanonicalUrl(post?.slug)
-  const webmentionsForPost = !devToArticle
-    ? await getWebMentionsPerPost(post)
-    : undefined
+  const webmentionsForPost = await getWebMentionsPerPost(post)
   const results = webmentionsForPost
     ? parseWebMentionResults(webmentionsForPost)
     : undefined

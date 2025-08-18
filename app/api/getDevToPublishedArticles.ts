@@ -17,6 +17,9 @@ const getDevToPublishedArticles = async () => {
   if (cachedData) {
     const jsonData = await cachedData.json()
     console.info(`🔍 cached Dev.to articles found:`, jsonData)
+    if (jsonData.error) {
+      cache.delete('devto-articles')
+    }
     return jsonData as unknown as DevToArticle[]
   }
   if (!cachedData) {
@@ -32,14 +35,22 @@ const getDevToPublishedArticles = async () => {
 
       if (res?.status !== 200) {
         console.error('🚨 Dev.to API error:', res?.status, res?.statusText)
+        return
       }
       const data = await res?.json()
-      console.log('🔍 data', data)
-      await cache?.put('devto-articles', JSON.stringify(data), {
-        httpMetadata: {
-          cacheExpiry: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days
+      console.log('🔍 response data', data)
+      // don't store any errors
+      if (res.error) return
+
+      await cache?.put(
+        'incremental-cache/devto-articles',
+        JSON.stringify(data),
+        {
+          httpMetadata: {
+            cacheExpiry: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days
+          }
         }
-      })
+      )
       return data as unknown as DevToArticle[]
     } catch (error) {
       if (error instanceof Error) {

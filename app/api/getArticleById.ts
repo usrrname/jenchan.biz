@@ -1,19 +1,15 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 // @ts-ignore
-import type { Cloudflare } from '../../types/cloudflare-env'
 
 const getArticleById = async (id: number) => {
   'use server'
-  const context = (await getCloudflareContext({ async: true })) as {
-    env: CloudflareEnv
-  }
-  const { ...env } = context as unknown as Cloudflare.Env
+  const context = await getCloudflareContext({ async: true })
   const endpoint = `https://dev.to/api/articles/${id}`
   const headers = new Headers()
-  headers.append('api-key', `${env.NEXT_DEVTO_API_KEY as string}`)
+  headers.append('api-key', `${context.env?.NEXT_DEVTO_API_KEY as string}`)
   headers.append('accept', 'application/vnd.forem.api-v1+json')
   try {
-    const res = await env.WORKER_SELF_REFERENCE.fetch(endpoint, {
+    const res = await context?.env?.WORKER_SELF_REFERENCE.fetch(endpoint, {
       headers: headers,
       cache: 'force-cache'
     })
