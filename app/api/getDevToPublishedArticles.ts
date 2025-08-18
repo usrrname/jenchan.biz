@@ -10,6 +10,7 @@ const getDevToPublishedArticles = async () => {
   })) as unknown as Cloudflare.Env
 
   const cache = await env.NEXT_INC_CACHE_R2_BUCKET
+
   const cachedData = await cache?.get('devto-articles')
   if (cachedData) {
     const jsonData = await cachedData.json()
@@ -19,13 +20,12 @@ const getDevToPublishedArticles = async () => {
   if (!cachedData) {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', `${env.NEXT_DEVTO_API_KEY as string}`)
+    headers.append('api-key', env.NEXT_DEVTO_API_KEY)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
 
     try {
       const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
-        headers: headers,
-        cache: 'force-cache'
+        headers: headers
       })
 
       if (res?.status !== 200) {

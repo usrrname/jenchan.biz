@@ -4,8 +4,7 @@
   name = "jenchan-biz"
   compatibility_date = "2025-03-25"
   compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
-  [vars]
-  NEXT_DEVTO_API_KEY = "NuSF8PLwnzhRxX9YzCSEJRBM"
+
   [assets]
   directory = ".open-next/assets"
   binding = "ASSETS"
@@ -17,7 +16,6 @@
   [observability]
   enabled = true
   
-  [env.preview]
-
+  [env.development]
   [r2_buckets]
   NEXT_INC_CACHE_R2_BUCKET=jen-preview-bucket
