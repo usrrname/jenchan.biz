@@ -1,12 +1,15 @@
 'use client'
 import {
-  Menu, MenuButton,
+  Menu,
+  MenuButton,
   MenuItem,
   MenuItems,
-  Radio, RadioGroup, Transition
-} from '@headlessui/react';
-import { useTheme } from 'next-themes';
-import { Fragment, useEffect, useState } from 'react';
+  Radio,
+  RadioGroup,
+  Transition
+} from '@headlessui/react'
+import { useTheme } from 'next-themes'
+import { Fragment, useEffect, useState } from 'react'
 
 const Sun = () => (
   <svg
@@ -41,7 +44,14 @@ const Rave = () => (
     height="24"
     fill="currentColor"
   >
-    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+    <circle
+      cx="12"
+      cy="12"
+      r="10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
     <circle cx="8" cy="15" r="2" />
     <circle cx="16" cy="15" r="2" />
     <path
@@ -53,7 +63,6 @@ const Rave = () => (
     />
   </svg>
 )
-
 
 const Monitor = () => (
   <svg
@@ -80,7 +89,6 @@ const ThemeSwitch = () => {
   // When mounted on client, now we can show the UI
   useEffect(() => {
     setMounted(true)
-
   }, [theme])
 
   const getThemeIcon = () => {
@@ -100,9 +108,7 @@ const ThemeSwitch = () => {
     <div className="flex items-center">
       <Menu as="div" className="relative inline-block text-left">
         <div className="hover:text-primary-500 dark:hover:text-primary-400 rave:hover:text-primary-500 flex items-center justify-center">
-          <MenuButton aria-label="Theme switcher">
-            {getThemeIcon()}
-          </MenuButton>
+          <MenuButton aria-label="Theme switcher">{getThemeIcon()}</MenuButton>
         </div>
         <Transition
           as={Fragment}
@@ -113,7 +119,10 @@ const ThemeSwitch = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <MenuItems className="ring-opacity-5 absolute right-0 z-50 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white ring-1 shadow-lg ring-black focus:outline-hidden dark:bg-gray-800">
+          <MenuItems
+            className="ring-opacity-5 absolute right-0 z-50 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-hidden dark:bg-gray-800"
+            anchor="bottom end"
+          >
             <RadioGroup value={theme} onChange={setTheme}>
               <div className="p-1">
                 <Radio value="light">
