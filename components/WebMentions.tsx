@@ -18,7 +18,7 @@ const WebMentionAvatarRow = ({
 }) => {
   return (
     <>
-      <div className="flex flex-row items-start space-x-2">
+      <div className="flex flex-row space-x-2">
         {data?.map((child, index) => (
           <span className={`${className} my-0`} key={index}>
             <NextLink
@@ -29,7 +29,7 @@ const WebMentionAvatarRow = ({
               <Image
                 src={child?.author?.photo}
                 alt={child?.author?.name}
-                className="h-12 w-12 rounded-full"
+                className="!my-0 h-12 w-12 rounded-full"
               />
             </NextLink>
           </span>
@@ -58,7 +58,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
 
   return (
     <>
-      <section className="w-auto">
+      <section className="flex w-auto flex-col">
         <p className="!my-0 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
         {(isLike || isRepost) && (

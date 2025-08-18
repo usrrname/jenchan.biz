@@ -239,25 +239,27 @@ export default async function Page(props: {
             &nbsp;on{' '}
             <NextLink
               href={articleUrl!}
-              className="no-underline"
+              className="u-syndication no-underline"
               data-webmention-target={`${siteMetadata.siteUrl}/blog/${post.slug}`}
             >
               Dev.to
             </NextLink>
           </>
         )}
-        {likes && likes.length > 0 && (
-          <WebMentions data={likes} title="Likes" type="like" />
-        )}
-        {reposts && reposts.length > 0 && (
-          <WebMentions data={reposts} title="Reposts" type="repost" />
-        )}
-        {mentions && mentions.length > 0 && (
-          <WebMentions data={mentions} title="Mentions" type="mention" />
-        )}
-        {replies && replies.length > 0 && (
-          <WebMentions data={replies} title="Replies" type="reply" />
-        )}
+        <div className="mt-3">
+          {likes && likes.length > 0 && (
+            <WebMentions data={likes} title="Likes" type="like" />
+          )}
+          {reposts && reposts.length > 0 && (
+            <WebMentions data={reposts} title="Reposts" type="repost" />
+          )}
+          {mentions && mentions.length > 0 && (
+            <WebMentions data={mentions} title="Mentions" type="mention" />
+          )}
+          {replies && replies.length > 0 && (
+            <WebMentions data={replies} title="Replies" type="reply" />
+          )}
+        </div>
       </Layout>
     </>
   )
