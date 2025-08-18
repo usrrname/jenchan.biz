@@ -1,9 +1,13 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
-// @ts-ignore
-import dotenv from 'dotenv'
+import dotenv from 'dotenv' // @ts-ignore
 import type { CloudflareEnv } from '../../types/cloudflare-env'
 dotenv.config()
 
+/**
+ * Fetches all published articles
+ * uses @link https://developers.forem.com/api/v1#tag/articles/operation/getUserPublishedArticles
+ * @returns Promise<void>
+ */
 const getDevToPublishedArticles = async () => {
   'use server'
 
