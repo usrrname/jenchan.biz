@@ -35,7 +35,6 @@ export default async function PostLayout({
 }: LayoutProps) {
   const { path, date, title, tags, readingTime, toc, summary, slug } = content
   const basePath = path.split('/')[0]
-  const devToArticle = await discussOnDevTo(path)
 
   return (
     <SectionContainer>
