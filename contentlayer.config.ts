@@ -32,7 +32,7 @@ import rehypeSlug from 'rehype-slug'
 import getDevToPublishedArticles from './app/api/getDevToPublishedArticles'
 import siteMetadata from './data/siteMetadata'
 const root = process.cwd()
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NEXTJS_ENV === 'production'
 
 // heroicon mini link
 const icon = fromHtmlIsomorphic(

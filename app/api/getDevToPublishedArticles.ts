@@ -20,7 +20,7 @@ const getDevToPublishedArticles = async () => {
   try {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', env.NEXT_DEVTO_API_KEY)
+    headers.append('api-key', `${process.env.NEXT_DEVTO_API_KEY}`)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
     headers.append('Content-Type', 'application/json')
 

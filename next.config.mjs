@@ -12,7 +12,7 @@ const withContentlayer = createContentlayerPlugin({
   configPath: './contentlayer.config.ts'
 })
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NEXTJS_ENV === 'development') {
   await initOpenNextCloudflareForDev()
 }
 
