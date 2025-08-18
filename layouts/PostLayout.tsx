@@ -6,18 +6,10 @@ import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import SectionContainer from '@/components/SectionContainer'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
 import type { Authors, Blog } from 'contentlayer/generated'
 import TOCInline from 'pliny/ui/TOCInline'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import { ReactNode } from 'react'
-
-const discussOnDevTo = async (path) => {
-  const result = await findDevToArticleByCanonicalUrl(
-    `${path.split('blog/')[1]}`
-  )
-  return result?.url
-}
 
 const postDateTemplate: Intl.DateTimeFormatOptions = {
   weekday: 'long',
@@ -154,19 +146,6 @@ export default async function PostLayout({
               <div className="prose dark:prose-invert e-content max-w-none pt-10 pb-8">
                 {children}
               </div>
-
-              {devToArticle && (
-                <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
-                  <Link
-                    href={devToArticle}
-                    rel="nofollow"
-                    key={path}
-                    className="u-syndication"
-                  >
-                    Discuss on Dev.to
-                  </Link>
-                </div>
-              )}
             </div>
             <footer>
               <div className="divide-gray-200 text-sm leading-5 font-medium xl:col-start-1 xl:row-start-2 xl:divide-y dark:divide-gray-700">
