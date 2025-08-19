@@ -13,7 +13,7 @@ async function findDevToArticleByCanonicalUrl(
     const R2Cache = context.env.NEXT_INC_CACHE_R2_BUCKET
     const cachedResults = await R2Cache?.get('incremental-cache/devto-articles')
     const data: DevToArticle[] | undefined = await cachedResults?.json()
-
+    console.log('[findArticleByCanonicalUrl]: cached devTo articles', data)
     if (!data) {
       console.info('No published devto articles found in R2 cache :(')
       return
@@ -37,7 +37,6 @@ async function findDevToArticleByCanonicalUrl(
       `findDevToArticleByCanonicalUrl: unable to find article for ${slug}`,
       error
     )
-    // Return undefined instead of throwing - this allows the build to continue
     return undefined
   }
 }
