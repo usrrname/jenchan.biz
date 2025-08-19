@@ -1,6 +1,5 @@
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import { createContentlayerPlugin } from 'next-contentlayer2'
-initOpenNextCloudflareForDev()
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
 
@@ -90,10 +89,8 @@ const nextConfig = {
     }
   },
   images: {
-    unoptimized: true,
-    loader: 'default',
-    domains: [],
-    remotePatterns: [],
+    loader: 'custom',
+    loaderFile: './scripts/image-loader.ts',
     minimumCacheTTL: 0,
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
