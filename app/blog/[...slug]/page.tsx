@@ -94,6 +94,9 @@ export async function generateMetadata(props: {
       images: ogImages,
       authors: authors
     },
+    alternates: {
+      canonical: `${siteMetadata.siteUrl}/blog/${slug}`
+    },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
@@ -228,13 +231,13 @@ export default async function Page(props: {
                   href={articleUrl!}
                   className="font-bold no-underline hover:bg-yellow-200"
                 >
-                  💖🔥🦄 {article.public_reactions_count}{' '}
+                  💖🔥🦄 {article.public_reactions_count}&nbsp;
                   {article.public_reactions_count === 1
                     ? 'reaction'
                     : 'reactions'}
                 </NextLink>
               )}
-            &nbsp;on{' '}
+            &nbsp;on&nbsp;
             <NextLink
               href={articleUrl!}
               className="u-syndication no-underline"
@@ -244,7 +247,7 @@ export default async function Page(props: {
             </NextLink>
           </>
         )}
-        <div className="mt-3">
+        <div className="mt-3 space-y-2">
           {likes && likes.length > 0 && (
             <WebMentions data={likes} title="Likes" type="like" />
           )}
