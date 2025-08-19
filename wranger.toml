@@ -16,6 +16,6 @@
   [observability]
   enabled = true
   
-  [env.development]
+  [env.develop]
   [r2_buckets]
   NEXT_INC_CACHE_R2_BUCKET=jen-preview-bucket

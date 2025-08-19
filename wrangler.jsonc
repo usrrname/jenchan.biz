@@ -24,6 +24,7 @@
       "preview_bucket_name": "jen-preview-bucket"
     }
   ],
+
   "env": {
     "development": {
       "r2_buckets": [
