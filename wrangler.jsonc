@@ -2,7 +2,10 @@
   "main": ".open-next/worker.js",
   "name": "jenchan-biz",
   "compatibility_date": "2025-03-25",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": [
+    "nodejs_compat",
+    "assets_navigation_prefers_asset_serving"
+  ],
   "minify": false,
   "services": [
     {
