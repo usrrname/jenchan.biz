@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: __dirname
 })
 
 // @ts-check
@@ -27,7 +27,8 @@ const config = [
       'public',
       'wrangler.toml',
       'wrangler.jsonc',
-    ],
+      '.open-next'
+    ]
   },
   js.configs.recommended,
   ...compat.extends(
@@ -39,14 +40,14 @@ const config = [
   ),
   {
     plugins: {
-      '@typescript-eslint': typescriptEslint,
+      '@typescript-eslint': typescriptEslint
     },
 
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.amd,
-        ...globals.node,
+        ...globals.node
       },
 
       parser: tsParser,
@@ -55,8 +56,8 @@ const config = [
 
       parserOptions: {
         project: true,
-        tsconfigRootDir: __dirname,
-      },
+        tsconfigRootDir: __dirname
+      }
     },
 
     rules: {
@@ -70,17 +71,17 @@ const config = [
         {
           components: ['Link'],
           specialLink: ['hrefLeft', 'hrefRight'],
-          aspects: ['invalidHref', 'preferButton'],
-        },
+          aspects: ['invalidHref', 'preferButton']
+        }
       ],
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'react/no-unescaped-entities': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-var-requires': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-    },
-  },
+      '@typescript-eslint/ban-ts-comment': 'off'
+    }
+  }
 ]
 
 export default config
