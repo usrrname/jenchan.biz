@@ -78,8 +78,16 @@ const nextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  serverActions: {
-    allowedOrigins: ['webmention.io', 'dev.to', 'github.com', 'cloudflare.com']
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'webmention.io',
+        'dev.to',
+        'github.com',
+        'cloudflare.com',
+        'cloudflareinsights.com'
+      ]
+    }
   },
   images: {
     unoptimized: true,
@@ -111,6 +119,11 @@ const nextConfig = {
         hostname: '*.mstdn.party'
       }
     ]
+  },
+  logging: {
+    fetches: {
+      fullUrl: true
+    }
   },
   async headers() {
     return [

@@ -59,7 +59,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
   return (
     <>
       <section className="flex w-auto flex-col">
-        <p className="!my-0 text-left font-bold">{title}</p>
+        <p className="!my-2 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
         {(isLike || isRepost) && (
           <WebMentionAvatarRow data={data} className={computedClass} />

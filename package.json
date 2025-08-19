@@ -14,7 +14,8 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
-    "typegen": "wrangler types --env-interface CloudflareEnv ./types/cloudflare-env.d.ts"
+    "typegen": "wrangler types --env-interface CloudflareEnv ./types/cloudflare-env.d.ts",
+    "clean": "rm -rf .open-next .next"
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",
