@@ -2,19 +2,17 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 // @ts-ignore
 import type { CloudflareEnv } from '../../types/cloudflare-env'
 
-export const runtime = 'edge'
-
 /**
  * Fetches all published articles
  * uses @link https://developers.forem.com/api/v1#tag/articles/operation/getUserPublishedArticles
  * @returns Promise<void>
  */
 const getDevToPublishedArticles = async () => {
-  const { env } = (await getCloudflareContext({
+  const context = (await getCloudflareContext({
     async: true
   })) as unknown as CloudflareEnv
 
-  const cache = await env.NEXT_INC_CACHE_R2_BUCKET
+  const cache = await context.env.NEXT_INC_CACHE_R2_BUCKET
   const cachedResults = await cache.get('incremental-cache/devto-articles')
   if (cachedResults !== null) {
     console.log(`[getDevToPublishedArticles]: R2 cache exists`)
@@ -24,12 +22,11 @@ const getDevToPublishedArticles = async () => {
   try {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    // Use env instead of process.env
-    headers.append('api-key', `${env.NEXT_DEVTO_API_KEY}`)
+    headers.append('api-key', `${context.env.NEXT_DEVTO_API_KEY}`)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
     headers.append('Content-Type', 'application/json')
 
-    const res = await env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
+    const res = await context.env.WORKER_SELF_REFERENCE?.fetch(endpoint, {
       headers,
       method: 'GET',
       cache: 'force-cache'
