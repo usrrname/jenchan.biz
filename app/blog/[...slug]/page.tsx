@@ -156,8 +156,6 @@ export async function generateStaticParams() {
   }))
 }
 
-export const revalidate = 3600 // 1 hour
-
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>
 }) {
