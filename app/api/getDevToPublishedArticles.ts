@@ -1,7 +1,9 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+
+import dotenv from 'dotenv'
 // @ts-ignore
 import type { CloudflareEnv } from '../../types/cloudflare-env'
-
+dotenv.config()
 /**
  * Fetches all published articles
  * uses @link https://developers.forem.com/api/v1#tag/articles/operation/getUserPublishedArticles
@@ -22,7 +24,7 @@ const getDevToPublishedArticles = async () => {
   try {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', `${context.env.NEXT_DEVTO_API_KEY}`)
+    headers.append('api-key', `${process.env.NEXT_DEVTO_API_KEY}`)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
     headers.append('Content-Type', 'application/json')
 
