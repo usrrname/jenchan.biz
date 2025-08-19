@@ -1,7 +1,8 @@
-import { getCloudflareContext } from '@opennextjs/cloudflare';
-import dotenv from 'dotenv'; // @ts-ignore
-import type { CloudflareEnv } from '../../types/cloudflare-env';
-dotenv.config()
+import { getCloudflareContext } from '@opennextjs/cloudflare'
+// @ts-ignore
+import type { CloudflareEnv } from '../../types/cloudflare-env'
+
+export const runtime = 'edge'
 
 /**
  * Fetches all published articles
@@ -9,8 +10,6 @@ dotenv.config()
  * @returns Promise<void>
  */
 const getDevToPublishedArticles = async () => {
-  'use server'
-
   const { env } = (await getCloudflareContext({
     async: true
   })) as unknown as CloudflareEnv
@@ -25,7 +24,8 @@ const getDevToPublishedArticles = async () => {
   try {
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
-    headers.append('api-key', `${process.env.NEXT_DEVTO_API_KEY}`)
+    // Use env instead of process.env
+    headers.append('api-key', `${env.NEXT_DEVTO_API_KEY}`)
     headers.append('accept', 'application/vnd.forem.api-v1+json')
     headers.append('Content-Type', 'application/json')
 

@@ -1,9 +1,11 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
+
 // @ts-ignore
 import type { Cloudflare } from '../../types/cloudflare-env'
 
+export const runtime = 'edge'
+
 const getArticleById = async (id: number) => {
-  'use server'
   const context = (await getCloudflareContext({
     async: true
   })) as unknown as Cloudflare.Env

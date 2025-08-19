@@ -1,10 +1,10 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
+export const runtime = 'edge'
+
 async function findDevToArticleByCanonicalUrl(
   slug: string
 ): Promise<DevToArticleStats | undefined> {
-  'use server'
-
   const context = await getCloudflareContext({
     async: true
   })

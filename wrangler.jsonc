@@ -3,6 +3,7 @@
   "name": "jenchan-biz",
   "compatibility_date": "2025-03-25",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "minify": false,
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
@@ -24,7 +25,6 @@
       "preview_bucket_name": "jen-preview-bucket"
     }
   ],
-
   "env": {
     "development": {
       "r2_buckets": [

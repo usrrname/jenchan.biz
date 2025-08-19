@@ -1,13 +1,9 @@
-import {
-  getDeploymentId,
-  initOpenNextCloudflareForDev
-} from '@opennextjs/cloudflare'
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 import { createContentlayerPlugin } from 'next-contentlayer2'
 initOpenNextCloudflareForDev()
 
 const withBundleAnalyzer = { enabled: process.env.ANALYZE === 'true' }
 
-// Use createContentlayerPlugin instead of withContentlayer
 const withContentlayer = createContentlayerPlugin({
   configPath: './contentlayer.config.ts'
 })
@@ -19,7 +15,7 @@ if (process.env.NEXTJS_ENV === 'development') {
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.cloudflareinsights.com  *.googletagmanager.com *.google-analytics.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.cloudflareinsights.com  *.googletagmanager.com *.google-analytics.com *.cloudflare.com *.google-analytics.com;
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
   media-src 'self' *.s3.amazonaws.com *.cloudflare.com;
@@ -79,19 +75,20 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined
  **/
 const nextConfig = {
   output,
-  basePath,
-  deploymentId: getDeploymentId(),
+  trailingSlash: true,
   reactStrictMode: true,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  eslint: {
-    dirs: ['app', 'components', 'layouts', 'scripts']
-  },
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['webmention.io', 'dev.to', 'github.com']
-    }
+  serverActions: {
+    allowedOrigins: ['webmention.io', 'dev.to', 'github.com', 'cloudflare.com']
   },
   images: {
+    unoptimized: true,
+    loader: 'default',
+    domains: [],
+    remotePatterns: [],
+    minimumCacheTTL: 0,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
     remotePatterns: [
       {
         protocol: 'https',
@@ -113,8 +110,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.mstdn.party'
       }
-    ],
-    unoptimized
+    ]
   },
   async headers() {
     return [
@@ -134,6 +130,10 @@ const nextConfig = {
       test: /\.svg$/,
       use: ['@svgr/webpack']
     })
+
+    config.infrastructureLogging = {
+      level: 'error'
+    }
 
     // Suppress contentlayer2 webpack warnings
     config.ignoreWarnings = [
