@@ -6,43 +6,49 @@ dotenv.config()
 
 export default async function getWebMentionsPerPost(
   post: Blog
-): Promise<WebMentionPostResponse> {
+): Promise<WebMentionPostResponse | undefined> {
   const { env } = await getCloudflareContext({
     async: true
   })
 
   if (!env.NEXT_INC_CACHE_R2_BUCKET) {
     console.warn('⚠️ R2 bucket not available, skipping cache')
-    return { links: [] }
+    return
   }
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get(`webmentions-${post.slug}`)
-  if (cachedData) {
-    console.info('🔍 cached webmentions found')
-    const jsonData = await cachedData.json()
+  const jsonData = await cachedData?.json()
+
+  if (jsonData) {
+    console.info(`✅ cache hit: webmentions found for ${post.slug}`)
     return jsonData as unknown as WebMentionPostResponse
   }
-  const url = siteMetadata.siteUrl
-  const target = `${url}/blog/${post.slug}`
+  console.log('❌ R2 cache MISS - fetching from webmention.io API')
+  try {
+    const url = siteMetadata.siteUrl
+    const target = `${url}/blog/${post.slug}`
 
-  const res = await env.WORKER_SELF_REFERENCE?.fetch(
-    `https://webmention.io/api/mentions?target=${target}&token=${process.env.NEXT_WEBMENTION_TOKEN}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
+    const res = await env.WORKER_SELF_REFERENCE?.fetch(
+      `https://webmention.io/api/mentions?target=${target}&token=${process.env.NEXT_WEBMENTION_TOKEN}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  )
+    )
 
-  if (!res?.ok) throw new Error('Failed to fetch')
-  const data = await res?.json()
-  await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data), {
-    httpMetadata: {
-      cacheExpiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-    }
-  })
-  return data as unknown as WebMentionPostResponse
+    if (!res?.ok) throw new Error('Failed to fetch webmentions')
+    const data = await res?.json()
+    await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data), {
+      httpMetadata: {
+        cacheExpiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+      }
+    })
+    return data as unknown as WebMentionPostResponse
+  } catch (error) {
+    console.error('❌ Error in getWebMentionsPerPost:', error)
+  }
 }
 
 export const parseWebMentionResults = (results: WebMentionPostResponse) => {

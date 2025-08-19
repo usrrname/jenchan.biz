@@ -21,15 +21,19 @@ const getDevToPublishedArticles = async () => {
 
     const cache = await context.env.NEXT_INC_CACHE_R2_BUCKET
     if (!cache) {
-      console.error('R2 cache not available')
+      console.error('❌ R2 cache not available')
       return null
     }
 
+    console.log('✅ R2 cache bucket available:', cache)
+
     const cachedResults = await cache.get('incremental-cache/devto-articles')
     if (cachedResults !== null) {
-      console.log(`[getDevToPublishedArticles]: R2 cache exists`)
+      console.log('✅ R2 cache HIT - returning cached data')
       return cachedResults as R2ObjectBody
     }
+
+    console.log('❌ R2 cache MISS - fetching from API')
 
     const endpoint = `https://dev.to/api/articles/me/published`
     const headers = new Headers()
@@ -57,6 +61,7 @@ const getDevToPublishedArticles = async () => {
     }
 
     // Add timeout to cache operation
+    console.log('✅ Storing data in R2 cache...')
     const cachePromise = cache.put(
       'incremental-cache/devto-articles',
       JSON.stringify(data),
@@ -73,10 +78,11 @@ const getDevToPublishedArticles = async () => {
     )
 
     await Promise.race([cachePromise, timeoutPromise])
+    console.log('✅ Data stored in R2 cache successfully')
 
     return data
   } catch (error) {
-    console.error('Error in getDevToPublishedArticles:', error)
+    console.error('❌ Error in getDevToPublishedArticles:', error)
     // Return null instead of throwing to prevent worker crashes
     return null
   }
