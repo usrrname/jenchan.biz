@@ -42,6 +42,7 @@ export default async function getWebMentionsPerPost(
     const data = await res?.json()
     await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data), {
       httpMetadata: {
+        contentType: 'application/json',
         cacheExpiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
       }
     })
