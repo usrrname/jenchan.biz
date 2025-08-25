@@ -54,7 +54,7 @@ const projectsData: Project[] = [
     company: 'Rangle.io',
     description: `Worked on a rotating team of 4 to develop a command line tool with a boilerplate Figma UI Kit to accelerate the bootstrapping of design systems based on selection of JS framework, CSS strategy, and CI tool`,
     imgSrc: '/static/images/work/radius-home.svg',
-    href: 'https://radius.rangle.io/'
+    href: 'https://rangle.io/radius'
   },
   {
     title: 'Idea to MVP: Insurance Payer Health Portal',
