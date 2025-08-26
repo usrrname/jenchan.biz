@@ -229,6 +229,8 @@ export default async function Page(props: {
               article.public_reactions_count > 0 && (
                 <NextLink
                   href={articleUrl!}
+                  rel="syndication"
+                  data-webmention-target={`${siteMetadata.siteUrl}/blog/${post.slug}`}
                   className="font-bold no-underline hover:bg-yellow-200"
                 >
                   💖🔥🦄 {article.public_reactions_count}&nbsp;

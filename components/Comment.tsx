@@ -33,7 +33,7 @@ const Comment = ({ child, type }: CommentProps) => {
       )}
       {/* @ts-ignore */}
       {(type === 'reply' || type === 'mention') && child?.content && (
-        <div className="prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
+        <div className="u-syndication prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
           <div
             dangerouslySetInnerHTML={{
               /* @ts-ignore */

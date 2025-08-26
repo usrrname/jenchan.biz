@@ -64,7 +64,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
 
   links?.forEach((mention) => {
     const { data, activity } = mention
-    const { author, url, published, published_ts } = data
+    const { author, url, published, published_ts, source } = data
     let { content } = data
     const { name } = author
     // Ignore webmentions and promo from myself
@@ -93,6 +93,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
           author,
           content,
           url,
+          source,
           published,
           published_ts
         })
@@ -105,6 +106,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
           author,
           content,
           url,
+          source,
           published,
           published_ts
         })
