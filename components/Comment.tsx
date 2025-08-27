@@ -20,28 +20,32 @@ const Comment = ({ child, type }: CommentProps) => {
           />
         </NextLink>
       </div>
-      <NextLink
-        className="p-author h-card text-sm text-gray-500 dark:text-gray-400"
-        href={child?.author.url}
-      >
-        {child?.author.name}
-      </NextLink>
-      {child?.published_ts && (
-        <span className="dt-published text-sm text-gray-500 dark:text-gray-400">
-          <time dateTime={child.published_ts.toString()} />
-        </span>
-      )}
-      {/* @ts-ignore */}
-      {(type === 'reply' || type === 'mention') && child?.content && (
-        <div className="u-syndication prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
-          <div
-            dangerouslySetInnerHTML={{
-              /* @ts-ignore */
-              __html: child.content
-            }}
-          />
+      <div className="flex flex-col">
+        <div className="flex flex-row">
+          <NextLink
+            className="p-author h-card text-sm text-gray-500 dark:text-gray-400"
+            href={child?.source?.toString()}
+          >
+            {child?.author.name}
+          </NextLink>
+          {child?.published_ts && (
+            <span className="dt-published text-sm text-gray-500 dark:text-gray-400">
+              <time dateTime={new Date(child.published_ts).toISOString()} />
+            </span>
+          )}
         </div>
-      )}
+        {/* @ts-ignore */}
+        {(type === 'reply' || type === 'mention') && child?.content && (
+          <div className="u-syndication prose p-content max-w-full text-gray-500 italic dark:text-gray-400">
+            <div
+              dangerouslySetInnerHTML={{
+                /* @ts-ignore */
+                __html: child.content
+              }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

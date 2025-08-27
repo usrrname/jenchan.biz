@@ -70,7 +70,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
           <div key={index} className={`flex flex-col ${computedClass}`}>
             {(isReply || isMention) && child?.published && (
               <Comment
-                child={child}
+                child={{ ...child, source: child.source?.toString() }}
                 url={url}
                 type={isReply ? 'reply' : 'mention'}
               />
