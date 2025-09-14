@@ -67,7 +67,7 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
 
         {/* // Replies and Mentions */}
         {data?.map((child, index) => (
-          <div key={index} className={`flex flex-col ${computedClass}`}>
+          <div key={index} className={`${computedClass}`}>
             {(isReply || isMention) && child?.published && (
               <Comment
                 child={{ ...child, source: child.source?.toString() }}
