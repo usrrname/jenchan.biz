@@ -47,4 +47,5 @@ interface WebMentionReaction {
   url: URL
   published?: WebMentionPostData['published']
   published_ts?: WebMentionPostData['published_ts']
+  source?: WebMentionPostData['source']
 }
