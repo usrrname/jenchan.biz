@@ -1,13 +1,13 @@
+import findDevToArticleByCanonicalUrl from '@/app/lib/findArticleByCanonicalUrl'
+import getWebMentionsPerPost, {
+  parseWebMentionResults
+} from '@/app/lib/getWebMentionsPerPost'
 import { components } from '@/components/MDXComponents'
 import WebMentions from '@/components/WebMentions'
 import siteMetadata from '@/data/siteMetadata'
 import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
 import PostSimple from '@/layouts/PostSimple'
-import findDevToArticleByCanonicalUrl from 'app/api/findArticleByCanonicalUrl'
-import getWebMentionsPerPost, {
-  parseWebMentionResults
-} from 'app/api/getWebMentionsPerPost'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
 import 'css/prism.css'

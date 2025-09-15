@@ -13,7 +13,7 @@ const updateArticle = async (id: number, article: Blog) => {
     body_markdown: article.body.raw,
     tags: [...article.tags],
     series: article.series ?? '',
-    canonical_url: siteMetadata.siteUrl + `/${article.slug}`,
+    canonical_url: siteMetadata.siteUrl + `/${article.slug}`
   } as Partial<DevToArticle>
 
   const headers = new Headers()
@@ -23,8 +23,8 @@ const updateArticle = async (id: number, article: Blog) => {
     const res = await fetch(endpoint, {
       headers: headers,
       body: JSON.stringify({
-        article: payload,
-      }),
+        article: payload
+      })
     })
     return res.json()
   } catch (error) {

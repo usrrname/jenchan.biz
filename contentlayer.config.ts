@@ -29,7 +29,7 @@ import rehypeKatexNoTranslate from 'rehype-katex-notranslate'
 import rehypePresetMinify from 'rehype-preset-minify'
 import rehypePrismPlus from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
-import getDevToPublishedArticles from './app/api/getDevToPublishedArticles'
+import getDevToPublishedArticles from './app/lib/getDevToPublishedArticles'
 import siteMetadata from './data/siteMetadata'
 const root = process.cwd()
 const isProduction = process.env.NEXTJS_ENV === 'production'
