@@ -9,43 +9,45 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-headings: 'Noto Serif', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-headings:
+    'Noto Serif', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-serif: var(--noto-serif), 'Arial Rounded MT', sans-serif;
-  --font-sans: 'Shantell Sans', ui-serif, system-ui, serif, 'Apple Color Emoji',
+  --font-sans:
+    'Shantell Sans', ui-serif, system-ui, serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-body: var(--inter), sans-serif;
- /* Base colors */
- --color-watermelon: #FF3366; /* Primary - Sweet pink */
- --color-blueberry: #4D4DFF; /* Complementary to watermelon */
- --color-lime-punch: #AAFF00; /* Secondary */
- --color-grape-soda: #9933FF; /* Complementary to lime */
- --color-mango-tango: #FF9933; /* Accent 1 */
- --color-blue-raspberry: #00CCFF; /* Complementary to mango */
- /* Primary color scale */
- --color-primary-50: #FFF0F3;
- --color-primary-100: #FFE0E9;
- --color-primary-200: #FFC1D4;
- --color-primary-300: #FF94B3;
- --color-primary-400: #FF6692;
- --color-primary-500: var(--color-watermelon); /* Main brand color */
- --color-primary-600: #E61A4D;
- --color-primary-700: #CC0033;
- --color-primary-800: #990026;
- --color-primary-900: #66001A;
- --color-primary-950: #33000D;
+  /* Base colors */
+  --color-watermelon: #ff3366; /* Primary - Sweet pink */
+  --color-blueberry: #4d4dff; /* Complementary to watermelon */
+  --color-lime-punch: #aaff00; /* Secondary */
+  --color-grape-soda: #9933ff; /* Complementary to lime */
+  --color-mango-tango: #ff9933; /* Accent 1 */
+  --color-blue-raspberry: #00ccff; /* Complementary to mango */
+  /* Primary color scale */
+  --color-primary-50: #fff0f3;
+  --color-primary-100: #ffe0e9;
+  --color-primary-200: #ffc1d4;
+  --color-primary-300: #ff94b3;
+  --color-primary-400: #ff6692;
+  --color-primary-500: var(--color-watermelon); /* Main brand color */
+  --color-primary-600: #e61a4d;
+  --color-primary-700: #cc0033;
+  --color-primary-800: #990026;
+  --color-primary-900: #66001a;
+  --color-primary-950: #33000d;
 
-  --color-secondary-50: #F9F7FF;
-  --color-secondary-100: #F2F0FF;
-  --color-secondary-200: #E5E0FF;
-  --color-secondary-300: #D1C4FF;
-  --color-secondary-400: #B3A3FF;
-  --color-secondary-500: #8C7AE6;
-  --color-secondary-600: #6B5CC4;
-  --color-secondary-700: #4D3D99;
-  --color-secondary-800: #332B66;
-  --color-secondary-900: #1F1A40;
-  --color-secondary-950: #0F0D1F;
+  --color-secondary-50: #f9f7ff;
+  --color-secondary-100: #f2f0ff;
+  --color-secondary-200: #e5e0ff;
+  --color-secondary-300: #d1c4ff;
+  --color-secondary-400: #b3a3ff;
+  --color-secondary-500: #8c7ae6;
+  --color-secondary-600: #6b5cc4;
+  --color-secondary-700: #4d3d99;
+  --color-secondary-800: #332b66;
+  --color-secondary-900: #1f1a40;
+  --color-secondary-950: #0f0d1f;
 
   /* Gray scale with rave undertones */
   --color-gray-50: var(--color-secondary-50);
@@ -76,7 +78,8 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-  body p, .prose{
+  body p,
+  .prose {
     font-family: 'Inter', sans-serif;
   }
   a,
@@ -91,7 +94,13 @@
     outline-color: var(--color-primary-500);
   }
 
-  & h1, & h2, & h3, & h4, & h5, & h6, .content-header {
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6,
+  .content-header {
     font-family: var(--noto-serif);
     font-stretch: extra-condensed;
   }
@@ -100,289 +109,318 @@
   /* Vibe-coded Raver Theme */
   .theme-rave {
     --*: initial;
-  --font-headings: 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
-  --font-body: 'Inter', 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+    --font-headings:
+      'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
+    --font-body:
+      'Inter', 'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT', sans-serif;
 
-  /* Primary color scale */
-  --color-primary-50: #FFF0F3;
-  --color-primary-100: #FFE0E9;
-  --color-primary-200: #FFC1D4;
-  --color-primary-300: #FF94B3;
-  --color-primary-400: #FF6692;
-  --color-primary-500: var(--color-watermelon); /* Main brand color */
-  --color-primary-600: #E61A4D;
-  --color-primary-700: #CC0033;
-  --color-primary-800: #990026;
-  --color-primary-900: #66001A;
-  --color-primary-950: #33000D;
+    /* Primary color scale */
+    --color-primary-50: #fff0f3;
+    --color-primary-100: #ffe0e9;
+    --color-primary-200: #ffc1d4;
+    --color-primary-300: #ff94b3;
+    --color-primary-400: #ff6692;
+    --color-primary-500: var(--color-watermelon); /* Main brand color */
+    --color-primary-600: #e61a4d;
+    --color-primary-700: #cc0033;
+    --color-primary-800: #990026;
+    --color-primary-900: #66001a;
+    --color-primary-950: #33000d;
 
-  --color-secondary-50: var(--color-lime-punch);
-  --color-secondary-100: var(--color-mango-tango);
-  --color-secondary-200: var(--color-blue-raspberry);
-  --color-secondary-300: var(--color-watermelon);
-  --color-secondary-400: var(--color-blue-raspberry);
-  --color-secondary-500: var(--color-lime-punch);
-  --color-secondary-600: var(--color-mango-tango);
-  --color-secondary-700: var(--color-blueberry);
-  --color-secondary-800: var(--color-blueberry);
-  --color-secondary-900: var(--color-blueberry);
-  --color-secondary-950: var(--color-blueberry);
-}
-.theme-rave,
-.theme-rave .prose {
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sans), 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT', sans-serif;
-    text-transform: unset;
-    font-stretch: unset;
+    --color-secondary-50: var(--color-lime-punch);
+    --color-secondary-100: var(--color-mango-tango);
+    --color-secondary-200: var(--color-blue-raspberry);
+    --color-secondary-300: var(--color-watermelon);
+    --color-secondary-400: var(--color-blue-raspberry);
+    --color-secondary-500: var(--color-lime-punch);
+    --color-secondary-600: var(--color-mango-tango);
+    --color-secondary-700: var(--color-blueberry);
+    --color-secondary-800: var(--color-blueberry);
+    --color-secondary-900: var(--color-blueberry);
+    --color-secondary-950: var(--color-blueberry);
   }
-
-  font-family: var(--font-body);
-
-  & a {
-    color: var(--color-blue-raspberry);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 2px;
-    &:hover {
-      color: var(--color-watermelon);
-      text-shadow: 0 0 8px var(--color-watermelon);
+  .theme-rave,
+  .theme-rave .prose {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family:
+        var(--font-sans), 'Shantell Sans', 'Comic Sans', 'Arial Rounded MT',
+        sans-serif;
+      text-transform: unset;
+      font-stretch: unset;
     }
-    & code {
-      color: var(--color-lime-punch);
-      background: color-mix(in srgb, var(--color-gray-900) 10%, transparent);
-    }
-  }
 
-  & :where(h1, h2) {
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    color: var(--color-watermelon);
-    text-shadow: 
-      3px 3px 0 var(--color-blueberry),
-      -3px -3px 0 var(--color-blue-raspberry),
-      0 0 10px var(--color-watermelon);
-    position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: -1em -1.5em;
-      background: 
-        radial-gradient(
-          circle at 30% 20%,
-          rgba(255, 182, 193, 0.2) 0%,  /* Strawberry milk */
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 70% 60%,
-          rgba(135, 206, 250, 0.15) 0%,  /* Berry blue */
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 20% 80%,
-          rgba(255, 153, 51, 0.12) 0%,  /* Mango */
-          transparent 45%
-        ),
-        linear-gradient(
-          45deg,
-          rgba(221, 160, 221, 0.1) 0%,  /* Grape juice */
-          transparent 50%
-        ),
-        linear-gradient(
-          -60deg,
-          rgba(102, 204, 255, 0.08) 30%,  /* Blue coconut */
-          transparent 80%
-        );
-      border-radius: 1.5em;
-      filter: blur(8px);
-      z-index: -1;
-      animation: floatBackground 8s ease-in-out infinite alternate;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      inset: -0.5em -1em;
-      background: 
-        radial-gradient(
-          circle at 60% 40%,
-          rgba(255, 105, 180, 0.15) 0%,  /* Dragon fruit */
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 20% 30%,
-          rgba(173, 216, 230, 0.12) 0%,  /* Blueberry smoothie */
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 80% 70%,
-          rgba(255, 192, 203, 0.1) 0%,  /* Watermelon juice */
-          transparent 40%
-        );
-      border-radius: 1em;
-      filter: blur(4px);
-      z-index: -1;
-      animation: floatBackground 6s ease-in-out infinite alternate-reverse;
-    }
-  }
-
-  & h1 {
-    font-family: var(--font-sans);
-    font-size: 2.5em;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    &::before {
-      background: 
-        radial-gradient(
-          circle at 40% 30%,
-          rgba(255, 182, 193, 0.25) 0%,  /* Stronger strawberry */
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 70% 65%,
-          rgba(135, 206, 250, 0.2) 0%,  /* Stronger blueberry */
-          transparent 45%
-        ),
-        radial-gradient(
-          circle at 25% 85%,
-          rgba(255, 218, 185, 0.18) 0%,  /* Stronger peach */
-          transparent 50%
-        );
-      animation: floatBackground 10s ease-in-out infinite alternate;
-    }
-  }
-
-  & h2 {
-    font-family: var(--font-headings);
-    font-size: 2em;
-    border-bottom: 3px solid;
-    border-image: linear-gradient(
-      90deg,
-      var(--color-watermelon),
-      var(--color-mango-tango),
-      var(--color-blue-raspberry)
-    ) 1;
-    padding-bottom: 0.25em;
-  }
-
-  & h3 {
-    font-family: var(--font-headings);
-    font-weight: 700;
-    font-size: 1.5em;
-    color: var(--color-mango-tango);
-    text-shadow: 
-      2px 2px 0 var(--color-blue-raspberry),
-      0 0 8px var(--color-mango-tango);
-    position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: -0.25em -0.5em;
-      background: 
-        radial-gradient(
-          circle at 40% 30%,
-          rgba(255, 153, 51, 0.1) 0%,  /* Mango */
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 70% 65%,
-          rgba(255, 105, 180, 0.1) 0%,  /* Dragon fruit */
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 25% 85%,
-          rgba(102, 204, 255, 0.1) 0%,  /* Blue coconut */
-          transparent 45%
-        );
-      border-radius: 0.5em;
-      filter: blur(6px);
-      z-index: -1;
-    }
-  }
-}
-
-.rave.dark .prose {
-  & a {
     font-family: var(--font-body);
-    color: var(--color-lime-punch);
-    &:hover {
-      color: var(--color-mango-tango);
-      text-shadow: 0 0 12px var(--color-mango-tango);
+
+    & a {
+      color: var(--color-blue-raspberry);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+      &:hover {
+        color: var(--color-watermelon);
+        text-shadow: 0 0 8px var(--color-watermelon);
+      }
+      & code {
+        color: var(--color-lime-punch);
+        background: color-mix(in srgb, var(--color-gray-900) 10%, transparent);
+      }
     }
-    & code {
+
+    & :where(h1, h2) {
+      font-weight: 800;
+      letter-spacing: 0.05em;
       color: var(--color-watermelon);
-      background: color-mix(in srgb, var(--color-gray-100) 10%, transparent);
+      text-shadow:
+        3px 3px 0 var(--color-blueberry),
+        -3px -3px 0 var(--color-blue-raspberry),
+        0 0 10px var(--color-watermelon);
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -1em -1.5em;
+        background:
+          radial-gradient(
+            circle at 30% 20%,
+            rgba(255, 182, 193, 0.2) 0%,
+            /* Strawberry milk */ transparent 35%
+          ),
+          radial-gradient(
+            circle at 70% 60%,
+            rgba(135, 206, 250, 0.15) 0%,
+            /* Berry blue */ transparent 40%
+          ),
+          radial-gradient(
+            circle at 20% 80%,
+            rgba(255, 153, 51, 0.12) 0%,
+            /* Mango */ transparent 45%
+          ),
+          linear-gradient(
+            45deg,
+            rgba(221, 160, 221, 0.1) 0%,
+            /* Grape juice */ transparent 50%
+          ),
+          linear-gradient(
+            -60deg,
+            rgba(102, 204, 255, 0.08) 30%,
+            /* Blue coconut */ transparent 80%
+          );
+        border-radius: 1.5em;
+        filter: blur(8px);
+        z-index: -1;
+        animation: floatBackground 8s ease-in-out infinite alternate;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -0.5em -1em;
+        background:
+          radial-gradient(
+            circle at 60% 40%,
+            rgba(255, 105, 180, 0.15) 0%,
+            /* Dragon fruit */ transparent 30%
+          ),
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(173, 216, 230, 0.12) 0%,
+            /* Blueberry smoothie */ transparent 35%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(255, 192, 203, 0.1) 0%,
+            /* Watermelon juice */ transparent 40%
+          );
+        border-radius: 1em;
+        filter: blur(4px);
+        z-index: -1;
+        animation: floatBackground 6s ease-in-out infinite alternate-reverse;
+      }
+    }
+
+    & h1 {
+      font-family: var(--font-sans);
+      font-size: 2.5em;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      &::before {
+        background:
+          radial-gradient(
+            circle at 40% 30%,
+            rgba(255, 182, 193, 0.25) 0%,
+            /* Stronger strawberry */ transparent 40%
+          ),
+          radial-gradient(
+            circle at 70% 65%,
+            rgba(135, 206, 250, 0.2) 0%,
+            /* Stronger blueberry */ transparent 45%
+          ),
+          radial-gradient(
+            circle at 25% 85%,
+            rgba(255, 218, 185, 0.18) 0%,
+            /* Stronger peach */ transparent 50%
+          );
+        animation: floatBackground 10s ease-in-out infinite alternate;
+      }
+    }
+
+    & h2 {
+      font-family: var(--font-headings);
+      font-size: 2em;
+      border-bottom: 3px solid;
+      border-image: linear-gradient(
+          90deg,
+          var(--color-watermelon),
+          var(--color-mango-tango),
+          var(--color-blue-raspberry)
+        )
+        1;
+      padding-bottom: 0.25em;
+    }
+
+    & h3 {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      font-size: 1.5em;
+      color: var(--color-mango-tango);
+      text-shadow:
+        2px 2px 0 var(--color-blue-raspberry),
+        0 0 8px var(--color-mango-tango);
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -0.25em -0.5em;
+        background:
+          radial-gradient(
+            circle at 40% 30%,
+            rgba(255, 153, 51, 0.1) 0%,
+            /* Mango */ transparent 35%
+          ),
+          radial-gradient(
+            circle at 70% 65%,
+            rgba(255, 105, 180, 0.1) 0%,
+            /* Dragon fruit */ transparent 40%
+          ),
+          radial-gradient(
+            circle at 25% 85%,
+            rgba(102, 204, 255, 0.1) 0%,
+            /* Blue coconut */ transparent 45%
+          );
+        border-radius: 0.5em;
+        filter: blur(6px);
+        z-index: -1;
+      }
     }
   }
 
-  & :where(h1, h2) {
-    color: var(--color-lime-punch);
-    text-shadow: 
-      3px 3px 0 var(--color-grape-soda),
-      -3px -3px 0 var(--color-watermelon),
-      0 0 15px var(--color-lime-punch);
-    &::before {
-      background: 
-        radial-gradient(
-          circle at 35% 25%,
-          rgba(255, 153, 204, 0.12) 0%,  /* Pink lemonade */
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 75% 55%,
-          rgba(153, 204, 255, 0.1) 0%,  /* Blue raspberry */
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 15% 75%,
-          rgba(255, 204, 153, 0.08) 0%,  /* Orange cream */
-          transparent 45%
-        );
+  .rave.dark .prose {
+    & a {
+      font-family: var(--font-body);
+      color: var(--color-lime-punch);
+      &:hover {
+        color: var(--color-mango-tango);
+        text-shadow: 0 0 12px var(--color-mango-tango);
+      }
+      & code {
+        color: var(--color-watermelon);
+        background: color-mix(in srgb, var(--color-gray-100) 10%, transparent);
+      }
     }
-    &::after {
-      background: 
-        radial-gradient(
-          circle at 65% 35%,
-          rgba(204, 153, 255, 0.08) 0%,  /* Grape soda */
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 25% 45%,
-          rgba(153, 255, 204, 0.06) 0%,  /* Lime slush */
-          transparent 35%
-        ),
-        radial-gradient(
-          circle at 85% 65%,
-          rgba(255, 153, 153, 0.07) 0%,  /* Strawberry ice */
-          transparent 40%
-        );
+
+    & :where(h1, h2) {
+      color: var(--color-lime-punch);
+      text-shadow:
+        3px 3px 0 var(--color-grape-soda),
+        -3px -3px 0 var(--color-watermelon),
+        0 0 15px var(--color-lime-punch);
+      &::before {
+        background:
+          radial-gradient(
+            circle at 35% 25%,
+            rgba(255, 153, 204, 0.12) 0%,
+            /* Pink lemonade */ transparent 35%
+          ),
+          radial-gradient(
+            circle at 75% 55%,
+            rgba(153, 204, 255, 0.1) 0%,
+            /* Blue raspberry */ transparent 40%
+          ),
+          radial-gradient(
+            circle at 15% 75%,
+            rgba(255, 204, 153, 0.08) 0%,
+            /* Orange cream */ transparent 45%
+          );
+      }
+      &::after {
+        background:
+          radial-gradient(
+            circle at 65% 35%,
+            rgba(204, 153, 255, 0.08) 0%,
+            /* Grape soda */ transparent 30%
+          ),
+          radial-gradient(
+            circle at 25% 45%,
+            rgba(153, 255, 204, 0.06) 0%,
+            /* Lime slush */ transparent 35%
+          ),
+          radial-gradient(
+            circle at 85% 65%,
+            rgba(255, 153, 153, 0.07) 0%,
+            /* Strawberry ice */ transparent 40%
+          );
+      }
+    }
+
+    & h3 {
+      color: var(--color-blue-raspberry);
+      text-shadow:
+        2px 2px 0 var(--color-watermelon),
+        0 0 12px var(--color-blue-raspberry);
     }
   }
 
-  & h3 {
-    color: var(--color-blue-raspberry);
-    text-shadow: 
-      2px 2px 0 var(--color-watermelon),
-      0 0 12px var(--color-blue-raspberry);
+  /* Animation keyframes */
+  @keyframes floatBackground {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(4px, -4px) scale(1.02);
+    }
+    50% {
+      transform: translate(-3px, 3px) scale(0.98);
+    }
+    75% {
+      transform: translate(2px, -2px) scale(1.01);
+    }
+    100% {
+      transform: translate(-4px, 4px) scale(0.99);
+    }
   }
-}
+  /* Banner animations */
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+    }
 
-/* Animation keyframes */
-@keyframes floatBackground {
-  0% {
-    transform: translate(0, 0) scale(1);
+    to {
+      transform: translateY(0);
+    }
   }
-  25% {
-    transform: translate(4px, -4px) scale(1.02);
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-100%);
+    }
   }
-  50% {
-    transform: translate(-3px, 3px) scale(0.98);
-  }
-  75% {
-    transform: translate(2px, -2px) scale(1.01);
-  }
-  100% {
-    transform: translate(-4px, 4px) scale(0.99);
-  }
-  } 
 }
 
 @layer utilities {
@@ -460,7 +498,6 @@ input:-webkit-autofill:focus {
     background-color 600000s 0s,
     color 600000s 0s;
 }
-
 
 .wavy {
   text-decoration-line: underline;

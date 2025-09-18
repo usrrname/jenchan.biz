@@ -1,7 +1,7 @@
+import Banner from '@/components/Banner'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
-import WebVitals from '@/components/WebVitals'
 import siteMetadata from '@/data/siteMetadata'
 import 'css/tailwind.css'
 import { Metadata } from 'next'
@@ -119,9 +119,18 @@ export default function RootLayout({
       {googleAnalyticsId !== null && (
         <GA googleAnalyticsId={googleAnalyticsId as string} />
       )}
-      <WebVitals />
       <body className="rave:bg-gradient-to-br rave:from-watermelon/10 rave:via-blueberry/10 rave:to-lime-punch/10 bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
         <ThemeProviders>
+          <Banner className="" id="welcome-banner">
+            <div>
+              <p className="text-lg font-bold">
+                I'm looking for my next challenge!
+              </p>
+              <p className="text-sm opacity-90">
+                Senior+ roles. Toronto. Hybrid or Remote
+              </p>
+            </div>
+          </Banner>
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
