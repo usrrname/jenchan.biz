@@ -77,6 +77,7 @@ To be able to relate my domain and existing BlueSky account to bridgy, I did the
   height={320}
   alt="screenshot of Bluesky account settings showing info that you will need to add to your domain registrar"
 />
+
 Source: [Bluesky's guide to setting up a domain
 handle](https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial).
 
@@ -92,7 +93,7 @@ Bluesky's ATProtocol offers a few ways to update your account handle to be [the 
 
 Totally extra: to be able to have `fed.brid.gy` recognize my existing Mastodon and BlueSky accounts as connected to my domain without creating new bridged accounts on the network, I also included these [webfinger](https://en.wikipedia.org/wiki/WebFinger) redirects in my `_redirects` file:
 
-```txt
+```
 /.well-known/atproto-did https://fed.brid.gy/.well-known/atproto-did 301
 /.well-known/host-meta https://fed.brid.gy/.well-known/host-meta 301
 /.well-known/webfinger https://fed.brid.gy/.well-known/webfinger 301
