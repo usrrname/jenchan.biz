@@ -14,7 +14,7 @@ export default function Banner({
   return (
     <div
       id={id}
-      className={`relative z-50 animate-[slideDown_0.5s_ease-out_0.5s_forwards] border-b-2 border-neutral-200 text-black shadow-xs ${className} `}
+      className={`relative z-50 animate-[slideDown_0.5s_ease-out_0.5s_forwards] border-b-1 border-neutral-200 dark:border-lime-punch raver:border-lime-punch text-black dark:text-secondary-50 shadow-xs ${className} `}
     >
       <div className="relative px-4 py-3 sm:px-6 lg:px-8">
         <button
@@ -25,7 +25,7 @@ export default function Banner({
               setTimeout(() => banner.remove(), 300)
             }
           }}
-          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full p-1 transition-colors hover:bg-white/20 focus:ring-2 focus:ring-black/50 focus:outline-none"
+          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full p-1 transition-colors hover:bg-white/20 focus:ring-2 focus:ring-black/50 focus:outline-none dark:text-white"
           aria-label="Close banner"
         >
           <svg
