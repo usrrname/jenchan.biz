@@ -1,5 +1,5 @@
 ---
-title: 'Recovering webmentions and connecting to the Fediverse after migrating to Cloudflare'
+title: 'Recovering webmentions from the Fediverse after migrating to Cloudflare'
 draft: false
 summary: Adding to the internet's dogpile of webmention troubleshooting for collecting authentic reactions from online communities.
 tags: [bridgy, fediverse, indieweb, cloudflare, webmentions]
@@ -10,7 +10,7 @@ images:
   ]
 ---
 
-This is a long procrastinated post on debugging the phenomena of the missing webmentions ever since I [migrated this blog from Vercel to Cloudflare pages](/blog/blocking-ai-crawlers). I've since "upgraded" this NextJS setup to a Cloudflare Worker.
+This is a long procrastinated post on debugging the phenomena of missing webmentions ever since I [migrated this blog from Vercel to Cloudflare pages](/blog/blocking-ai-crawlers). I've since "upgraded" this NextJS setup to a Cloudflare Worker.
 
 TL;DR: This is how I got these showing up again under my posts 👇🏻
 
@@ -131,4 +131,36 @@ Ta-da! 🎉 Webmentions are back.
 
 Now, when I log into `brid.gy` with Bluesky or Mastodon, I can use Bridgy to share new posts from my site, have community reactions linked to my posts, and even resend webmentions from older posts on the Fediverse.
 
-![screenshot of brid.gy Bluesky](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/bridgy-bluesky.png)
+![screenshot of brid.gy publishing to Bluesky](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/bridgy-bluesky.png)
+
+Now for a vanity embed!
+
+<blockquote
+  class="bluesky-embed"
+  data-bluesky-uri="at://did:plc:ibwpi5rsdkmwaq6d7zuac2vm/app.bsky.feed.post/3lzjw4imd7m2q"
+  data-bluesky-cid="bafyreidozwqeqxhmgq5ozwpyoypzaacvgaxszgxm7kbqpm2iu2e5ulkf34"
+  data-bluesky-embed-color-mode="system"
+>
+  <p lang="">
+    Adding to the internet&#x27;s dogpile of webmention troubleshooting for
+    collecting authentic reactions from online communities.
+    (https://jenchan.biz/blog/recovering-webmentions-after-migrating-to-cloudflare)
+    <br></br>
+    <a href="https://bsky.app/profile/did:plc:ibwpi5rsdkmwaq6d7zuac2vm/post/3lzjw4imd7m2q?ref_src=embed">
+      [image or embed]
+    </a>
+  </p>
+  &mdash; 422 Unprocessable Entity (
+  <a href="https://bsky.app/profile/did:plc:ibwpi5rsdkmwaq6d7zuac2vm?ref_src=embed">
+    @jenchan.biz
+  </a>
+  )
+  <a href="https://bsky.app/profile/did:plc:ibwpi5rsdkmwaq6d7zuac2vm/post/3lzjw4imd7m2q?ref_src=embed">
+    September 23, 2025 at 5:57 PM
+  </a>
+</blockquote>
+<script
+  async
+  src="https://embed.bsky.app/static/embed.js"
+  charset="utf-8"
+></script>

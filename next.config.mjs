@@ -14,13 +14,13 @@ if (process.env.NEXTJS_ENV === 'development') {
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.cloudflareinsights.com  *.googletagmanager.com *.google-analytics.com *.cloudflare.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.cloudflareinsights.com  *.googletagmanager.com *.google-analytics.com *.cloudflare.com *.bsky.app;
   style-src 'self' 'unsafe-inline';
   img-src * blob: data:;
   media-src 'self' *.s3.amazonaws.com *.cloudflare.com;
   connect-src *;
   font-src 'self';
-  frame-src stackblitz.com codepen.io codesandbox.io youtube.com;
+  frame-src stackblitz.com codepen.io codesandbox.io youtube.com embed.bsky.app;
 `
 
 const securityHeaders = [
