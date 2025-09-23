@@ -33,11 +33,6 @@ So far, there are 2 main ways to enable webmentions:
 
 1. [webmention.io](https://webmention.io/) is a service that started by the person who wrote a lot of the original mechanics behind IndieAuth, and was what I used as an external API for webmentions.
 
-There's 2 parts to this:
-
-- the ability to identify your web presence through a personal domain
-- the ability to verify you are that person based on a social media profile having a link to that domain.
-
 Then by embedding a `<link>` tag in your HTML, you can tell webmentions.io to send webmentions to your domain when someone either mentions you on the Fediverse or literally sends a webmention to your domain. (Mastodon and Github also supports this.)
 
 ```html
@@ -74,9 +69,16 @@ In either case, I've found **you can't expect to cross-post between two existing
 
 To be able to relate my domain and existing BlueSky account to bridgy, I did the following:
 
-1. [create an app password](https://fed.brid.gy/docs#app-password) so `brid.gy` or `fed.bri.gy` can bridge posts on your behalf and retrieve a `dld` value.
+1. [create an app password](https://fed.brid.gy/docs#app-password) so `brid.gy` or `fed.bri.gy` can syndicate posts on your behalf. Afterwards, I copied the `dld` value and added it to my domain registrar.
 
-See [Bluesky's guide to setting up a domain handle](https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial).
+<Image
+  src="https://bsky.social/about/images/blogposts/change-handle-2.jpg"
+  width={320}
+  height={320}
+  alt="screenshot of Bluesky account settings showing info that you will need to add to your domain registrar"
+/>
+Source: [Bluesky's guide to setting up a domain
+handle](https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial).
 
 2. Update Cloudflare DNS settings with a `TXT` record
 
@@ -102,7 +104,7 @@ This is also the approach recommended by ATProtocol docs.
 
 On my BlueSky account, I created an application password specifically for bridging and copied the `dld` value, and updated my DNS settings with a txt record.
 
-Since I already had existing mastodon and bluesky accounts, this use of `fed.brid.gy` is actually quite redundant as I'm not looking to create a bridged account of my website's posts on a federated network, nor am I looking to create a bridged account of one Fediverse account's posts to another.
+Since I already had existing Mastodon and Bluesky accounts, this use of `fed.brid.gy` is actually quite redundant as I'm not looking to create a bridged account of my website's posts on a federated network, nor am I looking to create a bridged account of one Fediverse account's posts to another.
 
 The only benefit here is that when I log into `fed.brid.gy` with Mastodon or Bluesky, it won't create an alternate bridged account on the network, and will instead recognize my existing accounts.
 
@@ -112,9 +114,9 @@ As you can tell, I went through all 3 services' docs blow by blow to see what mi
 
 AI was useless at debugging this... as it is with all kinds of fringe tech.
 
-After rummaging through Google, I found a [2019 post](https://chrismcleod.dev/blog/experiences-with-cloudflare-blocking-bridgy/) by Chris McLeod who found that Cloudflare was blocking brid.gy's webmentions.
+After rummaging through Google, I found a [2019 post](https://chrismcleod.dev/blog/experiences-with-cloudflare-blocking-bridgy/) by Chris McLeod who found that Cloudflare was blocking Bridgy's webmentions.
 
-I had a hunch that Cloudflare's scrape shield or AI Audit features (now renamed "AI Crawl Control") was blocking forwarded webmentions from `brid.gy`.
+I had a hunch that Cloudflare's scrape shield or AI Audit features (now renamed "AI Crawl Control") was blocking forwarded webmentions from Bridgy.
 
 Reading the W3C spec, I noticed that the second criteria for sending webmentions is that the request must include a `link` header in HTTP requests to discover the webmention endpoint. (See [3.1.2 Sender discovers receiver Webmention endpoint](https://www.w3.org/TR/webmention/#h-sender-discovers-receiver-webmention-endpoint))
 

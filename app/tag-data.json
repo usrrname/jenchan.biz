@@ -53,6 +53,10 @@
   "mongodb": 1,
   "backend": 1,
   "intermediate": 3,
+  "bridgy": 1,
+  "fediverse": 1,
+  "indieweb": 1,
+  "webmentions": 1,
   "virtualmachine": 1,
   "ie11": 1,
   "responsivedesign": 1,
@@ -67,9 +71,5 @@
   "sql": 1,
   "shecodedally": 1,
   "cookies": 1,
-  "http": 1,
-  "bridgy": 1,
-  "fediverse": 1,
-  "indieweb": 1,
-  "webmentions": 1
+  "http": 1
 }

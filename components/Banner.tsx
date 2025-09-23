@@ -14,7 +14,7 @@ export default function Banner({
   return (
     <div
       id={id}
-      className={`relative z-50 animate-[slideDown_0.5s_ease-out_0.5s_forwards] border-b-2 border-neutral-500 text-black shadow-lg ${className} `}
+      className={`relative z-50 animate-[slideDown_0.5s_ease-out_0.5s_forwards] border-b-2 border-neutral-200 text-black shadow-lg ${className} `}
     >
       <div className="relative px-4 py-3 sm:px-6 lg:px-8">
         <button
