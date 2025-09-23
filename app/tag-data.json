@@ -20,7 +20,7 @@
   "discuss": 1,
   "vercel": 1,
   "nextjs": 1,
-  "cloudflare": 1,
+  "cloudflare": 2,
   "self-hosting": 1,
   "bugs": 1,
   "agile": 2,
@@ -67,5 +67,9 @@
   "sql": 1,
   "shecodedally": 1,
   "cookies": 1,
-  "http": 1
+  "http": 1,
+  "bridgy": 1,
+  "fediverse": 1,
+  "indieweb": 1,
+  "webmentions": 1
 }

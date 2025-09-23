@@ -1,0 +1,131 @@
+---
+title: 'Recovering webmentions and connecting to the Fediverse after migrating to Cloudflare'
+draft: false
+summary: Adding to the internet's dogpile of webmention troubleshooting for collecting authentic reactions from online communities.
+tags: [bridgy, fediverse, indieweb, cloudflare, webmentions]
+date: 2025-09-23
+images:
+  [
+    '/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/lost-webmentions.png'
+  ]
+---
+
+This is a long procrastinated post on debugging the phenomena of the missing webmentions ever since I [migrated this blog from Vercel to Cloudflare pages](/blog/blocking-ai-crawlers). I've since "upgraded" this NextJS setup to a Cloudflare Worker.
+
+TL;DR: This is how I got these showing up again under my posts 👇🏻
+
+![screenshot of blog rendering webmentions backfeed showing likes and reposts from Mastodon](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/blog-webmentions.png)
+
+The approach:
+
+- [webmention.io](https://webmention.io/) for receiving webmentions
+- [Brid.gy](https://brid.gy/) for sending backfeed from the Fediverse
+- A NextJS server function that fetches webmentions from webmention.io at build time and stores them in Cloudflare's R2 cache (See [`app/lib/getWebMentionsPerPost.ts`](https://github.com/usrrname/jenchan.biz/blob/main/app/lib/getWebMentionsPerPost.ts))
+- NextJS static bundle is deployed by a Cloudflare Worker
+
+## Why webmentions?
+
+The main idea behind the IndieWeb and Fediverse is to provide nerds with the opportunity to own their own content and reduce reliance on centralized platforms – many of which have had all value extracted, and do little to facilitate socialization and connection.
+
+Webmentions offer a way to link your identity and contributions to your own domain (if you wanted to). Setup is easy if you have a static site. All you have to do is include some `<link>` tags and update your social media with your domain.
+
+So far, there are 2 main ways to enable webmentions:
+
+1. [webmention.io](https://webmention.io/) is a service that started by the person who wrote a lot of the original mechanics behind IndieAuth, and was what I used as an external API for webmentions.
+
+There's 2 parts to this:
+
+- the ability to identify your web presence through a personal domain
+- the ability to verify you are that person based on a social media profile having a link to that domain.
+
+Then by embedding a `<link>` tag in your HTML, you can tell webmentions.io to send webmentions to your domain when someone either mentions you on the Fediverse or literally sends a webmention to your domain. (Mastodon and Github also supports this.)
+
+```html
+<link
+  rel="webmention"
+  href="https://webmention.io/<your-domain.com>/webmention"
+/>
+```
+
+To start the journey of owning your own content, check out [IndieWebify.Me](https://indiewebify.me/)
+
+2. You could roll your own webmentions service by creating your own webmentions endpoint and posting to it with [microformats2](https://microformats.org/wiki/microformats2) data included. Within your site's view markup, you would also benefit from adding microformats2 data to your posts. This would be more effortful than using the existing services.
+
+This post addresses webmentions that go missing despite doing option #1.
+
+## Bridging your domain to the Fediverse
+
+To further embed your content with the Fediverse and connect it with your domain-as-identity, Bridgy Classic ([brid.gy](https://brid.gy/)) could be used to share posts from your site to Mastodon or Bluesky and to connect ["backfeed"](https://indieweb.org/backfeed) (reactions, reposts, and comments) back to the content on your domain.
+
+Alternately, Bridgy Fed ([fed.bri.gy](https://fed.bri.gy/)) could be used to "bridge" posts from your website or an existing Fediverse account onto a different network's account.
+
+## Bridging !== Cross-posting
+
+It's worth figuring out whether you want to use Bridgy Classic or Bridgy Fed.
+One is not like the other, and entirely easy to mix up.
+
+If you already have BOTH accounts, there's no point in using Bridgy Fed.
+
+If you already have either a Bluesky or Mastodon account, you can link your domain to your existing Fediverse accounts, so that you're recognized as the author of the content on the platform. For example, Bridgy Fed can bridge posts from your existing Mastodon account to a brand new Bluesky account.
+
+In either case, I've found **you can't expect to cross-post between two existing Fediverse accounts using this service.**
+
+## Setting up Bridgy Classic with Bluesky
+
+To be able to relate my domain and existing BlueSky account to bridgy, I did the following:
+
+1. [create an app password](https://fed.brid.gy/docs#app-password) so `brid.gy` or `fed.bri.gy` can bridge posts on your behalf and retrieve a `dld` value.
+
+See [Bluesky's guide to setting up a domain handle](https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial).
+
+2. Update Cloudflare DNS settings with a `TXT` record
+
+![screenshot of Cloudflare DNS settings showing txt record](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/cf-dns.png)
+
+## Using my domain as handle on Bluesky
+
+Bluesky's ATProtocol offers a few ways to update your account handle to be [the same as your domain](https://atproto.com/specs/handle#handle-resolution).
+
+### The [HTTPS Well-known Method](https://atproto.com/specs/handle#https-well-known-method)
+
+Totally extra: to be able to have `fed.brid.gy` recognize my existing Mastodon and BlueSky accounts as connected to my domain without creating new bridged accounts on the network, I also included these [webfinger](https://en.wikipedia.org/wiki/WebFinger) redirects in my `_redirects` file:
+
+```txt
+/.well-known/atproto-did https://fed.brid.gy/.well-known/atproto-did 301
+/.well-known/host-meta https://fed.brid.gy/.well-known/host-meta 301
+/.well-known/webfinger https://fed.brid.gy/.well-known/webfinger 301
+```
+
+### The DNS TXT Record Method
+
+This is also the approach recommended by ATProtocol docs.
+
+On my BlueSky account, I created an application password specifically for bridging and copied the `dld` value, and updated my DNS settings with a txt record.
+
+Since I already had existing mastodon and bluesky accounts, this use of `fed.brid.gy` is actually quite redundant as I'm not looking to create a bridged account of my website's posts on a federated network, nor am I looking to create a bridged account of one Fediverse account's posts to another.
+
+The only benefit here is that when I log into `fed.brid.gy` with Mastodon or Bluesky, it won't create an alternate bridged account on the network, and will instead recognize my existing accounts.
+
+## Getting around this mess
+
+As you can tell, I went through all 3 services' docs blow by blow to see what might unblock the sending of webmentions and display of backfeed. Prior to moving my deployment to Cloudflare, `webmentions.io` had always worked.
+
+AI was useless at debugging this... as it is with all kinds of fringe tech.
+
+After rummaging through Google, I found a [2019 post](https://chrismcleod.dev/blog/experiences-with-cloudflare-blocking-bridgy/) by Chris McLeod who found that Cloudflare was blocking brid.gy's webmentions.
+
+I had a hunch that Cloudflare's scrape shield or AI Audit features (now renamed "AI Crawl Control") was blocking forwarded webmentions from `brid.gy`.
+
+Reading the W3C spec, I noticed that the second criteria for sending webmentions is that the request must include a `link` header in HTTP requests to discover the webmention endpoint. (See [3.1.2 Sender discovers receiver Webmention endpoint](https://www.w3.org/TR/webmention/#h-sender-discovers-receiver-webmention-endpoint))
+
+So I applied a custom Cloudflare [transform rule](https://developers.cloudflare.com/rules/transform/) rule. (It probably could also be a `_headers` rule.)
+
+![screenshot of Cloudflare Workers Rules Dashboard ](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/transform-rules-modify-header.png)
+
+Ta-da! 🎉 Webmentions are back.
+
+![Screenshot of webmentions.io dashboard showing webmentions forwarded by brid.gy](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/webmentions.png)
+
+Now, when I log into `brid.gy` with Bluesky or Mastodon, I can use Bridgy to share new posts from my site, have community reactions linked to my posts, and even resend webmentions from older posts on the Fediverse.
+
+![screenshot of brid.gy Bluesky](/static/images/blog/recovering-webmentions-after-migrating-to-cloudflare/bridgy-bluesky.png)
