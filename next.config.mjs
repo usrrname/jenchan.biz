@@ -114,6 +114,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.mstdn.party'
+      },
+      {
+        protocol: 'https',
+        hostname: '*.bsky.social'
       }
     ]
   },
