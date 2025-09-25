@@ -7916,6 +7916,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@welldone-software/why-did-you-render@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "@welldone-software/why-did-you-render@npm:10.0.1"
+  dependencies:
+    lodash: ^4
+  peerDependencies:
+    react: ^19
+  checksum: 477c6a570739ae6692101a5e38240db9f1d5ccdcee430bb664f3d970f0d0bfcf889d9b22f8534cbc9d10b3f6780d6ef10a9f80e476b68fde3198fa46852d25d0
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^3.0.0":
   version: 3.0.1
   resolution: "abbrev@npm:3.0.1"
@@ -14044,6 +14055,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
+  languageName: node
+  linkType: hard
+
 "log-update@npm:^5.0.1":
   version: 5.0.1
   resolution: "log-update@npm:5.0.1"
@@ -19035,6 +19053,7 @@ __metadata:
     "@types/react": ^19.0.8
     "@typescript-eslint/eslint-plugin": ^8.12.0
     "@typescript-eslint/parser": ^8.12.0
+    "@welldone-software/why-did-you-render": ^10.0.1
     body-scroll-lock: ^4.0.0-beta.0
     contentlayer2: 0.5.4
     cross-env: ^7.0.3

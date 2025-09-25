@@ -1,7 +1,8 @@
-import { allBlogs } from 'contentlayer/generated'
-import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import React from 'react'
-import Main from './Main'
+import './wdyr';
+
+import { allBlogs } from 'contentlayer/generated';
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer';
+import Main from './Main';
 
 export default async function Page() {
   const sortedPosts = sortPosts(allBlogs)
