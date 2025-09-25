@@ -6,7 +6,7 @@ type MentionsProps = {
   data: WebMentionReplies[] | WebMentionReaction[] | WebMentionPost[]
   /** URL of original post - for replies */
   url?: string
-  type: 'reply' | 'mention' | 'like' | 'repost' | 'link'
+  type: 'reply' | 'mention' | 'like' | 'repost' | 'link' | 'bookmark'
 }
 
 const WebMentionAvatarRow = ({
@@ -51,6 +51,8 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
         return 'like-of'
       case 'link':
         return 'link-of'
+      case 'bookmark':
+        return 'bookmark-of'
       default:
         return ''
     }
@@ -61,18 +63,18 @@ const WebMentions = ({ data, url, type, title }: MentionsProps) => {
       <section className="flex w-auto flex-col">
         <p className="!my-2 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
-        {(type === 'like' || type === 'repost') && (
+        {['like', 'repost', 'bookmark'].includes(type) && (
           <WebMentionAvatarRow data={data} className={computedClass(type)} />
         )}
 
         {/* // Replies and Mentions */}
         {data?.map((child, index) => (
-          <div key={index} className={`${computedClass}`}>
-            {(type === 'reply' || type === 'mention') && child?.published && (
+          <div key={index} className={`${computedClass(type)}`}>
+            {['reply', 'mention', 'link'].includes(type) && child?.published && (
               <Comment
                 child={{ ...child, source: child.source?.toString() }}
                 url={url}
-                type={type}
+                type={type as 'reply' | 'mention' | 'link'}
               />
             )}
           </div>

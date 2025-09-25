@@ -5,6 +5,7 @@ import SectionContainer from '@/components/SectionContainer'
 import siteMetadata from '@/data/siteMetadata'
 import 'css/tailwind.css'
 import { Metadata } from 'next'
+import Image from 'next/image'
 import { GA } from 'pliny/analytics'
 import { SearchConfig, SearchProvider } from 'pliny/search'
 import 'pliny/search/algolia.css'
@@ -126,10 +127,10 @@ export default function RootLayout({
               <p className="text-lg font-bold">
                 I'm looking for my next challenge!
               </p>
-              <p className="text-sm opacity-90">
-                Senior+ roles. Toronto. Hybrid or Remote
-              </p>
             </div>
+            <p className="text-sm opacity-90">
+              Senior+ roles. Toronto. Hybrid or Remote <Image src="/static/images/hot.gif" alt="spinning hot gif" width={30} height={30} className="self-end inline-block" />
+            </p>
           </Banner>
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>

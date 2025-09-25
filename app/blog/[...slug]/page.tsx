@@ -44,6 +44,7 @@ interface BlogPostProps extends Metadata {
         mentions: WebMentionReplies[]
         replies: WebMentionReplies[]
         reposts: WebMentionReaction[]
+    bookmarks: WebMentionReaction[]
       }
     | undefined
   article?: DevToArticleStats
@@ -188,7 +189,7 @@ export default async function Page(props: {
     post.layout || defaultLayout
   ] as React.ComponentType<any>
 
-  const { likes, mentions, replies, reposts } = webmentions || {}
+  const { likes, mentions, replies, reposts, bookmarks } = webmentions || {}
 
   // Safely handle jsonLd
   const safeJsonLd = jsonLd ? JSON.stringify(jsonLd) : '{}'
@@ -226,7 +227,7 @@ export default async function Page(props: {
               </>
             )}
             {article.public_reactions_count &&
-              article.public_reactions_count > 0 && (
+              +article.public_reactions_count > 0 && (
                 <NextLink
                   href={articleUrl!}
                   rel="syndication"
@@ -261,6 +262,9 @@ export default async function Page(props: {
           )}
           {replies && replies.length > 0 && (
             <WebMentions data={replies} title="Replies" type="reply" />
+          )}
+          {bookmarks && bookmarks.length > 0 && (
+            <WebMentions data={bookmarks} title="Bookmarks" type="bookmark" />
           )}
         </div>
       </Layout>

@@ -8,6 +8,9 @@ type WebMentionPost = {
   activity: {
     type: 'like' | 'repost' | 'mention' | 'reply' | 'link' | 'bookmark'
   }
+  rels: {
+    canonical: URL
+  }
   source: URL | string
   verified: boolean
   verified_date: string

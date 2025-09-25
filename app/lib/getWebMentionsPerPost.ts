@@ -17,13 +17,14 @@ export default async function getWebMentionsPerPost(
   }
   const cache = env.NEXT_INC_CACHE_R2_BUCKET
   const cachedData = await cache?.get(`webmentions-${post.slug}`)
-  const jsonData = await cachedData?.json()
+  const jsonData = await cachedData?.json() as WebMentionPostResponse
 
-  if (jsonData) {
-    console.info(`✅ cache hit: webmentions found for ${post.slug}`)
-    return jsonData as unknown as WebMentionPostResponse
-  }
-  console.log('❌ R2 cache MISS - fetching from webmention.io API')
+  if (jsonData?.links?.length && jsonData?.links?.length > 0) {
+      console.info(`✅ cache hit: webmentions found for ${post.slug}`)
+      return jsonData as unknown as WebMentionPostResponse
+    }
+
+  console.log(`❌ R2 cache MISS - fetching webmentions for ${post.slug} from webmention.io API`)
   try {
     const url = siteMetadata.siteUrl
     const target = `${url}/blog/${post.slug}`
@@ -39,14 +40,19 @@ export default async function getWebMentionsPerPost(
     )
 
     if (!res?.ok) throw new Error('Failed to fetch webmentions')
-    const data = await res?.json()
+    
+    const data = await res?.json() as WebMentionPostResponse
+    
+    if (data?.links?.length && data?.links?.length > 0) {
     await cache?.put(`webmentions-${post.slug}`, JSON.stringify(data), {
       httpMetadata: {
         contentType: 'application/json',
-        cacheExpiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        cacheExpiry: new Date(Date.now() + 300 * 1000) // 5 minutes
       }
     })
-    return data as unknown as WebMentionPostResponse
+    
+      return data as unknown as WebMentionPostResponse
+    }
   } catch (error) {
     console.error('❌ Error in getWebMentionsPerPost:', error)
   }
@@ -61,6 +67,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   let replies: WebMentionReplies[] = []
   const likes: WebMentionReaction[] = []
   const reposts: WebMentionReaction[] = []
+  const bookmarks: WebMentionReaction[] = []
 
   links?.forEach((mention) => {
     const { data, activity } = mention
@@ -68,12 +75,19 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     let { content } = data
     const { name } = author
     // Ignore webmentions and promo from myself
-    if (name === 'Jen Chan') return
+    if (name === 'Jen Chan' ) return
 
     switch (activity.type) {
       case 'like':
+         likes.push({
+          author,
+          url,
+          source
+         })
+        break
       case 'bookmark':
-        likes.push({
+        bookmarks.push({
+          source,
           author,
           url
         })
@@ -81,6 +95,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
       case 'repost':
         if (!content) content = `<a href="${url}" class="repost-of">${url}</a>`
         reposts.push({
+          source,
           url,
           author
         })
@@ -120,5 +135,5 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     )
   }
 
-  return { likes, mentions, replies, reposts }
+  return { likes, mentions, replies, reposts, bookmarks }
 }

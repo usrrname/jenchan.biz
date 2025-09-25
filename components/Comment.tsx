@@ -5,7 +5,7 @@ type CommentProps = {
   /** URL of original post - for replies */
   url?: string
   child: WebMentionReplies | WebMentionReaction
-  type: 'reply' | 'mention'
+  type: 'reply' | 'mention' | 'link'
 }
 
 const Comment = ({ child, type }: CommentProps) => {
@@ -21,7 +21,7 @@ const Comment = ({ child, type }: CommentProps) => {
             className="!mb-0 rounded-full"
           />
           <NextLink
-            className="p-author h-card text-sm text-gray-500 dark:text-gray-400"
+            className="p-author text-sm text-gray-500 dark:text-gray-400"
             href={child?.source?.toString() ?? ''}
           >
             {child?.author.name}
@@ -39,7 +39,7 @@ const Comment = ({ child, type }: CommentProps) => {
           )}
         </div>
         {/* @ts-ignore */}
-        {(type === 'reply' || type === 'mention') && child?.content && (
+        {['reply', 'mention', 'link'].includes(type) && child?.content && (
           <div className="u-syndication p-content max-w-full text-gray-500 italic dark:text-gray-400">
             <div
               dangerouslySetInnerHTML={{
