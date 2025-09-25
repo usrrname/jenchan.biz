@@ -40,39 +40,39 @@ const WebMentionAvatarRow = ({
 }
 
 const WebMentions = ({ data, url, type, title }: MentionsProps) => {
-  const isReply = type === 'reply'
-  const isMention = type === 'mention'
-  const isLike = type === 'like'
-  const isRepost = type === 'repost'
-  const isLink = type === 'link'
 
-  const computedClass = isReply
-    ? `in-reply-to`
-    : isRepost
-      ? `repost-of`
-      : isLike
-        ? `like-of`
-        : isLink
-          ? 'link-of'
-          : ''
+  const computedClass = (type: string) => {
+    switch (type) {
+      case 'reply':
+        return 'in-reply-to'
+      case 'repost':
+        return 'repost-of'
+      case 'like':
+        return 'like-of'
+      case 'link':
+        return 'link-of'
+      default:
+        return ''
+    }
+  }
 
   return (
     <>
       <section className="flex w-auto flex-col">
         <p className="!my-2 text-left font-bold">{title}</p>
         {/* Likes and Reposts */}
-        {(isLike || isRepost) && (
-          <WebMentionAvatarRow data={data} className={computedClass} />
+        {(type === 'like' || type === 'repost') && (
+          <WebMentionAvatarRow data={data} className={computedClass(type)} />
         )}
 
         {/* // Replies and Mentions */}
         {data?.map((child, index) => (
           <div key={index} className={`${computedClass}`}>
-            {(isReply || isMention) && child?.published && (
+            {(type === 'reply' || type === 'mention') && child?.published && (
               <Comment
                 child={{ ...child, source: child.source?.toString() }}
                 url={url}
-                type={isReply ? 'reply' : 'mention'}
+                type={type}
               />
             )}
           </div>
