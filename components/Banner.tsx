@@ -21,7 +21,7 @@ export default function Banner({
           onClick={(e) => {
             const banner = e.currentTarget.closest('[id]') as HTMLElement
             if (banner) {
-              banner.style.animation = 'slideUp 0.3s ease-in forwards'
+              banner.style.animation = 'slideUp 0.3s ease-in-out forwards'
               setTimeout(() => banner.remove(), 300)
             }
           }}
