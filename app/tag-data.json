@@ -11,7 +11,7 @@
   "codinghorror": 2,
   "testing": 6,
   "webdev": 4,
-  "javascript": 4,
+  "javascript": 5,
   "productivity": 9,
   "ai": 2,
   "cursor": 1,
@@ -65,11 +65,12 @@
   "webstandards": 1,
   "forms": 1,
   "designsystems": 1,
-  "node": 1,
+  "node": 2,
   "heroku": 1,
   "debugging": 2,
   "sql": 1,
   "shecodedally": 1,
   "cookies": 1,
-  "http": 1
+  "http": 1,
+  "cli": 1
 }
