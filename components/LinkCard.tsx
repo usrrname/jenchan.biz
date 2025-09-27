@@ -22,7 +22,7 @@ const LinkCard: React.FC<LinkCardProps> = ({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="!text-decoration-none inline-block overflow-hidden rounded-lg shadow-md transition-shadow duration-200 ease-in-out hover:shadow-lg"
+      className="u-url !text-decoration-none inline-block overflow-hidden rounded-lg shadow-md transition-shadow duration-200 ease-in-out hover:shadow-lg"
     >
       {image && (
         <Image
@@ -32,11 +32,11 @@ const LinkCard: React.FC<LinkCardProps> = ({
           alt={`${title}`}
         />
       )}
-      <div className="p-4">
-        <p className="text-lg font-semibold">{title}</p>
-        {author && <p className="mb-2 text-sm text-gray-600">{author}</p>}
-        <p className="mb-2 text-sm text-gray-600">{description}</p>
-        {date && <p className="text-xs text-gray-500">{date}</p>}
+      <div className="p-4 h-card">
+        <p className="p-name text-lg font-semibold">{title}</p>
+        {author && <p className="p-author mb-2 text-sm text-gray-600">{author}</p>}
+        <p className="p-summary mb-2 text-sm text-gray-600">{description}</p>
+        {date && <p className="dt-published text-xs text-gray-500">{date}</p>}
       </div>
     </a>
   )

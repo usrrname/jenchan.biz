@@ -11,13 +11,13 @@ interface Project {
 }
 
 const projectsData: Project[] = [
-  // {
-  //   title: 'Various features: Sports Betting Platform',
-  //   description: `Expanded front end capability to launch from 20 to 400+, contributing to 50% of 2024 revenue at Rivalry`,
-  //   company: `Rivalry`,
-  //   imgSrc: '/static/images/work/rivalry-casinov2.jpg',
-  //   href: 'https://rivalry.com/casino',
-  // },
+  {
+    title: 'Various features: Esports betting platform with 150K DAU',
+    description: `Revamped registration flow, casino, sportsbook and landing page experiences to reduce maintenance and increase conversion by >40%. I improved front end capability to launch from 20 to 400+, which contributed 50% of 2024 revenue at Rivalry.`,
+    company: `Rivalry`,
+    imgSrc: '/static/images/work/rivalry-casinov2.jpg',
+    href: 'https://rivalry.com/casino',
+  },
   {
     title: 'Enterprise Design System',
     description: `Led and support 12-30 contributors to build and maintain a design system with web components for use in Angular 1-16 and React 16-18 projects. Components are now used in over 150+ products`,
