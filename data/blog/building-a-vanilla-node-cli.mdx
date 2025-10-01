@@ -1,0 +1,207 @@
+---
+title: Building a vanilla Node CLI for bootstrapping projects with Cursor rules
+draft: false
+summary: 'Well look, I only used a tool to write a tool for managing how I use a different tool without using any other tools! And then I used only a tool from that tool to test it.'
+date: '2025-10-01'
+images: ['/static/images/blog/building-a-vanilla-node-cli/path-problems.png']
+tags: [nodejs, tooling, javascript, esm, testing]
+---
+
+![screen recording of the CLI --help command](/static/images/blog/building-a-vanilla-node-cli/help.gif)
+
+My friend [Evert](https://evertpot.com/) has been daring me to work without the overhead of bundlers, frameworks and libraries when building projects. In our ongoing debates of best practices, I've previously argued that starting with libraries helps with not reinventing the wheel and productionizing development output. Seeing this [post](https://evertpot.com/node-changelog-cli-tool/), I decided to give the approach a try.
+
+Whenever I built a CLI at work, it would start as a node script, or I would reach for [Inquirer](https://www.npmjs.com/package/inquirer) or [Commander](https://www.npmjs.com/package/commander). It got the IO job done so that I could arrive at outcomes needed to deliver quickly without headbashing over the nuances of reading shell input, saving to the right folder, so on and so forth.
+
+I had been tinkering with the installable aspect of [`@usrrname/cursorrules`](https://github.com/usrrname/cursorrules) for a while. I initially built the library as a set of rules so I could adopt best practices and conventions for projects in whichever language or stack I happened to be working on. You can read about that whole journey to try agentic workflows with Cursor when their [rules](https://www.cursor.com/docs/rules) first came out at ["Agentic AI Workflow Woes"](/blog/agentic-ai-workflow-woes).
+
+It gets 1673 weekly downloads. I bet most of them are bots.
+
+Look, _[ONLY 2 devDependencies!](https://github.com/usrrname/cursorrules/blob/d1c7cc559bb1614d9b533d9a313f54cbb2c1e6be/package.json)_
+
+<div className="flex flex-col gap-x-2 sm:flex-row">
+  <LinkCard
+    className="w-full sm:w-[50%]"
+    author="Evert Pot"
+    title="Building a simple CLI tool with modern Node.js"
+    url="https://evertpot.com/node-changelog-cli-tool"
+    date="2023-02-13"
+    description="I’m a maintainer of several dozen open source libraries. One thing I’ve always done is maintain a hand-written changelog."
+  />
+  <LinkCard
+    className="w-full sm:w-[50%]"
+    title="@usrrname/cursorrules on Github"
+    image="https://usrrname.github.io/cursorrules/img/sara-gets-playful-with-vicodin.jpg"
+    description="A wicked npx-able lib of cursorrules with Otaku AI agents, optional lean workflow 🎀"
+    url="https://github.com/usrrname/cursorrules"
+  />
+</div>
+
+## The case against over-tooling
+
+The school of thought around minimal dependency usage or the [no-framework movement](https://github.com/frameworkless-movement/awesome-frameworkless) arises from aversion to code bloat, lock-in to specific frameworks or libraries, or premature adoption of bleeding edge solutions that interoperate terribly with similar tools in the same ecosystem, which can lead to higher maintenance efforts down the line.
+
+The rapid development of different Big Tech backed front end frameworks in the 2010s-all solving for similar reactivity and rendering performance issues-produced a lot of upgrade pains for teams. For example, when [AngularJS became Angular](https://v2.angular.io/docs/ts/latest/guide/upgrade.html), teams had to decide whether they felt committed to learn a completely new syntax and mental models as Angular was a major version rewrite of the entire framework.[^1]
+
+Choosing a framework means buying into an ecosystem and the maintainers' opinions. Breaking changes or opinionated rollouts and deprecations can be a common occurrence when choosing a bleeding edge framework, some of which may not be widely adopted or well-documented in terms of upgrade methodology or integrations in the ecosystem. For example, whenever Nuxt comes out with a new major release, people had to wait for community maintained modules and plugins to be upgraded before completing their own migrations.
+
+For companies that haven't undergone agile transformation and habitually outsources development, business needs for new feature development or customer-centric requests often overrule tech debt and maintenance. This leads to software that's increasingly brittle and difficult to maintain.
+
+With dependencies, the more you install, the more you have to maintain, manage, and configure over time to stay productive. The recent series of npm supply chain attacks also remind us how more dependencies mean higher risk of exposure to maliciously published upstream dependencies.[^2]
+
+## I Don't Really NodeJS
+
+<Image
+  width="200"
+  src="/static/images/blog/building-a-vanilla-node-cli/idknode.png"
+  alt="Parody book cover of 'I married an artist' by Billy Button showing a woman sitting on a chair with her face buried in her hands. Title replaced with 'You don't Node.js'"
+/>
+
+![screenshot of terminal showing different cursor rules selected and downloaded to a project folder](/static/images/blog/building-a-vanilla-node-cli/interactive.gif)
+
+<figcaption>The outcome</figcaption>
+
+Until last week running `npx @usrrname/cursorrules` would have installed the whole library of Cursor rules with 40+ rule files. This was overkill for bootstrapping or onboarding to codebases that only needed specific rules. I began codesplitting the library into smaller util functions.
+
+This way, I could just use `npx @usrrname/cursorrules --interactive` (`-i` for short) to select the rules I needed for a project.
+
+All hell broke loose.
+
+Import statements and filepath resolution became a pain, and what Cursor helped with scaffolding-which worked as a single file-completely borked when split into multiple files.
+
+![spiderman meme of 3 spidermen pointing at each other accusatorily with all statements copied from Cursor debugging](/static/images/blog/building-a-vanilla-node-cli/path-problems.png)
+
+<figcaption>
+  The embodiment of Cursor after diving back into a project you spec-prompted
+  months ago.
+</figcaption>
+
+### `process.cwd()` is not where I thought it was
+
+As a conflation with python's `os().cwd`, I assumed the value of `process.cwd()` would be the exact path of the present working directory wherever it was called in a file (er, module).
+
+In actuality, it's the directory from where the Node process was invoked. (ie. where in the filesystem a user runs `npm install` or `npx`).
+
+So if my code was structured like below, commands would still identify available Cursor rule types _and_ save them to a local `--output` folder on the user's machine.
+
+Since I had split the initial `cli.mjs` into multiple files with different nesting levels, any command that dealt with looking up files or directories now needed to be aware of its own position in the filesystem in order to continue working as expected.
+
+```bash
+. # root of project
+└── .cursor/
+    └── rules
+           ├── core
+           └── standards
+           └── utils
+└── cli/
+    ├── commands.mjs  # imports helpers from the utils directory
+    ├── index.mjs # the cli entry point referenced by bin/cli.mjs on package.json
+    ├── test/
+    └── utils
+        ├── detect-npx.mjs
+        ├── download-files.mjs
+        ├── find-folder-up.mjs
+        ├── find-package-root.mjs
+        ├── interactive-menu.mjs
+        └── validate-dirname.mjs
+
+```
+
+In order to reference files elsewhere in the filesystem hierarchy, the `path` module `join` and `dirname` APIs offer ways to attain the exact, absolute filepath for cross-platform compatibility.
+
+[`url.fileURLToPath`](https://nodejs.org/api/url.html#urlfileurltopathurl-options) can do this too, with the added benefit of returning correct decodings of percent-encoded characters like `%20`.
+
+```js
+import path, { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// grab the directory name of the current file
+const __dirname = dirname(fileURLToPath(import.meta.url))
+// create a cross-platform absolute filepath to the rules directory
+const rulesDir = path.join(__dirname, 'rules')
+```
+
+### No transpilation step means stricter import statements
+
+Once you use `.mjs`, you have to keep using `.mjs`.
+
+Unlike the times I used build tools to transpile `.ts` to ESM or CJS, running the code as-is, unminified or transpiled, means I have to be more careful with import statements and absolute file paths where they're needed.
+
+One does not simply import a function from a `.js` file and expect their CLI to work in an `.mjs` file as we're literally running the code, unminified or transpiled.
+
+The `.mjs` extension tells Node to treat the file as an ES module. Importing a `.js` file with a named export will result in the runtime error, `ERR_MODULE_NOT_FOUND` due to Node's requirement for [mandatory file extensions](https://nodejs.org/api/esm.html#esm_mandatory_file_extensions) in import statements.
+
+### `npx` is a slippery eel
+
+[npx](https://docs.npmjs.com/cli/v10/commands/npx) is included in a lot of demos for fast trial and project scaffolding as it allows users to run package commands locally, or remotely, without performing a full package install.
+
+When `npx` is invoked, a temporary directory is created in the user's npm cache. This path can be identified with `process.env.npm_config_prefix`. This was crucial for identifying the categories and rules that users would select to copy into their local current working directory.
+
+### Backward compatibility still matters
+
+In keeping with the no-dependency approach, I decided to use [`styleText`](https://nodejs.org/api/util.html#utilstyletextformat-text-options) from `node:util` to color and modify CLI text. But not all Node APIs are created equal.
+
+This API was introduced in Node 21. As I was recording terminal videos with Terminalizer which would only run on Node 20, there would be errors without creating fallback functions to forward calls for `util.styleText` which wouldn't exist in Node 20.
+
+As Terminalizer wasn't capturing emojis and color, I ended up using [asciinema](https://asciinema.org/) with [Noto Emoji](https://fonts.google.com/noto/specimen/Noto+Emoji) installed.
+
+## First impressions with `node:test`
+
+There are a few things around node's testing framework that don't work like other testing frameworks.
+
+Unlike Jest or vitest's `expect`, [`assert`](https://nodejs.org/api/assert.html) can be used to check for expected output. While `describe` and `test` have been nicely aliased to `suite` and `it`, I still had a lot of trouble with common test patterns.
+
+### Mocking is not so straightforward
+
+The [node docs](https://nodejs.org/en/learn/test-runner/mocking#mocking-in-tests) lay out what and when to mock from a behavioral-driven perspective, however setup is somewhat painful.
+
+It appears that if you want to mock or spy on a function (as module, because the `node:test` runner supports everything as ESM), you have to write them out as a [mocked module](https://nodejs.org/en/learn/test-runner/mocking#mocking-in-tests) and then do an `await`-ed import to prevent each test suite from clobbering the other with race conditions.
+
+Oh yeah, you have to use the [`--experimental-test-runner` flag](https://nodejs.org/api/test.html#experimental-test-runner) when you run the test script.
+
+### Failed tests render `not-ok`
+
+`node:test` uses `node-tap`, an adaptation of TAP ([Test Anything Protocol](https://testanything.org)) under the hood.
+
+I don't like how it prints `not-ok` to describe a failed test.
+
+Besides displaying the expected and actual values after test runs, it doesn't surface basic console logs to see more details about the error, so you end up putting console logs within your actual code to debug things.
+
+### Test isolation isn't happening
+
+To run single tests, the docs mention using the `--test-only` flag. I also tried to use the `runOnly` option, but all suites would continue to run.
+
+```
+test('test name', { runOnly: true }, () => {
+    ...
+}
+```
+
+### No support for groupings through `.each()`
+
+If you want to run the same test with different inputs, Vitest's [`each`](https://vitest.dev/api/#test-each) API allowed for providing an array of expected inputs and outcomes... but not `node:test`.
+
+I ended up using a `forEach` loop with an `assert` statement inside.
+
+### Difficulty testing interactive I/O
+
+It's hard to test interactive input behaviour after `process.stdin.setRawMode`is called. While [cli-testing-library](https://cli-testing.com/guides/introduction/) aided in providing ways to reproduce user behaviour input behaviour, it also hung on `process.stdin.setRawMode`.
+
+Test runs fail in a CI environment because it's not an interactive terminal and `process.stdin.setRawMode` is not available.
+
+I don't think `node:test` has the breadth of features that I'm used to with other testing frameworks, but I'm willing to be persuaded.
+
+## Mythical Tools to End All Tools
+
+Ever since vibe coding popped off, userland has been littered with vibe-coded single-use project tools, browser extensions, `agent.md`, spec-kits and whitepapers on how to prompt, "reason", slice and dice with LLMs. Most of these tools (including this one) aren't stable and won't be long-lived, since Big AI startups keep trying to outdo each other with the next best code assistant.
+
+Evergreen software principles such as deep-diving in a problem space, iterating with discipline, exploring technnology choices that support stability and align with team capability may seem like antiquated discussions when there's apparent tools on every corner for quick wins.
+
+To sales, the choice of technology is just an implementation detail. For developers, it becomes an exercise of working with the hell of previous decisions.
+
+[^1]: I'm not singling out Angular to bag on it, it's just an example of one of the challenges of working in a fast-moving space where many solutions for the same problems.
+
+[^2]:
+    ["Wave of npm supply chain attacks exposes thousands of enterprise developer credentials"](https://www.infoworld.com/article/4047739/wave-of-npm-supply-chain-attacks-exposes-thousands-of-enterprise-developer-credentials.html) - InfoWorld, Aug 28, 2025.<br />
+    ["Ongoing supply chain attack targets CrowdStrike NPM packages"](https://socket.dev/blog/ongoing-supply-chain-attack-targets-crowdstrike-npm-packages) -
+    Socket, Oct 24, 2024.

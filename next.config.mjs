@@ -97,6 +97,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: '*.github.io'
+      },
+      {
+        protocol: 'https',
         hostname: 'picsum.photos'
       },
       {
