@@ -1,46 +1,38 @@
-import Image from 'next/image'
-import NextLink from 'next/link'
+import { formatWebmentionDate } from '@/app/utils/formatWebmentionDate'
+import WebMentionAvatar from './WebMentionAvatar'
 // @ts-nocheck
 type CommentProps = {
   /** URL of original post - for replies */
   url?: string
-  child: WebMentionReplies | WebMentionReaction
+  child: WebMentionReply | WebMentionComment
   type: 'reply' | 'mention' | 'link'
+  className: string
 }
 
-const Comment = ({ child, type }: CommentProps) => {
+const Comment = ({ child, type, className }: CommentProps) => {
+
+  const dateToFormat = child.published || child.published_ts || child.verified_date;
+  const publishedDate = dateToFormat ? formatWebmentionDate(dateToFormat) : undefined;
+
   return (
-    <div className="h-cite flex flex-row gap-x-3">
-      <div className="flex w-[98px] flex-col items-center gap-y-2">
-        <NextLink href={child?.url} target="_blank" className={`h-card u-url`}>
-          <Image
-            src={child?.author?.photo}
-            alt={child?.author?.name}
-            width={48}
-            height={48}
-            className="!mb-0 rounded-full"
-          />
-          <NextLink
-            className="p-author text-sm text-gray-500 dark:text-gray-400"
-            href={child?.source?.toString() ?? ''}
-          >
-            {child?.author.name}
-          </NextLink>
-        </NextLink>
-      </div>
+    <div className={`h-cite flex flex-row gap-x-3 items-start ${className}`}>
+
+      <WebMentionAvatar url={child?.url?.toString()} author={child?.author} withName={true} />
+
       <div className="flex flex-col">
-        <div className="flex flex-row">
-          {child?.published_ts && (
-            <span className="dt-published text-sm text-gray-500 dark:text-gray-400">
-              <time
-                dateTime={new Date(child.published_ts).toLocaleDateString()}
-              />
-            </span>
-          )}
-        </div>
+
+        {publishedDate && (
+          <time
+            className="dt-published text-sm text-gray-500 dark:text-gray-400 raver:watermelon"
+            dateTime={publishedDate}
+          >
+            {publishedDate}
+          </time>
+        )}
+
         {/* @ts-ignore */}
         {['reply', 'mention', 'link'].includes(type) && child?.content && (
-          <div className="u-syndication p-content max-w-full text-gray-500 italic dark:text-gray-400">
+          <div className="u-syndication p-content max-w-full text-gray-500 italic dark:text-gray-400 raver:watermelon">
             <div
               dangerouslySetInnerHTML={{
                 /* @ts-ignore */
