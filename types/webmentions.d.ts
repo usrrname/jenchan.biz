@@ -23,10 +23,11 @@ type WebMentionPostData = {
   author: WebMentionCommentAuthor
   source: URL | string
   name: string | null
-  url: URL
+  url?: URL
   content?: string
-  published?: Date | number | null
-  published_ts?: number | null
+  published?: Date | number 
+  published_ts?: number
+  verified_date?: Date | number
 }
 
 type WebMentionCommentAuthor = {
@@ -36,18 +37,13 @@ type WebMentionCommentAuthor = {
   source?: WebMentionPostData['source']
 }
 
-interface WebMentionReplies {
-  author: WebMentionCommentAuthor
-  content?: WebMentionPostData['content']
-  url: WebMentionPostData['url']
-  published?: WebMentionPostData['published']
-  published_ts?: WebMentionPostData['published_ts']
-  source?: WebMentionPostData['source']
-}
+type WebMentionReply = WebMentionPostData;
+
+type WebMentionComment = WebMentionPostData;
 
 interface WebMentionReaction {
   author: WebMentionCommentAuthor
-  url: URL
+  url?: URL
   published?: WebMentionPostData['published']
   published_ts?: WebMentionPostData['published_ts']
   source?: WebMentionPostData['source']

@@ -41,8 +41,8 @@ interface BlogPostProps extends Metadata {
   webmentions:
     | {
         likes: WebMentionReaction[]
-        mentions: WebMentionReplies[]
-        replies: WebMentionReplies[]
+    mentions: WebMentionComment[]
+    replies: WebMentionReply[]
         reposts: WebMentionReaction[]
     bookmarks: WebMentionReaction[]
       }
@@ -163,6 +163,7 @@ export async function generateStaticParams() {
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>
 }) {
+
   const params = await props.params
   const slug = decodeURI(params.slug.join('/'))
   const postData = await getBlogPostData(slug)
