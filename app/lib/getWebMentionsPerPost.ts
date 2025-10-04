@@ -12,11 +12,11 @@ export default async function GET(
       async: true
     })
   
-    // const cache = await env.NEXT_INC_CACHE_R2_BUCKET
-    // if (!cache) {
-    //   console.error('❌ R2 cache not available')
-    //   return;
-    // }
+    const cache = await env.NEXT_INC_CACHE_R2_BUCKET
+    if (!cache) {
+      console.error('❌ R2 cache not available')
+      return;
+    }
   
   const url = siteMetadata.siteUrl
   const target = `${url}/blog/${post.slug}`
@@ -24,13 +24,13 @@ export default async function GET(
 
   try {
 
-    // const cachedData = await cache?.get(`webmentions-${post.slug}`)
-    // const jsonData = await cachedData?.json() as WebMentionPostResponse
+    const cachedData = await cache?.get(`webmentions-${post.slug}`)
+    const jsonData = await cachedData?.json() as WebMentionPostResponse
 
-    // if (jsonData?.links?.length && jsonData?.links?.length > 0) {
-    //   console.info(`✅ cache hit: webmentions found for ${post.slug}`)
-    //   return jsonData as unknown as WebMentionPostResponse
-    // }
+    if (jsonData?.links?.length && jsonData?.links?.length > 0) {
+      console.info(`✅ cache hit: webmentions found for ${post.slug}`)
+      return jsonData as unknown as WebMentionPostResponse
+    }
 
     // Extract fetch logic into a reusable function
     const fetchWebMentions = async (targetUrl: string) => {
