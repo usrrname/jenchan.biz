@@ -41,10 +41,4 @@ type WebMentionReply = WebMentionPostData;
 
 type WebMentionComment = WebMentionPostData;
 
-interface WebMentionReaction {
-  author: WebMentionCommentAuthor
-  url?: URL
-  published?: WebMentionPostData['published']
-  published_ts?: WebMentionPostData['published_ts']
-  source?: WebMentionPostData['source']
-}
+type WebMentionReaction = Pick<WebMentionPostData, 'id' | 'author' | 'url' | 'published' | 'published_ts' | 'source'>
