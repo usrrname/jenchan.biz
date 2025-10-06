@@ -17,7 +17,7 @@ const Comment = ({ child, type, className }: CommentProps) => {
   return (
     <div className={`h-cite flex flex-row gap-x-3 items-start ${className}`}>
 
-      <WebMentionAvatar url={child?.url?.toString()} author={child?.author} withName={true} className="w-[98px]" />
+      <WebMentionAvatar url={child?.url} author={child?.author} withName={true} className="w-[98px]" />
 
       <div className="flex flex-col">
 

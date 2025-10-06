@@ -40,6 +40,9 @@ export default async function GET(
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
+          },
+          cf: {
+            cacheTtl: 5, 
           }
         }
       )
@@ -95,7 +98,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
   const bookmarks: WebMentionReaction[] = []
 
   links?.forEach((mention) => {
-    const { data, activity } = mention
+    const { data, activity, id } = mention
     const { author, url, published, published_ts, source, verified_date } = data
     let { content } = data
     const { name } = author
@@ -106,6 +109,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     switch (activity.type) {
       case 'like':
          likes.push({
+          id,
           author,
           url,
           source
@@ -113,6 +117,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
         break
       case 'bookmark':
         bookmarks.push({
+          id,
           source,
           author,
           url
@@ -121,6 +126,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
       case 'repost':
         if (!content) content = `<a href="${url}" class="repost-of">${url}</a>`
         reposts.push({
+          id,
           source,
           url,
           author
@@ -159,11 +165,13 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     }
   })
 
+  // sort replies by published_ts
   if (replies.length > 0) {
     replies = replies.toSorted(
       (a, b) => (b.published_ts ?? 0) - (a.published_ts ?? 0)
     )
   }
+  
 
   return { likes, mentions, replies, reposts, bookmarks }
 }

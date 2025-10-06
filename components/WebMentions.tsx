@@ -12,19 +12,20 @@ const WebMentionAvatarRow = ({
   data,
   className
 }: {
-    data: WebMentionReply[] | WebMentionReaction[] | WebMentionComment[]
+  data: WebMentionReply[] | WebMentionReaction[] | WebMentionComment[]
   className: string
 }) => {
   return (
     <>
-      <div className="flex flex-row space-x-2">
+      <div className="flex flex-row flex-wrap space-x-2">
         {data?.map((child, index) => (
-          <span className={`${className} my-0`} key={index}>
-            <WebMentionAvatar
-              url={child?.url}
-              author={child?.author}
-            />
-          </span>
+          <WebMentionAvatar
+            url={child?.url}
+            author={child?.author}
+            className={`${className} my-0`}
+            key={child?.id}
+          />
+
         ))}
       </div>
     </>
