@@ -1,0 +1,182 @@
+---
+title: Installing Lazyvim and Oh-My-Zsh on NixOS without Home Manager or flakes
+summary: 'After 2 days of on-and-off teeth-gnashing, I FINALLY got it working.'
+date: 2025-10-17
+draft: false
+tags: [nix, linux, vim]
+images:
+  ['/static/images/blog/installing-lazyvim-on-nixos/types-of-headache.jpg']
+---
+
+!["Types of headache meme showing from left to right, diagrams of migraine, hypertension, and stress headache regions highlighted in red. On the lower right quadrant, a diagram with a full head in red is labelled with 'Configuring NixOS'"](/static/images/blog/installing-lazyvim-on-nixos/types-of-headache.jpg)
+
+A recent contract I'm on requires me to SSH into a VM running NixOS. Little did I know, its default editor is nano, and besides the repo I'm working on having a VSCode server I could SSH into with Cursor, getting around the filesystem and doing other setup required using nano, which I knew nothing about. I had also lost all my aliases and configs.
+
+## Installing neovim
+
+```nix
+# /etc/nixos/configuration.nix
+environment.systemPackages = with pkgs; [
+  neovim
+];
+```
+
+I decided to install Neovim, and since that worked, why not bring in LazyVim? I was in for a nightmare. As it turns out, Nix is a language, an operating system, and a package manager. Unlike the only other 2 Debian distros I had gently used, there was no `apt`.
+
+Maybe because Nix is some penultimate meta-operating system where you can configure the hell out of the setup, there are 3+ ways to install any package:
+
+- the authoritative Nix configuration file `/etc/nixos/configuration.nix` which would install the package globally but require rebuild of the operating system
+- the `nix-shell -p <package>` command which would run it as an ephemeral, isolated bash environment with the package installed for the duration of the shell
+- the `nix-env` command which would install the package globally but has [some faction of users](https://stop-using-nix-env.privatevoid.net/) who claim you should never use nix-env
+- Nix [flakes](https://nixos.wiki/wiki/Flakes) have their own registry, `nixpkgs` and use the `nix run` command. They're also able to be committed to repos and set at the system, user or repo level. As I was on a short timeline and didn't want to impact the setup of my current project, I decided against this approach.
+- other userland inventions like [`nixvim`](https://nix-community.github.io/nixvim/), [kickstart-nix.nvim](https://neovimcraft.com/plugin/mrcjkb/kickstart-nix.nvim/) or [`home-manager`](https://nix-community.github.io/home-manager/) which had their own way of managing the configuration of Neovim.
+
+There are probably more I don't know about.
+
+Since I had used Nix for all but 2 days, I went down a rabbit hole of old forums and documentation.
+
+As I was using 25.05 NixOS, some of the older posts contained syntax that was no longer valid.
+
+Adding the [`vimPlugins.LazyVim`](https://search.nixos.org/packages?channel=25.05&show=vimPlugins.LazyVim&query=lazyvim#) plugin:
+
+```bash
+# /etc/nixos/configuration.nix
+  environment.systemPackages = with pkgs; [
+    ...
+    vimPlugins.LazyVim
+  ];
+```
+
+Then came the challenge of actually installing my LazyVim config, which I had already saved in my dotfiles, so I cloned, then copied my nvim/.config/nvim into my NixOS `/home/user/.config/nvim` folder.
+
+Configuring Neovim to use my LazyVim config files:
+
+```bash
+# /etc/nixos/configuration.nix
+
+programs.neovim = {
+  enable = true;
+  defaultEditor = true;
+  viAlias = true;
+  vimAlias = true;
+	configure = {
+	    customRC = ''
+
+          let mapleader = "\<Space>"
+
+          lua << EOF
+            ${builtins.readFile /home/user/.config/nvim/init.lua}
+
+            ${builtins.readFile /home/user/.config/nvim/lua/config/lazy.lua}
+
+            ${builtins.readFile /home/user/.config/nvim/lua/config/keymaps.lua}
+
+            ${builtins.readFile /home/user/.config/nvim/lua/config/autocmds.lua}
+          EOF
+
+        '';
+	};
+ };
+```
+
+And of course, because I'm a demented Mac user, I had to throw in [Oh My Zsh](https://ohmyz.sh/) for the shell:
+
+```bash
+# /etc/nixos/configuration.nix
+
+  environment.systemPackages = with pkgs; [
+    ...
+    oh-my-zsh
+  ];
+
+  programs.zsh = {
+    enable = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [ "git" "zsh-autosuggestions" "zsh-autocomplete" "direnv" ];
+      theme = "robbyrussell";
+    };
+  };
+
+```
+
+Replaced the `.zshrc` and copied the folders from my custom zsh path at `/Users/user/.oh-my-zsh/custom/plugins` into NixOS' `/home/user/.oh-my-zsh/custom/plugins`.
+
+And now with `exec zsh`, my auto-completions are back!
+
+## The whole config
+
+```bash
+# /etc/nixos/configuration.nix
+{ config, pkgs, ... }:
+
+{
+imports = [];
+
+# ...omitted for brevity...
+
+ programs.neovim = {
+  enable = true;
+  defaultEditor = true;
+  viAlias = true;
+  vimAlias = true;
+	configure = {
+	    customRC = ''
+
+          let mapleader = "\<Space>"
+
+          lua << EOF
+            ${builtins.readFile /home/jenc/.config/nvim/init.lua}
+
+            ${builtins.readFile /home/jenc/.config/nvim/lua/config/lazy.lua}
+
+            ${builtins.readFile /home/jenc/.config/nvim/lua/config/keymaps.lua}
+
+            ${builtins.readFile /home/jenc/.config/nvim/lua/config/autocmds.lua}
+          EOF
+
+        '';
+	};
+ };
+
+  system.userActivationScripts.zshrc = "touch .zshrc"; # to avoid being prompted to generate the config for the first time
+
+  programs.direnv.enable = true;
+
+ # Enable Zsh with Oh My Zsh
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [ "git" "zsh-autosuggestions" "zsh-autocomplete" "direnv" ];
+      theme = "robbyrussell";
+    };
+  };
+
+  # Allow proprietary packages
+  nixpkgs.config.allowUnfree = true;
+
+  environment.systemPackages = with pkgs; [
+    wget
+    direnv
+    gitFull
+    nixfmt-rfc-style
+    starship
+    vim
+    neovim
+    zsh
+    oh-my-zsh
+    tree
+    fzf
+    vimPlugins.nvim-cmp
+    vimPlugins.LazyVim
+];
+
+}
+
+```
+
+And then `nixos-rebuild switch` to apply the changes.
+
+If you're curious, my [dotfiles](https://github.com/usrrname/dotfiles) are available on GitHub.
