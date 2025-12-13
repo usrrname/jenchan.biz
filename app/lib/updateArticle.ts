@@ -1,9 +1,12 @@
 import siteMetadata from '@/data/siteMetadata'
 import { Blog } from 'contentlayer/generated'
+import { validateArticleId } from './urlValidation'
 
 const updateArticle = async (id: number, article: Blog) => {
   'use server'
-  const endpoint = `https://dev.to/api/articles/${id}`
+  // Validate and sanitize the ID to prevent SSRF attacks
+  const validatedId = validateArticleId(id)
+  const endpoint = `https://dev.to/api/articles/${validatedId}`
 
   const payload = {
     title: article.title,

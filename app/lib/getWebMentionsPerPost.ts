@@ -2,6 +2,7 @@ import { Blog } from '.contentlayer/generated/types'
 import siteMetadata from '@/data/siteMetadata'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import dotenv from 'dotenv'
+import { validateSlug, validateUrl } from './urlValidation'
 dotenv.config()
 
 export default async function GET(
@@ -18,9 +19,22 @@ export default async function GET(
       return;
     }
   
+  // Validate slug to prevent SSRF attacks
+  const validatedSlug = validateSlug(post.slug)
   const url = siteMetadata.siteUrl
-  const target = `${url}/blog/${post.slug}`
-  const trailingSlashTarget = `${url}/blog/${post.slug}/`
+  
+  // Validate the base URL format (siteUrl is from config, but validate for safety)
+  try {
+    const urlObj = new URL(url)
+    if (urlObj.protocol !== 'https:') {
+      throw new Error('siteUrl must use HTTPS protocol')
+    }
+  } catch (error) {
+    throw new Error(`Invalid siteUrl configuration: ${url}`)
+  }
+  
+  const target = `${url}/blog/${validatedSlug}`
+  const trailingSlashTarget = `${url}/blog/${validatedSlug}/`
 
   try {
 
@@ -34,8 +48,17 @@ export default async function GET(
 
     // Extract fetch logic into a reusable function
     const fetchWebMentions = async (targetUrl: string) => {
+      // Validate the target URL to prevent SSRF attacks
+      // Note: targetUrl is constructed from validated slug and siteMetadata.siteUrl,
+      // but we validate it anyway for defense in depth
+      const encodedTarget = encodeURIComponent(targetUrl)
+      
+      // Validate that the final URL only points to webmention.io
+      const webmentionUrl = `https://webmention.io/api/mentions?target=${encodedTarget}&token=${process.env.NEXT_WEBMENTION_TOKEN}`
+      validateUrl(webmentionUrl, ['webmention.io'])
+      
       return env.WORKER_SELF_REFERENCE?.fetch(
-        `https://webmention.io/api/mentions?target=${targetUrl}&token=${process.env.NEXT_WEBMENTION_TOKEN}`,
+        webmentionUrl,
         {
           method: 'GET',
           headers: {

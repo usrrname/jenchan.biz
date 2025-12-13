@@ -1,5 +1,6 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 import dotenv from 'dotenv'
+import { validateGithubOwnerRepo, validateUrl } from './urlValidation'
 type Project = {
   title: string
   description: string
@@ -93,14 +94,29 @@ export default async function getGithubData(
   const results = await Promise.all(
     githubProjects.map(async (project) => {
       try {
+        // Validate the GitHub URL to prevent SSRF attacks
+        if (!project.href) {
+          return { ...project, stars: null }
+        }
+        
+        // Validate URL format and domain
+        validateUrl(project.href, ['github.com'])
+        
         // Extract owner/repo from URL
-        const match = project.href!.match(/github\.com\/([^/]+)\/([^/]+)/)
+        const match = project.href.match(/github\.com\/([^/]+)\/([^/]+)/)
         if (!match) return { ...project, stars: null }
         const [, owner, repo] = match
 
+        // Validate owner and repo to prevent path traversal and injection
+        const { owner: validatedOwner, repo: validatedRepo } = validateGithubOwnerRepo(owner, repo)
+
+        // Construct and validate the final API URL
+        const apiUrl = `https://api.github.com/repos/${validatedOwner}/${validatedRepo}`
+        validateUrl(apiUrl, ['api.github.com'])
+
         // Fetch repo data from GitHub API
         const res = await env.WORKER_SELF_REFERENCE?.fetch(
-          `https://api.github.com/repos/${owner}/${repo}`,
+          apiUrl,
           {
             headers: {
               Accept: 'application/vnd.github.v3+json',

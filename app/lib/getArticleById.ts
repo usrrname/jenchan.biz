@@ -2,14 +2,16 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 // @ts-ignore
 import type { Cloudflare } from '../../types/cloudflare-env'
+import { validateArticleId } from './urlValidation'
 
 export const runtime = 'edge'
 
 const getArticleById = async (id: number) => {
+  const validatedId = validateArticleId(id)
   const context = (await getCloudflareContext({
     async: true
   })) as unknown as Cloudflare.Env
-  const endpoint = `https://dev.to/api/articles/${id}`
+  const endpoint = `https://dev.to/api/articles/${validatedId}`
   const headers = new Headers()
   headers.append('api-key', `${context.env?.NEXT_DEVTO_API_KEY as string}`)
   headers.append('accept', 'application/vnd.forem.api-v1+json')
