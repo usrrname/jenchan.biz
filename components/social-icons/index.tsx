@@ -1,16 +1,14 @@
-import {
-  Bluesky,
-  DevTo,
-  Facebook,
-  Github,
-  Linkedin,
-  Mail,
-  Mastodon,
-  Rss,
-  Twitter,
-  X,
-  Youtube
-} from './icons'
+import { BlueSky } from './BlueSky'
+import { DevTo } from './DevTo'
+import { Facebook } from './Facebook'
+import { Github } from './Github'
+import { Linkedin } from './Linkedin'
+import { Mail } from './Mail'
+import { Mastodon } from './Mastodon'
+import { Rss } from './Rss'
+import { Twitter } from './Twitter'
+import { X } from './X'
+import { Youtube } from './Youtube'
 
 const components = {
   mail: Mail,
@@ -26,7 +24,7 @@ const components = {
   // threads: Threads,
   // instagram: Instagram,
   // medium: Medium,
-  bluesky: Bluesky
+  bluesky: BlueSky
 }
 
 type SocialIconProps = {
@@ -35,7 +33,7 @@ type SocialIconProps = {
   size?: number
 }
 
-const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
+export const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
   if (
     !href ||
     (kind === 'mail' &&
@@ -63,4 +61,3 @@ const SocialIcon = ({ kind, href, size = 8 }: SocialIconProps) => {
   )
 }
 
-export default SocialIcon

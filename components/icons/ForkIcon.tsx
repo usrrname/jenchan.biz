@@ -1,6 +1,6 @@
 import { SVGProps } from 'react'
 
-const ForkIcon = (props: SVGProps<SVGSVGElement>) => {
+export const ForkIcon = (props: SVGProps<SVGSVGElement>) => {
     const { width = 16, height = 16, ...rest } = props
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} {...rest}>
@@ -8,5 +8,3 @@ const ForkIcon = (props: SVGProps<SVGSVGElement>) => {
         </svg>
     )
 }
-
-export default ForkIcon 

@@ -47,6 +47,9 @@
   "nearlyfreespeech": 1,
   "shecoded": 4,
   "css": 1,
+  "nix": 1,
+  "linux": 1,
+  "vim": 1,
   "interview": 1,
   "layoff": 1,
   "mentalhealth": 1,
@@ -73,8 +76,5 @@
   "sql": 1,
   "shecodedally": 1,
   "cookies": 1,
-  "http": 1,
-  "nix": 1,
-  "linux": 1,
-  "vim": 1
+  "http": 1
 }

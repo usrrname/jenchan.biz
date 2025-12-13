@@ -2,7 +2,7 @@ import getGithubData, {
   contributionsData,
   ossData
 } from '@/app/lib/getGithubData'
-import ForkIcon from '@/components/icons/ForkIcon'
+import { ForkIcon } from '@/components/icons'
 import { genPageMetadata } from 'app/seo'
 import Link from 'next/link'
 
