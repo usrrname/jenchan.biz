@@ -59,3 +59,5 @@ yarn-error.log*
 tag-data.json
 _draft
 !.env.schema
+
+pment/
