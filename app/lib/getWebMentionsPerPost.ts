@@ -124,6 +124,7 @@ export const parseWebMentionResults = (results: WebMentionPostResponse) => {
     const { data, activity, id } = mention
     const { author, url, published, published_ts, source, verified_date } = data
     let { content } = data
+    if (!author) return
     const { name } = author
 
     // Ignore webmentions and promo from myself
