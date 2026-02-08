@@ -5,8 +5,22 @@ import getGithubData, {
 import { ForkIcon } from '@/components/icons'
 import { genPageMetadata } from 'app/seo'
 import Link from 'next/link'
-
+import { validateUrl } from '@/app/lib/urlValidation'
 export const metadata = genPageMetadata({ title: 'Projects' })
+
+// Only allow github.com and https protocol for outbound links.
+function getSafeHref(href: string | undefined): string | undefined {
+  if (!href) return undefined;
+  try {
+    validateUrl(href, ['github.com']);
+    if (href.startsWith('https://github.com/')) {
+      return href;
+    }
+  } catch {
+    // fall through
+  }
+  return undefined;
+}
 
 export default async function Projects() {
   const projectData = await getGithubData(ossData)
@@ -30,14 +44,20 @@ export default async function Projects() {
             </p>
             {projectData.map((d) => (
               <div key={d.title}>
-                <Link
-                  href={d.href || ''}
-                  className="text-lg leading-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                >
-                  <p className="text-lg leading-7 text-blue-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                {getSafeHref(d.href) ? (
+                  <Link
+                    href={getSafeHref(d.href)}
+                    className="text-lg leading-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                  >
+                    <p className="text-lg leading-7 text-blue-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                      {d.title}
+                    </p>
+                  </Link>
+                ) : (
+                  <p className="text-lg leading-7 text-blue-800 dark:text-gray-400">
                     {d.title}
                   </p>
-                </Link>
+                )}
                 <p className="text-sm leading-7 text-gray-600 dark:text-gray-400">
                   {d.description}
                 </p>
@@ -68,14 +88,20 @@ export default async function Projects() {
             </p>
             {contributions.map((d) => (
               <div key={d?.title}>
-                <Link
-                  href={d.href || ''}
-                  className="text-lg leading-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                >
-                  <p className="text-lg leading-7 text-blue-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                {getSafeHref(d.href) ? (
+                  <Link
+                    href={getSafeHref(d.href)}
+                    className="text-lg leading-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                  >
+                    <p className="text-lg leading-7 text-blue-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                      {d.title}
+                    </p>
+                  </Link>
+                ) : (
+                  <p className="text-lg leading-7 text-blue-800 dark:text-gray-400">
                     {d.title}
                   </p>
-                </Link>
+                )}
               </div>
             ))}
           </div>
