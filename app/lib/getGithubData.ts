@@ -114,18 +114,16 @@ export default async function getGithubData(
         const apiUrl = `https://api.github.com/repos/${validatedOwner}/${validatedRepo}`
         validateUrl(apiUrl, ['api.github.com'])
 
-        // Fetch repo data from GitHub API
-        const res = await env.WORKER_SELF_REFERENCE?.fetch(
-          apiUrl,
-          {
-            headers: {
-              Accept: 'application/vnd.github.v3+json',
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-              cache: 'force-cache'
-            }
-          }
-        )
+        const token = env.GITHUB_TOKEN ?? process.env.GITHUB_TOKEN
+        const headers: Record<string, string> = {
+          Accept: 'application/vnd.github.v3+json'
+        }
+        if (token) headers.Authorization = `Bearer ${token}`
 
+        const res = await env.WORKER_SELF_REFERENCE?.fetch(apiUrl, {
+          headers,
+          cache: 'force-cache'
+        })
         if (!res?.ok) throw new Error('Failed to fetch')
         const data = await res?.json()
         return {
